@@ -1,0 +1,25 @@
+<!-- Test.Ms.Presentation — Message listeners, health endpoints (Microservice archetype) -->
+<!-- Microservice is NOT HTTP-first. Presentation = message listeners + optional health. -->
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Test.Ms.Presentation</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Test.Ms.Application/Test.Ms.Application.csproj" />
+    <ProjectReference Include="../Test.Ms.Infrastructure/Test.Ms.Infrastructure.csproj" />
+    <ProjectReference Include="../Test.Ms.Common/Test.Ms.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Health checks only — microservice is not HTTP-first -->
+    <PackageReference Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.*" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.*" />
+    <!-- NOTE: No Swagger/OpenAPI by default. Add only if exposing admin endpoints. -->
+  </ItemGroup>
+
+</Project>

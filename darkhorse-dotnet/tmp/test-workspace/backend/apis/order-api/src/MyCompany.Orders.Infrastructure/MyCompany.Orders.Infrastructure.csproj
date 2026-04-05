@@ -1,0 +1,32 @@
+<!-- MyCompany.Orders.Infrastructure — Persistence, messaging (API archetype) -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>MyCompany.Orders.Infrastructure</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Onion: Infrastructure depends on Application + Domain -->
+    <ProjectReference Include="../MyCompany.Orders.Application/MyCompany.Orders.Application.csproj" />
+    <ProjectReference Include="../MyCompany.Orders.Domain/MyCompany.Orders.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Common contracts/utilities (external NuGet package) -->
+    <PackageReference Include="MyCompany.Orders.Common" Version="1.0.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Persistence (API archetype owns its data) -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.*" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.*">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

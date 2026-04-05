@@ -1,0 +1,90 @@
+/**
+ * Slash Menu Styles
+ */
+
+.slashMenu {
+  position: absolute;
+  z-index: 1000;
+  min-width: 280px;
+  max-width: 400px;
+  max-height: 320px;
+  overflow-y: auto;
+  background-color: var(--color-background-primary, #ffffff);
+  border: 1px solid var(--color-border-primary, #e5e7eb);
+  border-radius: var(--border-radius-md, 8px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 8px;
+}
+
+.slashMenu__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--border-radius-sm, 6px);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.slashMenu__item:hover {
+  background-color: var(--color-background-secondary, #f9fafb);
+}
+
+.slashMenu__item--selected {
+  background-color: var(--color-primary-light, #dbeafe);
+}
+
+.slashMenu__icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  color: var(--color-text-secondary, #6b7280);
+}
+
+.slashMenu__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.slashMenu__label {
+  font-size: var(--font-size-md, 14px);
+  font-weight: 500;
+  color: var(--color-text-primary, #1f2937);
+  margin-bottom: 2px;
+}
+
+.slashMenu__description {
+  font-size: var(--font-size-sm, 12px);
+  color: var(--color-text-secondary, #6b7280);
+  line-height: 1.4;
+}
+
+.slashMenu__empty {
+  padding: 16px;
+  text-align: center;
+  color: var(--color-text-secondary, #6b7280);
+  font-size: var(--font-size-sm, 12px);
+}
+
+/* Scrollbar styling */
+.slashMenu::-webkit-scrollbar {
+  width: 8px;
+}
+
+.slashMenu::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.slashMenu::-webkit-scrollbar-thumb {
+  background-color: var(--color-border-primary, #e5e7eb);
+  border-radius: 4px;
+}
+
+.slashMenu::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-text-tertiary, #9ca3af);
+}
+

@@ -1,0 +1,75 @@
+# Frontend Stack — {{project.name}}
+
+> READ-ONLY reference. AI agents must check these packages before proposing custom implementations.
+
+## Core UI Stack
+
+| Category | Package | Version | Purpose |
+|----------|---------|---------|--------|
+| Routing | `react-router-dom` | `^7.0.0` | Client-side routing |
+| State | `zustand` | `^5.0.0` | Lightweight global state management |
+| Component Library | `@chakra-ui/react` | `^3.0.0` | Accessible, themeable UI components |
+| Styling | `tailwindcss` | `^4.0.0` | Utility-first CSS (via `@tailwindcss/vite`) |
+| Forms | `react-hook-form` | `^7.0.0` | Performant, flexible form state management |
+| Forms | `@hookform/resolvers` | `^3.0.0` | Connects react-hook-form to Zod schemas |
+| Validation | `zod` | `^3.0.0` | TypeScript-first schema validation |
+
+## Toolkit Components (Complex Widgets)
+
+| Category | Package | Purpose |
+|----------|---------|---------|
+| Foundation | `@react-toolkit/core` | Shared utilities & types |
+| Foundation | `@react-toolkit/design-tokens` | Colors, spacing, typography |
+| Planning | `@react-toolkit/kanban` | Card-based workflow boards |
+| Planning | `@react-toolkit/gantt` | Project timelines with dependencies |
+| Planning | `@react-toolkit/timeline` | Event visualization |
+| Scheduling | `@react-toolkit/scheduler` | Multi-view calendar |
+| Data | `@react-toolkit/tree-grid` | Hierarchical data tables |
+| Data | `@react-toolkit/charts` | Column, spline, pie charts |
+| Data | `@react-toolkit/pivot-table` | Multi-dimensional aggregation |
+| Data | `@react-toolkit/tree-map` | Space-filling visualization |
+| Content | `@react-toolkit/rich-text-editor` | WYSIWYG with mentions |
+| Content | `@react-toolkit/image-editor` | Crop, filters, annotations |
+| AI | `@react-toolkit/chat-ui` | Message display UI |
+| AI | `@react-toolkit/ai-assist` | Contextual suggestions |
+
+## Usage
+
+```tsx
+// Routing
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+// State
+import { create } from 'zustand';
+
+// Chakra UI components
+import { Button, Box, Text, Input } from '@chakra-ui/react';
+
+// Tailwind (add classes directly)
+<div className="flex items-center gap-4 p-4 bg-gray-50">
+
+// Toolkit
+import { KanbanBoard } from '@react-toolkit/kanban';
+import { tokens } from '@react-toolkit/design-tokens';
+
+// Forms with Zod schema validation
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+
+const schema = z.object({ email: z.string().email(), age: z.number().min(18) });
+type FormData = z.infer<typeof schema>;
+
+const { register, handleSubmit, formState: { errors } } = useForm<FormData>({ resolver: zodResolver(schema) });
+```
+
+## Rules
+
+- **Use Chakra UI** for standard UI elements (buttons, inputs, modals, forms, layout)
+- **Use Tailwind** for custom spacing, responsive layouts, and utility classes
+- **Use Zustand** for all global/shared state — avoid prop drilling or Context for cross-component state
+- **Use react-hook-form + Zod** for ALL forms and any input that requires schema validation — define the Zod schema first, derive the TypeScript type with `z.infer<>`, then wire to `useForm` via `zodResolver`
+- **Use Toolkit** for complex domain widgets (Kanban, Gantt, charts, scheduler) — do NOT rebuild these
+- Toolkit packages are **FROZEN** — zero modifications allowed
+- Check toolkit components **before** building any custom complex widget
+- Do NOT mix multiple state management approaches (no Redux, no MobX, no Jotai)

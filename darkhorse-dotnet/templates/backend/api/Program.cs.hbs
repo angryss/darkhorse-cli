@@ -1,0 +1,23 @@
+﻿// {{project.dotnet.namespace}}.Presentation — Entry point (API archetype)
+// Minimal ASP.NET Core host. Expand as your bounded contexts grow.
+
+var builder = WebApplication.CreateBuilder(args);
+
+// TODO: Register MediatR, FluentValidation, AutoMapper from Application layer
+// TODO: Register EF Core DbContext from Infrastructure layer
+// TODO: Register Serilog from Presentation config
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.MapControllers();
+app.Run();

@@ -1,0 +1,76 @@
+﻿# 00 — Start Here
+
+> **Entry point for all AI agents and developers working on {{project.name}}.**
+
+## What Is This Project?
+
+**{{project.name}}** — {{project.description}}
+
+- **Archetype:** {{project.archetype}}
+- **Framework:** Quarkus (Java {{project.java.javaVersion}})
+- **Architecture:** DDD + Onion Architecture + CQRS
+- **Build:** Maven
+{{#if project.features.frontend}}
+- **Frontend:** React{{#if project.frontend.toolkit}} + DarkHorse Toolkit{{/if}}
+{{/if}}
+
+{{#if (eq project.archetype "api")}}
+> **API archetype** — Standard REST service with persistence and full domain logic.
+{{/if}}
+{{#if (eq project.archetype "bff-api")}}
+> **BFF-API archetype** — Backend-for-Frontend routing layer. No persistence, no domain logic execution. Queries route to downstream APIs, commands dispatch to a message broker.
+{{/if}}
+{{#if (eq project.archetype "microservice")}}
+> **Microservice archetype** — Message-driven service. Listens for commands/events from a broker, executes domain logic, owns its data. Not HTTP-first.
+{{/if}}
+
+## Navigation
+
+| File | Purpose |
+|------|---------|
+| `context/00-START-HERE.md` | You are here |
+| `context/10-REPO-MAP.md` | Folder layout and file descriptions |
+| `context/30-BOUNDED-CONTEXTS.md` | Domain contexts and relationships |
+| `context/50-SEARCH-QUERIES.md` | Search patterns for finding code |
+| `openspec/AGENTS.md` | **Read next** — AI agent rules and instructions |
+
+## Quick Reference
+
+```
+{{project.name}}/
+├── context/             ← AI navigation (this folder)
+├── openspec/            ← Specs, proposals, workflow
+│   ├── AGENTS.md        ← AI reads this second
+│   ├── specs/
+│   │   ├── architecture/ ← Mandatory architecture rules
+│   │   ├── patterns/    ← Implementation patterns
+│   │   ├── workflow/
+│   │   │   ├── skills/  ← Workflow skill definitions
+│   │   │   └── commands/ ← CLI command invocation guides
+│   │   ├── domain/      ← Bounded contexts (your definitions)
+│   │   └── project/
+│   │       └── roadmap.md ← MVP roadmap and archiving lifecycle
+│   ├── changes/
+│   │   └── mvp-1.0/     ← Active MVP (proposals + tracker)
+│   │       └── progress-tracker.md
+│   └── archive/         ← Completed MVPs (historical)
+├── .github/
+│   └── agents/          ← Copilot agent definitions
+├── backend/             ← Java/Quarkus code (DDD)
+│   └── {{archetypeCategory}}/
+│       ├── contexts/    ← Bounded contexts
+│       └── examples/    ← CQRS starter examples
+{{#if project.features.frontend}}
+├── frontend/            ← {{#if (eq project.frontend.platform "both")}}Web + Mobile apps{{else if (eq project.frontend.platform "mobile")}}React Native mobile app{{else}}React web app{{/if}}
+{{/if}}
+├── deployment/          ← Docker, Kubernetes
+└── .darkhorse.yaml      ← Project configuration
+```
+
+## What To Do Next
+
+1. Read `openspec/AGENTS.md` for architecture rules
+2. Check `openspec/specs/domain/` for bounded contexts
+3. Check `openspec/specs/project/roadmap.md` for project roadmap
+4. Check `openspec/changes/mvp-1.0/progress-tracker.md` for active work items
+5. Use `.github/agents/plan.agent.md` (Copilot agent) to create a new requirement proposal

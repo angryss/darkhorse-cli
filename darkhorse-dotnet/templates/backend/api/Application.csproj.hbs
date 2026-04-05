@@ -1,0 +1,27 @@
+<!-- {{project.dotnet.namespace}}.Application — Use cases, CQRS handlers (API archetype) -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net{{project.dotnet.dotnetVersion}}.0</TargetFramework>
+    <RootNamespace>{{project.dotnet.namespace}}.Application</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Onion: Application depends on Domain only -->
+    <ProjectReference Include="../{{project.dotnet.namespace}}.Domain/{{project.dotnet.namespace}}.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Workspace-shared contracts (integration events, shared abstractions) -->
+    <ProjectReference Include="../../../../shared/{{project.workspaceNamespace}}.Contracts/{{project.workspaceNamespace}}.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.4.*" />
+    <PackageReference Include="FluentValidation" Version="11.9.*" />
+    <PackageReference Include="AutoMapper" Version="13.0.*" />
+  </ItemGroup>
+
+</Project>

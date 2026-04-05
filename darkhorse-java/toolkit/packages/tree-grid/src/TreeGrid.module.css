@@ -1,0 +1,220 @@
+/**
+ * TreeGrid Component Styles
+ */
+
+.treeGrid {
+  width: 100%;
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  background: var(--color-white);
+  overflow: hidden;
+  font-family: var(--font-family-base);
+  font-size: var(--font-size-sm);
+}
+
+.gridContainer {
+  width: 100%;
+  overflow: auto;
+}
+
+/* Header */
+.header {
+  display: flex;
+  background: var(--color-gray-50);
+  border-bottom: 2px solid var(--color-gray-300);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.headerCell {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3) var(--spacing-4);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-900);
+  border-right: 1px solid var(--color-gray-200);
+  user-select: none;
+  min-width: 100px;
+}
+
+.headerCell:last-child {
+  border-right: none;
+}
+
+.headerCell.sortable {
+  cursor: pointer;
+  transition: background-color var(--duration-fast);
+}
+
+.headerCell.sortable:hover {
+  background: var(--color-gray-100);
+}
+
+.headerCell.sortable:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: -2px;
+}
+
+.headerText {
+  flex: 1;
+}
+
+.sortIndicator {
+  font-size: var(--font-size-xs);
+  color: var(--color-primary-600);
+}
+
+/* Body */
+.body {
+  overflow-y: auto;
+}
+
+.row {
+  display: flex;
+  border-bottom: 1px solid var(--color-gray-200);
+  transition: background-color var(--duration-fast);
+  cursor: pointer;
+}
+
+.row:hover {
+  background: var(--color-gray-50);
+}
+
+.row:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: -2px;
+}
+
+.row.selected {
+  background: var(--color-primary-50);
+}
+
+.cell {
+  padding: var(--spacing-3) var(--spacing-4);
+  border-right: 1px solid var(--color-gray-200);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 100px;
+  display: flex;
+  align-items: center;
+}
+
+.cell:last-child {
+  border-right: none;
+}
+
+/* Tree column specific styles */
+.treeCellContent {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  width: 100%;
+}
+
+.expandButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--duration-fast);
+  flex-shrink: 0;
+}
+
+.expandButton:hover {
+  background: var(--color-gray-200);
+}
+
+.expandButton:focus {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 1px;
+}
+
+.expandIcon {
+  display: inline-block;
+  transition: transform var(--duration-fast);
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-600);
+}
+
+.expandButton.expanded .expandIcon {
+  transform: rotate(90deg);
+}
+
+.expandPlaceholder {
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.cellValue {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Empty state */
+.treeGrid.empty {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyState {
+  color: var(--color-gray-500);
+  font-size: var(--font-size-base);
+  text-align: center;
+  padding: var(--spacing-8);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .treeGrid {
+    background: var(--color-gray-900);
+    border-color: var(--color-gray-700);
+  }
+
+  .header {
+    background: var(--color-gray-800);
+    border-bottom-color: var(--color-gray-700);
+  }
+
+  .headerCell {
+    color: var(--color-gray-100);
+    border-right-color: var(--color-gray-700);
+  }
+
+  .headerCell.sortable:hover {
+    background: var(--color-gray-700);
+  }
+
+  .row {
+    border-bottom-color: var(--color-gray-800);
+  }
+
+  .row:hover {
+    background: var(--color-gray-800);
+  }
+
+  .row.selected {
+    background: var(--color-primary-900);
+  }
+
+  .cell {
+    border-right-color: var(--color-gray-800);
+    color: var(--color-gray-200);
+  }
+
+  .emptyState {
+    color: var(--color-gray-400);
+  }
+}
+

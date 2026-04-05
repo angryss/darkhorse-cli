@@ -1,0 +1,54 @@
+import { describe, it, expect } from 'vitest';
+import { render, screen } from '@testing-library/react';
+import { {{ComponentName}} } from './{{ComponentName}}';
+
+describe('{{ComponentName}}', () => {
+  it('should render successfully', () => {
+    render(<{{ComponentName}} data-testid="component" />);
+    expect(screen.getByTestId('component')).toBeInTheDocument();
+  });
+
+  it('should apply custom className', () => {
+    render(<{{ComponentName}} className="custom-class" data-testid="component" />);
+    expect(screen.getByTestId('component')).toHaveClass('custom-class');
+  });
+
+  it('should apply custom styles', () => {
+    render(
+      <{{ComponentName}} 
+        style={{ backgroundColor: 'red' }} 
+        data-testid="component" 
+      />
+    );
+    expect(screen.getByTestId('component')).toHaveStyle({ backgroundColor: 'red' });
+  });
+
+  it('should handle disabled state', () => {
+    render(<{{ComponentName}} disabled data-testid="component" />);
+    expect(screen.getByTestId('component')).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('should render different variants', () => {
+    const { rerender } = render(
+      <{{ComponentName}} variant="primary" data-testid="component" />
+    );
+    expect(screen.getByTestId('component')).toBeInTheDocument();
+
+    rerender(<{{ComponentName}} variant="secondary" data-testid="component" />);
+    expect(screen.getByTestId('component')).toBeInTheDocument();
+  });
+
+  it('should render different sizes', () => {
+    const { rerender } = render(
+      <{{ComponentName}} size="sm" data-testid="component" />
+    );
+    expect(screen.getByTestId('component')).toBeInTheDocument();
+
+    rerender(<{{ComponentName}} size="md" data-testid="component" />);
+    expect(screen.getByTestId('component')).toBeInTheDocument();
+
+    rerender(<{{ComponentName}} size="lg" data-testid="component" />);
+    expect(screen.getByTestId('component')).toBeInTheDocument();
+  });
+});
+

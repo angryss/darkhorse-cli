@@ -1,0 +1,30 @@
+[package]
+name = "dh-desktop"
+description = "Dark Horse Desktop — Tauri application shell and command bridge"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[build-dependencies]
+tauri-build = { workspace = true }
+
+[dependencies]
+dh-domain = { path = "../dh-domain" }
+dh-application = { path = "../dh-application" }
+dh-infrastructure = { path = "../dh-infrastructure" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+uuid = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+tauri = { workspace = true }
+tauri-plugin-shell = { workspace = true }
+tauri-plugin-updater = { workspace = true }
+tauri-plugin-dialog = { workspace = true }
+tauri-plugin-fs = { workspace = true }
+anyhow = { workspace = true }
+
+[dev-dependencies]
+assert_matches = { workspace = true }

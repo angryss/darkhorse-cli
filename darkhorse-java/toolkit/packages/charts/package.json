@@ -1,0 +1,42 @@
+{
+  "name": "@react-toolkit/charts",
+  "version": "1.0.0",
+  "description": "Multi-chart dashboard component with column, spline area, and pie charts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage"
+  },
+  "keywords": [
+    "react",
+    "charts",
+    "dashboard",
+    "visualization",
+    "analytics",
+    "column-chart",
+    "area-chart",
+    "pie-chart"
+  ],
+  "author": "Frontend Toolkit Team",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "dependencies": {
+    "@react-toolkit/core": "workspace:*",
+    "@react-toolkit/design-tokens": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.3.3"
+  }
+}
+

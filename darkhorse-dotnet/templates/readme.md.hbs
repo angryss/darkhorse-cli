@@ -1,0 +1,111 @@
+# {{project.name}}
+
+> {{project.description}}
+
+## Workspace
+
+- **Architecture:** DDD + Onion Architecture + CQRS (per service)
+- **Backend:** ASP.NET Core (.NET, per service archetype)
+{{#if project.features.frontend}}
+- **Frontend:** {{#if (eq project.frontend.platform "both")}}React (Web) + React Native (Mobile){{else if (eq project.frontend.platform "mobile")}}React Native (Expo){{else}}React{{/if}}
+{{/if}}
+- **Initialized:** {{timestamp}} by DarkHorse .NET CLI v{{cliVersion}}
+
+## Workspace Structure
+
+```
+{{project.name}}/
+├── context/                   ← AI navigation
+├── openspec/                  ← Specs, proposals, workflow
+│   ├── AGENTS.md              ← AI agent rules
+│   ├── specs/
+│   │   ├── project/           ← Roadmap, progress tracker, MVPs
+│   │   ├── architecture/      ← Architecture decisions
+│   │   ├── domain/            ← Bounded contexts, DDD models
+│   │   └── workflow/          ← Development workflow
+│   ├── changes/               ← Active proposals
+│   └── archive/               ← Completed proposals
+├── backend/
+│   ├── apis/                  ← REST API services (darkhorse-dotnet add api)
+│   ├── bffs/                  ← Backend-for-Frontend services (darkhorse-dotnet add bff-api)
+│   └── microservices/         ← Message-driven services (darkhorse-dotnet add microservice)
+{{#if project.features.frontend}}
+├── frontend/
+{{#if (eq project.frontend.platform "both")}}│   ├── web-app/               ← React web application
+│   └── mobile-app/            ← React Native mobile app
+{{else if (eq project.frontend.platform "mobile")}}│   └── mobile-app/            ← React Native mobile app (Expo)
+{{else}}│   └── web-app/               ← React web application
+{{/if}}{{/if}}
+├── deployment/                ← Docker, Kubernetes
+└── .darkhorse.yaml            ← Workspace config
+```
+
+## Adding Services
+
+```bash
+# Add a REST API service
+darkhorse-dotnet add api --name order-api --namespace {{project.name}}.Orders
+
+# Add a Backend-for-Frontend
+darkhorse-dotnet add bff-api --name shell-bff --namespace {{project.name}}.ShellBff
+
+# Add a message-driven microservice
+darkhorse-dotnet add microservice --name notification-ms --namespace {{project.name}}.Notifications
+```
+
+Each service is an isolated .NET solution:
+```
+backend/<category>/<service-name>/
+├── <Namespace>.sln
+├── src/
+│   ├── <Namespace>.Presentation/     ← Controllers / Consumers
+│   ├── <Namespace>.Application/      ← CQRS handlers, use cases
+│   ├── <Namespace>.Domain/           ← Entities, value objects, events
+│   └── <Namespace>.Infrastructure/   ← Repos, DB, messaging clients
+└── tests/
+    ├── <Namespace>.UnitTests/
+    └── <Namespace>.IntegrationTests/
+```
+
+{{#if project.features.frontend}}
+## Frontend
+
+```bash
+{{#if (eq project.frontend.platform "both")}}
+# Start web app
+cd frontend/web-app && npm install && npm run dev
+
+# Start mobile app (separate terminal)
+cd frontend/mobile-app && npm install && npx expo start
+{{else if (eq project.frontend.platform "mobile")}}
+cd frontend/mobile-app && npm install && npx expo start
+{{else}}
+cd frontend/web-app && npm install && npm run dev
+{{/if}}
+```
+
+{{/if}}
+## For AI Agents
+
+Start with `context/00-START-HERE.md`, then read `openspec/AGENTS.md`.
+
+## Development Workflow
+
+```bash
+# Plan a feature or bug fix
+npx darkhorse-dotnet plan
+
+# Implement an approved proposal
+npx darkhorse-dotnet implement
+
+# Troubleshoot a bug
+npx darkhorse-dotnet troubleshoot
+```
+
+1. **Plan** — Generates a proposal in `openspec/changes/`
+2. **Implement** — Executes the approved proposal inside-out (Domain → Application → Infrastructure → Presentation)
+3. **Test** — Run tests, file bugs as BUG proposals
+4. **Archive** — Move completed proposals to `openspec/archive/`
+
+See `openspec/specs/workflow/` for detailed workflow guides.
+

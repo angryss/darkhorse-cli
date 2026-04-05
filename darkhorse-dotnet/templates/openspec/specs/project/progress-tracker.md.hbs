@@ -1,0 +1,64 @@
+# Progress Tracker — {{project.name}} — MVP 1.0
+
+> This file lives at `openspec/changes/mvp-1.0/` alongside the MVP's proposals and tasks.
+> When **all requirements are Done and all tests pass**, archive this MVP:
+> move `openspec/changes/mvp-1.0/` → `openspec/archive/mvp-1.0/` and update `openspec/specs/project/roadmap.md` to `Completed`.
+>
+> See `openspec/specs/project/roadmap.md` for the full MVP overview and naming conventions.
+
+## Current Status
+
+| MVP | Total REQs | Done | In Progress | Blocked | Not Started |
+|-----|-----------|------|-------------|---------|-------------|
+| 1.0 | 0 | 0 | 0 | 0 | 0 |
+
+## Activity Log
+
+| Date | ID | Action | Notes |
+|------|----|--------|-------|
+| {{timestamp}} | — | Workspace initialized | DarkHorse .NET CLI v{{cliVersion}} |
+
+---
+
+## MVP 1.0 — Foundation
+
+### Requirements
+
+| ID | Scope | Priority | Status | Proposal | Notes |
+|----|-------|----------|--------|----------|-------|
+| REQ-1.0-001 | full-slice | High | Not Started | — | _(First requirement — define in roadmap.md)_ |
+
+### Bounded Context Progress
+
+| Context | Entities | Commands | Queries | Tests | Status |
+|---------|----------|----------|---------|-------|--------|
+| _(none yet)_ | 0 | 0 | 0 | 0 | Not started |
+
+### Service Checklist
+
+| Service | Archetype | Scaffolded | Building | Tested | Notes |
+|---------|-----------|-----------|---------|--------|-------|
+| _(none yet)_ | — | ☐ | ☐ | ☐ | Run `darkhorse-dotnet add api` |
+
+---
+
+## Status Values
+
+| Status | Meaning |
+|--------|---------|
+| `Not Started` | No work begun |
+| `In Progress` | Active proposal exists in `openspec/changes/` |
+| `In Review` | Implementation complete, under review |
+| `Done` | All slice components complete and tested |
+| `Blocked` | Waiting on dependency or decision |
+
+## Requirement Scope Reference
+
+| Scope | Full-slice = Default |
+|-------|---------------------|
+| `full-slice` | Domain + Application + Infrastructure + Presentation{{#if project.features.frontend}} + Frontend{{/if}} + Tests |
+| `backend` | Backend layers + Tests only |
+{{#if project.features.frontend}}
+| `frontend` | UI + State + API integration + Tests |
+{{/if}}
+| `infrastructure` | Deployment, DevOps, configuration |

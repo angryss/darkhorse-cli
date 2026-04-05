@@ -1,0 +1,70 @@
+namespace {{project.dotnet.namespace}}.Domain.Examples;
+
+/// <summary>
+/// EXAMPLE: Aggregate Root for a standard API archetype.
+///
+/// The aggregate root is the entry point for all mutations within its boundary.
+/// All state changes go through public methods using domain language (place, cancel, ship).
+/// External code NEVER modifies an aggregate's internal state directly.
+///
+/// Location in a real context:
+///   {Namespace}.Domain/Contexts/{Context}/Entities/Order.cs
+///
+/// DELETE THIS FILE — replace with your real domain aggregate.
+/// </summary>
+public class ExampleAggregate
+{
+    // ---- Identity ----
+    public Guid Id { get; private set; }
+
+    // ---- State ----
+    public string Status { get; private set; } = "Draft";
+
+    // ---- Domain events (collected, published after persistence) ----
+    private readonly List<IDomainEvent> _domainEvents = new();
+    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+
+    // ---- Constructor: use static factory methods, not new() from outside ----
+    private ExampleAggregate() { }
+
+    /// <summary>
+    /// Factory method — uses domain language, not generic "Create".
+    /// </summary>
+    public static ExampleAggregate Place(string customerId)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(customerId);
+
+        var agg = new ExampleAggregate
+        {
+            Id = Guid.NewGuid(),
+            Status = "Placed",
+        };
+
+        // Raise domain event — past tense, naming what happened
+        agg._domainEvents.Add(new ExamplePlacedEvent(agg.Id));
+
+        return agg;
+    }
+
+    /// <summary>
+    /// Domain operation — cancel the aggregate if business rules allow.
+    /// </summary>
+    public void Cancel(string reason)
+    {
+        if (Status == "Cancelled")
+            throw new InvalidOperationException("Already cancelled.");
+
+        Status = "Cancelled";
+        _domainEvents.Add(new ExampleCancelledEvent(Id, reason));
+    }
+
+    public void ClearDomainEvents() => _domainEvents.Clear();
+}
+
+// ---- Domain events (same file for brevity; move to Events/ in real code) ----
+
+public interface IDomainEvent { }
+
+public record ExamplePlacedEvent(Guid AggregateId) : IDomainEvent;
+
+public record ExampleCancelledEvent(Guid AggregateId, string Reason) : IDomainEvent;

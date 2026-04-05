@@ -1,0 +1,87 @@
+﻿# {{project.name}}
+
+> {{project.description}}
+
+## Architecture
+
+- **Archetype:** {{project.archetype}}
+- **Framework:** Quarkus (Java {{project.java.javaVersion}})
+- **Architecture:** DDD + Onion Architecture + CQRS
+- **Build:** Maven
+{{#if project.features.frontend}}
+- **Frontend:** React{{#if project.frontend.toolkit}} + DarkHorse Toolkit{{/if}}
+{{/if}}
+- **Generated:** {{timestamp}} by DarkHorse Java CLI v{{cliVersion}}
+
+## Project Structure
+
+```
+{{project.name}}/
+├── context/          ← AI navigation
+├── openspec/         ← Specs, proposals, workflow
+├── backend/          ← Java/Quarkus services (DDD)
+│   └── {{archetypeCategory}}/
+│       ├── contexts/
+│       └── examples/
+{{#if project.features.frontend}}
+├── frontend/         ← {{#if (eq project.frontend.platform "both")}}React (Web) + React Native (Mobile){{else if (eq project.frontend.platform "mobile")}}React Native mobile app{{else}}React web app{{/if}}
+{{/if}}
+├── deployment/       ← Docker, Kubernetes
+└── .darkhorse.yaml   ← Config
+```
+
+## Getting Started
+
+```bash
+# Build backend
+cd backend/{{archetypeCategory}}
+./mvnw quarkus:dev
+
+{{#if project.features.frontend}}
+{{#if (eq project.frontend.platform "both")}}
+# Start web frontend (separate terminal)
+cd frontend/web-app
+npm install
+npm run dev
+
+# Start mobile app (separate terminal)
+cd frontend/mobile-app
+npm install
+npx expo start
+{{else if (eq project.frontend.platform "mobile")}}
+# Start mobile app (separate terminal)
+cd frontend/mobile-app
+npm install
+npx expo start
+{{else}}
+# Start frontend (separate terminal)
+cd frontend/web-app
+npm install
+npm run dev
+{{/if}}
+{{/if}}
+```
+
+## For AI Agents
+
+Start with `context/00-START-HERE.md`, then read `openspec/AGENTS.md`.
+
+## Development Workflow
+
+```bash
+# Plan a feature or bug fix
+npx darkhorse-java plan
+
+# Implement an approved proposal
+npx darkhorse-java implement
+
+# Troubleshoot a bug
+npx darkhorse-java troubleshoot
+```
+
+1. **Plan** — Generates a proposal in `openspec/changes/`
+2. **Implement** — Executes the approved proposal inside-out (Domain → Application → Infrastructure → Presentation)
+3. **Test** — Run tests, file bugs as BUG proposals
+4. **Archive** — Move completed proposals to `openspec/archive/`
+
+See `openspec/specs/workflow/` for detailed workflow guides.

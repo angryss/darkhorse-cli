@@ -1,0 +1,79 @@
+﻿# Roadmap — {{project.name}}
+
+> Project roadmap and milestone definitions. Each MVP is a **fully deliverable piece of work** — independently deployable, testable, and demonstrably valuable. **MVPs build on each other** — MVP 1.1 assumes MVP 1.0 is complete and archived.
+
+## MVP Lifecycle
+
+```
+openspec/changes/mvp-X.Y/          ← Active MVP
+  progress-tracker.md              ← Tracks all REQs / BUGs / ENHs for this MVP
+  REQ-X.Y-001/proposal.md          ← Individual requirement proposals
+  REQ-X.Y-001/tasks.md
+  BUG-X.Y-001/proposal.md
+
+                ↓ All Done + Tests Pass
+
+openspec/archive/mvp-X.Y/          ← Completed MVP (historical)
+  progress-tracker.md
+  REQ-X.Y-001/...
+```
+
+**Archiving rule:** When every row in `openspec/changes/mvp-X.Y/progress-tracker.md` is `Done` and the full test suite passes, move the entire `openspec/changes/mvp-X.Y/` folder to `openspec/archive/mvp-X.Y/` and update the MVP status in this file to `Completed`. The next MVP folder becomes the active working directory.
+
+## MVPs
+
+| MVP | Status | Description |
+|-----|--------|-------------|
+| 1.0 | Not Started | Core functionality |
+
+## Naming Convention
+
+- Features: `REQ-<MVP>-<###>` (e.g., REQ-1.0-001)
+- Enhancements: `ENH-<MVP>-<###>`
+- Bugs: `BUG-<MVP>-<###>`
+
+## Classification
+
+| Type | Scope |
+|------|-------|
+| `full-slice` | Backend + Frontend + Deployment + Tests |
+| `backend` | API + Service + Domain + Tests |
+| `frontend` | UI + State + API Integration + Tests |
+| `infrastructure` | Deployment, DevOps, Config |
+
+---
+
+## MVP 1.0 — Core
+
+### Goals
+- [ ] Define bounded contexts
+- [ ] Implement core domain logic
+- [ ] REST API endpoints
+- [ ] Basic tests (80%+ coverage)
+{{#if project.features.frontend}}
+- [ ] Basic frontend UI
+{{/if}}
+
+**Exit Criteria:**
+- Core bounded context defined and implemented
+- Critical use cases tested (80%+ coverage)
+- Application runs locally
+
+### Requirements
+
+| ID | Type | Priority | Description | Status |
+|----|------|----------|-------------|--------|
+| REQ-1.0-001 | feature | High | Define your first requirement | Not Started |
+
+---
+
+## Adding a New MVP
+
+After archiving the current MVP, create its successor folder:
+
+```
+openspec/changes/mvp-X.Y/
+  progress-tracker.md
+```
+
+Then define new requirements using `REQ-X.Y-###` IDs and add them to the roadmap below.

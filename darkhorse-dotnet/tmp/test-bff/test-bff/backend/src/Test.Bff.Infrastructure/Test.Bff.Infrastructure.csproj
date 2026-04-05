@@ -1,0 +1,31 @@
+<!-- Test.Bff.Infrastructure — REST clients, message senders (BFF-API archetype) -->
+<!-- NOTE: No persistence dependencies. BFF does NOT own data. -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>Test.Bff.Infrastructure</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Onion: Infrastructure depends on Application + Domain -->
+    <ProjectReference Include="../Test.Bff.Application/Test.Bff.Application.csproj" />
+    <ProjectReference Include="../Test.Bff.Domain/Test.Bff.Domain.csproj" />
+    <ProjectReference Include="../Test.Bff.Common/Test.Bff.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- REST Client (calls downstream APIs) -->
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.*" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="9.0.*" />
+
+    <!-- Messaging (commands dispatched to broker) -->
+    <PackageReference Include="MassTransit" Version="8.2.*" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.*" />
+
+    <!-- NOTE: No EF Core. No database drivers. BFF does NOT persist. -->
+  </ItemGroup>
+
+</Project>

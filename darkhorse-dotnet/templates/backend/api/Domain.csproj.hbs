@@ -1,0 +1,15 @@
+<!-- {{project.dotnet.namespace}}.Domain — Entities, value objects, domain events (API archetype) -->
+<!-- Domain has ZERO external dependencies — this is the core of Onion Architecture -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net{{project.dotnet.dotnetVersion}}.0</TargetFramework>
+    <RootNamespace>{{project.dotnet.namespace}}.Domain</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!-- No ProjectReference — Domain depends on NOTHING -->
+  <!-- No PackageReference — Domain has ZERO external dependencies -->
+
+</Project>

@@ -1,0 +1,98 @@
+# 50 — Search Queries
+
+> Search patterns for AI agents to find code by architectural pattern in **{{project.name}}** (archetype: {{project.archetype}}).
+
+## Find by Layer
+
+{{#if (eq project.archetype "api")}}
+| Pattern | Query |
+|---------|-------|
+| Domain entities | `backend/src/*/Domain/Contexts/*/Entities/**/*.cs` |
+| Value objects | Search for `record` in `*Domain/Contexts/*/ValueObjects/` |
+| Domain events | Search for `Event` in `*Domain/Contexts/*/Events/` |
+| Commands | `*Application/Contexts/*/Commands/**/*.cs` |
+| Queries | `*Application/Contexts/*/Queries/**/*.cs` |
+| Handlers | Search for `Handler` in `*Application/Contexts/` |
+| Repository interfaces | Search for `IRepository` in `*Domain/Contexts/` |
+| Repository implementations | Search for `Repository` in `*Infrastructure/Contexts/` |
+| REST controllers | `*Presentation/Contexts/*/Controllers/**/*.cs` |
+| EF Core DbContext | Search for `DbContext` in `*Infrastructure/Persistence/` |
+{{/if}}
+
+{{#if (eq project.archetype "bff-api")}}
+| Pattern | Query |
+|---------|-------|
+| API client interfaces | Search for `IClient` or `IApiClient` in `*Domain/Contexts/` |
+| Message sender interfaces | Search for `ISender` in `*Domain/Contexts/` |
+| Command handlers | `*Application/Contexts/*/Commands/**/*.cs` |
+| Query handlers | `*Application/Contexts/*/Queries/**/*.cs` |
+| HttpClient implementations | Search for `Client` in `*Infrastructure/Clients/` |
+| MassTransit senders | Search for `Sender` in `*Infrastructure/Messaging/` |
+| REST controllers | `*Presentation/Contexts/*/Controllers/**/*.cs` |
+| Auth middleware | Search for `Auth` or `Permission` in `*Presentation/` |
+{{/if}}
+
+{{#if (eq project.archetype "microservice")}}
+| Pattern | Query |
+|---------|-------|
+| Domain entities | `*Domain/Contexts/*/Entities/**/*.cs` |
+| Value objects | Search for `record` in `*Domain/Contexts/*/ValueObjects/` |
+| Domain events | Search for `Event` in `*Domain/Contexts/*/Events/` |
+| Command handlers | `*Application/Contexts/*/Commands/**/*.cs` |
+| Event handlers | `*Application/Contexts/*/Events/**/*.cs` |
+| Query handlers | `*Application/Contexts/*/Queries/**/*.cs` |
+| Repository interfaces | Search for `IRepository` in `*Domain/Contexts/` |
+| Repository implementations | Search for `Repository` in `*Infrastructure/Contexts/` |
+| MassTransit consumers | Search for `IConsumer` in `*Presentation/Contexts/` |
+| Integration event publishers | Search for `Publish` or `IPublishEndpoint` in `*Infrastructure/` |
+{{/if}}
+
+## Find by Bounded Context
+
+```
+backend/{{archetypeCategory}}/src/{Namespace}.Domain/Contexts/<ContextName>/         ← grep here for business rules
+backend/{{archetypeCategory}}/src/{Namespace}.Application/Contexts/<ContextName>/    ← grep here for use cases
+backend/{{archetypeCategory}}/src/{Namespace}.Infrastructure/Contexts/<ContextName>/ ← grep here for persistence/messaging
+backend/{{archetypeCategory}}/src/{Namespace}.Presentation/Contexts/<ContextName>/   ← grep here for API endpoints
+```
+
+## Find by Convention
+
+| Convention | Pattern |
+|------------|---------|
+| Aggregate roots | Classes inheriting `AggregateRoot` or `Entity<T>` |
+| CQRS commands | Classes ending in `Command` implementing `IRequest<T>` |
+| CQRS queries | Classes ending in `Query` implementing `IRequest<T>` |
+| MediatR handlers | Classes implementing `IRequestHandler<TRequest, TResponse>` |
+| MassTransit consumers | Classes implementing `IConsumer<T>` |
+| REST endpoints | Classes with `[ApiController]` attribute |
+| Tests | `*Tests.cs` or `*Test.cs` files |
+
+{{#if project.features.frontend}}
+## Frontend Search
+
+| Pattern | Query |
+|---------|-------|
+{{#if (eq project.frontend.platform "both")}}
+| React components | `frontend/web-app/src/components/**/*.tsx` |
+| Pages | `frontend/web-app/src/pages/**/*.tsx` |
+| Custom hooks (web) | `frontend/web-app/src/hooks/use*.ts` |
+| API services (web) | `frontend/web-app/src/services/**/*.ts` |
+| Screens & layouts | `frontend/mobile-app/app/**/*.tsx` |
+| Shared components (mobile) | `frontend/mobile-app/src/components/**/*.tsx` |
+| Custom hooks (mobile) | `frontend/mobile-app/src/hooks/use*.ts` |
+| API services (mobile) | `frontend/mobile-app/src/services/**/*.ts` |
+{{else if (eq project.frontend.platform "mobile")}}
+| Screens & layouts | `frontend/mobile-app/app/**/*.tsx` |
+| Shared components | `frontend/mobile-app/src/components/**/*.tsx` |
+| Custom hooks | `frontend/mobile-app/src/hooks/use*.ts` |
+| API services | `frontend/mobile-app/src/services/**/*.ts` |
+| State stores | `frontend/mobile-app/src/store/**/*.ts` |
+{{else}}
+| React components | `frontend/web-app/src/components/**/*.tsx` |
+| Pages | `frontend/web-app/src/pages/**/*.tsx` |
+| Custom hooks | `frontend/web-app/src/hooks/use*.ts` |
+| API services | `frontend/web-app/src/services/**/*.ts` |
+| State stores | `frontend/web-app/src/store/**/*.ts` |
+{{/if}}
+{{/if}}

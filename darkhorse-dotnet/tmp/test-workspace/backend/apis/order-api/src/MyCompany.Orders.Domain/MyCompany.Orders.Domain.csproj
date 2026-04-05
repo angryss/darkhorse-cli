@@ -1,0 +1,15 @@
+<!-- MyCompany.Orders.Domain — Entities, value objects, domain events (API archetype) -->
+<!-- Domain has ZERO external dependencies — this is the core of Onion Architecture -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>MyCompany.Orders.Domain</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!-- No ProjectReference — Domain depends on NOTHING -->
+  <!-- No PackageReference — Domain has ZERO external dependencies -->
+
+</Project>

@@ -1,0 +1,31 @@
+<!-- DarkHorse.Web.Infrastructure — REST clients, message senders (BFF-API archetype) -->
+<!-- NOTE: No persistence dependencies. BFF does NOT own data. -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>DarkHorse.Web.Infrastructure</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Onion: Infrastructure depends on Application + Domain -->
+    <ProjectReference Include="../DarkHorse.Web.Application/DarkHorse.Web.Application.csproj" />
+    <ProjectReference Include="../DarkHorse.Web.Domain/DarkHorse.Web.Domain.csproj" />
+    <ProjectReference Include="../DarkHorse.Web.Common/DarkHorse.Web.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- REST Client (calls downstream APIs) -->
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.*" />
+    <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="8.0.*" />
+
+    <!-- Messaging (commands dispatched to broker) -->
+    <PackageReference Include="MassTransit" Version="8.2.*" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.*" />
+
+    <!-- NOTE: No EF Core. No database drivers. BFF does NOT persist. -->
+  </ItemGroup>
+
+</Project>

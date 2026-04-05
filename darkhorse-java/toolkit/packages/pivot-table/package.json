@@ -1,0 +1,40 @@
+{
+  "name": "@react-toolkit/pivot-table",
+  "version": "1.0.0",
+  "description": "Interactive pivot table component for multi-dimensional data analysis",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage"
+  },
+  "keywords": [
+    "react",
+    "pivot-table",
+    "data-analysis",
+    "aggregation",
+    "pivot",
+    "crosstab"
+  ],
+  "author": "Frontend Toolkit Team",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "dependencies": {
+    "@react-toolkit/core": "workspace:*",
+    "@react-toolkit/design-tokens": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.3.3"
+  }
+}
+

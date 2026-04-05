@@ -1,0 +1,30 @@
+namespace {{project.dotnet.namespace}}.Domain.Examples;
+
+/// <summary>
+/// EXAMPLE: Repository interface for a microservice archetype.
+///
+/// Repository interfaces belong in the DOMAIN layer. The implementation lives
+/// in the Infrastructure layer. In a microservice, repositories are used by
+/// command handlers triggered by MassTransit consumers.
+///
+/// Rules:
+/// - One repository per Aggregate Root (not per entity)
+/// - Methods use domain language (ProcessAsync, not CreateAsync)
+/// - Methods accept/return domain entities, never EF Core or message DTOs
+///
+/// Location in a real context:
+///   {Namespace}.Domain/Contexts/{Context}/Interfaces/IPaymentRepository.cs
+///
+/// DELETE THIS FILE — replace with your real repository interface.
+/// </summary>
+public interface IExampleRepository
+{
+    /// <summary>Save a new or modified aggregate. Upsert semantics.</summary>
+    Task SaveAsync(ExampleAggregate aggregate, CancellationToken ct = default);
+
+    /// <summary>Find by correlation/aggregate ID. Returns null if not found.</summary>
+    Task<ExampleAggregate?> FindByIdAsync(Guid id, CancellationToken ct = default);
+
+    /// <summary>Find all items in a given status. Returns empty list if none.</summary>
+    Task<IReadOnlyList<ExampleAggregate>> FindByStatusAsync(string status, CancellationToken ct = default);
+}

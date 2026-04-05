@@ -1,0 +1,390 @@
+/* GanttChart Component Styles */
+@import '@react-toolkit/design-tokens';
+
+/* Main Container */
+.gantt {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--border-radius-lg);
+  overflow: hidden;
+  font-family: var(--font-family-sans);
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  gap: var(--spacing-2);
+  padding: var(--spacing-3);
+  background-color: var(--color-gray-50);
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.toolbarButton {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2);
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-gray-700);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.toolbarButton:hover {
+  background-color: var(--color-gray-50);
+  border-color: var(--color-primary-500);
+}
+
+.toolbarButtonIcon {
+  font-size: var(--font-size-base);
+}
+
+.toolbarButtonLabel {
+  display: inline;
+}
+
+@media (max-width: 768px) {
+  .toolbarButtonLabel {
+    display: none;
+  }
+}
+
+/* Main Content */
+.ganttContent {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+.ganttGrid {
+  flex-shrink: 0;
+  overflow: hidden;
+  border-right: 1px solid var(--color-gray-300);
+}
+
+.ganttTimeline {
+  flex: 1;
+  overflow: auto;
+}
+
+/* Splitter */
+.splitter {
+  width: 8px;
+  background-color: var(--color-gray-200);
+  cursor: col-resize;
+  position: relative;
+  transition: background-color var(--transition-fast);
+  z-index: 10;
+}
+
+.splitter:hover {
+  background-color: var(--color-primary-400);
+}
+
+.splitterDragging {
+  background-color: var(--color-primary-500);
+}
+
+.splitterHandle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 4px;
+  height: 40px;
+  background-color: var(--color-white);
+  border-radius: var(--border-radius-full);
+}
+
+/* Grid */
+.grid {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--color-white);
+}
+
+.gridHeader {
+  display: flex;
+  background-color: var(--color-gray-100);
+  border-bottom: 2px solid var(--color-gray-300);
+  font-weight: var(--font-weight-semibold);
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
+
+.gridHeaderCell {
+  padding: var(--spacing-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-900);
+  border-right: 1px solid var(--color-gray-200);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gridBody {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.gridRow {
+  display: flex;
+  border-bottom: 1px solid var(--color-gray-200);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.gridRow:hover {
+  background-color: var(--color-gray-50);
+}
+
+.gridRowSelected {
+  background-color: var(--color-primary-50);
+}
+
+.gridRowSummary {
+  font-weight: var(--font-weight-semibold);
+  background-color: var(--color-gray-50);
+}
+
+.gridCell {
+  display: flex;
+  align-items: center;
+  padding: var(--spacing-2) var(--spacing-3);
+  font-size: var(--font-size-sm);
+  color: var(--color-gray-900);
+  border-right: 1px solid var(--color-gray-200);
+  overflow: hidden;
+}
+
+.gridCellContent {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.expandButton {
+  width: 20px;
+  height: 20px;
+  margin-right: var(--spacing-2);
+  padding: 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-gray-600);
+  background: none;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.expandButton:hover {
+  color: var(--color-primary-600);
+}
+
+/* Timeline */
+.timeline {
+  position: relative;
+  height: 100%;
+  overflow: auto;
+}
+
+.timelineHeader {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: var(--color-gray-100);
+  border-bottom: 2px solid var(--color-gray-300);
+}
+
+.timelineHeaderContent {
+  display: flex;
+}
+
+.timelineHeaderCell {
+  flex-shrink: 0;
+  padding: var(--spacing-3);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-gray-900);
+  border-right: 1px solid var(--color-gray-200);
+  text-align: center;
+}
+
+.timelineHeaderCellWeekend {
+  background-color: var(--color-gray-200);
+}
+
+.timelineBody {
+  position: relative;
+  min-height: 100%;
+}
+
+.timelineRow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.timelineTasks {
+  position: relative;
+}
+
+.timelineGridlines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  pointer-events: none;
+}
+
+.timelineGridline {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-right: 1px solid var(--color-gray-200);
+}
+
+.timelineGridlineWeekend {
+  background-color: var(--color-gray-50);
+}
+
+/* Task Bar */
+.taskBar {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  padding: 0 var(--spacing-2);
+  background-color: var(--color-primary-500);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  overflow: hidden;
+  user-select: none;
+}
+
+.taskBar:hover {
+  box-shadow: var(--shadow-md);
+  z-index: 1;
+}
+
+.taskBarSelected {
+  outline: 2px solid var(--color-primary-700);
+  outline-offset: 2px;
+  z-index: 2;
+}
+
+.taskBarSummary {
+  background-color: var(--color-gray-800);
+  height: 12px !important;
+  border-radius: 0;
+  clip-path: polygon(0 0, 100% 0, 100% 50%, 95% 100%, 5% 100%, 0 50%);
+}
+
+.taskBarDragging {
+  opacity: 0.8;
+  cursor: move;
+  z-index: 3;
+}
+
+.taskBarProgress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background-color: var(--color-primary-700);
+  border-radius: var(--border-radius-md) 0 0 var(--border-radius-md);
+}
+
+.taskBarLabel {
+  position: relative;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-white);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  z-index: 1;
+}
+
+.taskBarHandle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 8px;
+  background-color: rgba(255, 255, 255, 0.3);
+  cursor: ew-resize;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.taskBar:hover .taskBarHandle {
+  opacity: 1;
+}
+
+.taskBarHandleLeft {
+  left: 0;
+  border-radius: var(--border-radius-md) 0 0 var(--border-radius-md);
+}
+
+.taskBarHandleRight {
+  right: 0;
+  border-radius: 0 var(--border-radius-md) var(--border-radius-md) 0;
+}
+
+.taskBarBaseline {
+  position: absolute;
+  background-color: var(--color-gray-400);
+  border-radius: var(--border-radius-sm);
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+/* Dependency Lines */
+.dependencyLines {
+  position: absolute;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.dependencyLine {
+  stroke: var(--color-gray-600);
+  stroke-width: 2;
+  fill: none;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .ganttGrid {
+    min-width: 300px;
+  }
+  
+  .taskBarLabel {
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .ganttGrid {
+    min-width: 250px;
+  }
+  
+  .toolbar {
+    flex-wrap: wrap;
+  }
+  
+  .taskBarLabel {
+    display: none;
+  }
+}
+

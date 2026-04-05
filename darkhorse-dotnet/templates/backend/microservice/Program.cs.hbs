@@ -1,0 +1,16 @@
+﻿// {{project.dotnet.namespace}}.Presentation — Entry point (Microservice archetype)
+// Minimal ASP.NET Core host for a message-driven microservice.
+// Primary interface is MassTransit consumers, NOT HTTP endpoints.
+
+var builder = WebApplication.CreateBuilder(args);
+
+// TODO: Register MediatR, FluentValidation, AutoMapper from Application layer
+// TODO: Register MassTransit consumers and EF Core from Infrastructure layer
+// TODO: Register Serilog from Presentation config
+
+builder.Services.AddHealthChecks();
+
+var app = builder.Build();
+
+app.MapHealthChecks("/healthz");
+app.Run();

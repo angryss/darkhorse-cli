@@ -1,0 +1,32 @@
+<!-- {{project.dotnet.namespace}}.Infrastructure — Persistence, messaging (API archetype) -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net{{project.dotnet.dotnetVersion}}.0</TargetFramework>
+    <RootNamespace>{{project.dotnet.namespace}}.Infrastructure</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Onion: Infrastructure depends on Application + Domain -->
+    <ProjectReference Include="../{{project.dotnet.namespace}}.Application/{{project.dotnet.namespace}}.Application.csproj" />
+    <ProjectReference Include="../{{project.dotnet.namespace}}.Domain/{{project.dotnet.namespace}}.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Workspace-shared contracts (integration events, shared abstractions) -->
+    <ProjectReference Include="../../../../shared/{{project.workspaceNamespace}}.Contracts/{{project.workspaceNamespace}}.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Persistence (API archetype owns its data) -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="{{project.dotnet.dotnetVersion}}.0.*" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="{{project.dotnet.dotnetVersion}}.0.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="{{project.dotnet.dotnetVersion}}.0.*">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,46 @@
+namespace DarkHorse.Mobile.Common.Examples;
+
+/// <summary>
+/// EXAMPLE: Query handler for a Microservice archetype.
+///
+/// Microservice queries read from the service's own database. They may
+/// use optimised read models (CQRS) or query the write model directly.
+///
+/// Queries can be triggered by inbound messages OR by internal service calls.
+/// If exposed externally, add a thin REST endpoint that delegates here.
+///
+/// Location in a real context:
+///   {Namespace}.Application/Contexts/{Context}/Queries/GetOrderByIdQueryHandler.cs
+/// </summary>
+public class ExampleQueryHandler
+{
+    // Inject read repository or read model
+    // private readonly IOrderReadRepository _readRepository;
+
+    /// <summary>
+    /// Handle a query against the service's own data store.
+    ///
+    /// Pattern:
+    /// 1. Validate the query
+    /// 2. Load from local read model or repository
+    /// 3. Map to DTO
+    /// 4. Return the DTO
+    ///
+    /// NOTE: Microservices own their data. Queries hit the local database,
+    /// never a downstream API. If data lives elsewhere, use integration events
+    /// to replicate it into a local read model.
+    /// </summary>
+    public object Handle(/* GetOrderByIdQuery query */)
+    {
+        // 1. Validate
+        // ArgumentNullException.ThrowIfNull(query.OrderId);
+
+        // 2. Load from local store
+        // var order = await _readRepository.GetByIdAsync(query.OrderId);
+
+        // 3. Map to DTO
+        // return OrderDto.From(order);
+
+        throw new NotImplementedException("Replace with real implementation");
+    }
+}

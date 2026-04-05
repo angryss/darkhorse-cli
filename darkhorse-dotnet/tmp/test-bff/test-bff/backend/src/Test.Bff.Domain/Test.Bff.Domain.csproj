@@ -1,0 +1,16 @@
+<!-- Test.Bff.Domain — Interfaces and contracts ONLY (BFF-API archetype) -->
+<!-- BFF Domain: No entities, no aggregates, no domain logic execution -->
+<!-- Contains: API client interfaces, message sender interfaces, shared contracts -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>Test.Bff.Domain</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!-- No ProjectReference — Domain depends on NOTHING -->
+  <!-- No PackageReference — Domain has ZERO external dependencies -->
+
+</Project>

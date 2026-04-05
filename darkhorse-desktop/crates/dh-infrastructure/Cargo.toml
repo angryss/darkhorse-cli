@@ -1,0 +1,24 @@
+[package]
+name = "dh-infrastructure"
+description = "Dark Horse Desktop — infrastructure: SQLite persistence, filesystem access, settings, logging, and update support"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+dh-domain = { path = "../dh-domain" }
+dh-application = { path = "../dh-application" }
+serde = { workspace = true }
+serde_json = { workspace = true }
+chrono = { workspace = true }
+uuid = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+tokio = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+rusqlite = { workspace = true }
+
+[dev-dependencies]
+assert_matches = { workspace = true }

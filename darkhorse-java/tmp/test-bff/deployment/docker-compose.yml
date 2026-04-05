@@ -1,0 +1,35 @@
+﻿# test-bff — Docker Compose
+
+services:
+  backend:
+    build:
+      context: ../backend/bffs
+      dockerfile: src/main/docker/Dockerfile.jvm
+    ports:
+      - "8080:8080"
+    environment:
+      QUARKUS_PROFILE: dev
+    networks:
+      - app-network
+
+  # Uncomment as needed:
+  # postgres:
+  #   image: postgres:16-alpine
+  #   ports:
+  #     - "5432:5432"
+  #   environment:
+  #     POSTGRES_DB: test-bff
+  #     POSTGRES_USER: app
+  #     POSTGRES_PASSWORD: changeme
+  #   volumes:
+  #     - postgres-data:/var/lib/postgresql/data
+  #   networks:
+  #     - app-network
+
+
+networks:
+  app-network:
+    driver: bridge
+
+# volumes:
+#   postgres-data:

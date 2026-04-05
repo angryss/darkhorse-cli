@@ -1,0 +1,40 @@
+{
+  "name": "@react-toolkit/chat-ui",
+  "version": "1.0.0",
+  "description": "Real-time conversational UI component with typing indicators and suggestions",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "react",
+    "chat",
+    "messaging",
+    "conversation",
+    "ui",
+    "component"
+  ],
+  "author": "React Toolkit",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "dependencies": {
+    "@react-toolkit/core": "workspace:*",
+    "@react-toolkit/design-tokens": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "typescript": "^5.0.0"
+  }
+}
+

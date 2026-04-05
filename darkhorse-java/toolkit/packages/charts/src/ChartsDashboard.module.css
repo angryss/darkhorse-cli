@@ -1,0 +1,129 @@
+/**
+ * ChartsDashboard Component Styles
+ */
+
+.dashboard {
+  width: 100%;
+  font-family: var(--font-family-base, system-ui, -apple-system, sans-serif);
+  background: var(--color-white, #ffffff);
+}
+
+.dashboard.dark {
+  background: var(--color-gray-900, #111827);
+}
+
+.grid {
+  display: grid;
+  width: 100%;
+}
+
+/* Panel */
+.panel {
+  background: var(--color-white, #ffffff);
+  border-radius: var(--radius-lg, 8px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow var(--duration-normal, 150ms);
+}
+
+.panel.bordered {
+  border: 1px solid var(--color-gray-200, #e5e7eb);
+}
+
+.panel.clickable {
+  cursor: pointer;
+}
+
+.panel.clickable:hover {
+  box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
+}
+
+.dark .panel {
+  background: var(--color-gray-800, #1f2937);
+}
+
+.dark .panel.bordered {
+  border-color: var(--color-gray-700, #374151);
+}
+
+/* Panel Header */
+.panelHeader {
+  padding: var(--spacing-4, 16px) var(--spacing-4, 16px) var(--spacing-3, 12px);
+  border-bottom: 1px solid var(--color-gray-200, #e5e7eb);
+}
+
+.dark .panelHeader {
+  border-bottom-color: var(--color-gray-700, #374151);
+}
+
+.panelTitle {
+  margin: 0;
+  font-size: var(--font-size-lg, 18px);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--color-gray-900, #111827);
+}
+
+.dark .panelTitle {
+  color: var(--color-gray-100, #f3f4f6);
+}
+
+/* Panel Body */
+.panelBody {
+  flex: 1;
+  padding: var(--spacing-4, 16px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Chart Error */
+.chartError {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: var(--color-red-600, #dc2626);
+  font-size: var(--font-size-sm, 14px);
+}
+
+.dark .chartError {
+  color: var(--color-red-400, #f87171);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .panelBody {
+    padding: var(--spacing-3, 12px);
+  }
+  
+  .panelTitle {
+    font-size: var(--font-size-base, 16px);
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  .dashboard:not(.dark) {
+    background: var(--color-gray-900, #111827);
+  }
+  
+  .dashboard:not(.dark) .panel {
+    background: var(--color-gray-800, #1f2937);
+    border-color: var(--color-gray-700, #374151);
+  }
+  
+  .dashboard:not(.dark) .panelHeader {
+    border-bottom-color: var(--color-gray-700, #374151);
+  }
+  
+  .dashboard:not(.dark) .panelTitle {
+    color: var(--color-gray-100, #f3f4f6);
+  }
+  
+  .dashboard:not(.dark) .chartError {
+    color: var(--color-red-400, #f87171);
+  }
+}
+

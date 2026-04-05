@@ -1,0 +1,34 @@
+<!-- DarkHorse.Mobile.Infrastructure — Persistence + messaging (Microservice archetype) -->
+<!-- Microservice owns its data and communicates via message broker -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>DarkHorse.Mobile.Infrastructure</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../DarkHorse.Mobile.Application/DarkHorse.Mobile.Application.csproj" />
+    <ProjectReference Include="../DarkHorse.Mobile.Domain/DarkHorse.Mobile.Domain.csproj" />
+    <ProjectReference Include="../DarkHorse.Mobile.Common/DarkHorse.Mobile.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Persistence (microservice owns its data) -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.*" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.*">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+
+    <!-- Messaging (message-driven, primary interface) -->
+    <PackageReference Include="MassTransit" Version="8.2.*" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.2.*" />
+
+    <!-- NOTE: No REST client dependency. Microservice does not call downstream APIs. -->
+  </ItemGroup>
+
+</Project>

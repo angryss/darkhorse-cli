@@ -1,0 +1,9 @@
+﻿{
+  "servers": {
+    "darkhorse": {
+      "command": "npx",
+      "args": ["darkhorse-java", "mcp-serve"],
+      "env": {}
+    }
+  }
+}

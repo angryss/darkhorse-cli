@@ -1,0 +1,48 @@
+namespace Test.Ms.Common.Examples;
+
+/// <summary>
+/// EXAMPLE: Command handler for a Microservice archetype.
+///
+/// Microservice command handlers are triggered by inbound messages from
+/// a broker (RabbitMQ via MassTransit), NOT by HTTP requests. They execute
+/// domain logic and persist state.
+///
+/// Location in a real context:
+///   {Namespace}.Application/Contexts/{Context}/Commands/PlaceOrderCommandHandler.cs
+/// </summary>
+public class ExampleCommandHandler
+{
+    // Inject repository and event publisher
+    // private readonly IOrderRepository _orderRepository;
+    // private readonly IIntegrationEventPublisher _eventPublisher;
+
+    /// <summary>
+    /// Handle an inbound command message from the broker.
+    ///
+    /// Pattern:
+    /// 1. Deserialise the inbound message (handled by MassTransit)
+    /// 2. Validate the command payload
+    /// 3. Execute domain logic (create/modify aggregate)
+    /// 4. Persist via repository
+    /// 5. Publish integration event for other services
+    ///
+    /// Triggered by: MassTransit consumer (IConsumer&lt;PlaceOrderMessage&gt;)
+    /// NOT triggered by: HTTP endpoint
+    /// </summary>
+    public void Handle(/* PlaceOrderMessage message */)
+    {
+        // 1. Deserialise is handled by MassTransit
+
+        // 2. Validate
+        // ArgumentNullException.ThrowIfNull(message.CustomerId);
+
+        // 3. Execute domain logic
+        // var order = Order.Place(message.CustomerId, message.Items);
+
+        // 4. Persist
+        // await _orderRepository.SaveAsync(order);
+
+        // 5. Publish integration event (other services may react)
+        // await _eventPublisher.PublishAsync(new OrderPlacedIntegrationEvent(order.Id));
+    }
+}

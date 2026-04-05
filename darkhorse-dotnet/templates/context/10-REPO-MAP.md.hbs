@@ -1,0 +1,222 @@
+﻿# 10 — Repository Map
+
+> Folder layout for **{{project.name}}**.
+
+## Top-Level Structure
+
+| Folder | Purpose |
+|--------|---------|
+| `context/` | AI navigation — helps agents understand the repo |
+| `openspec/` | Specs, proposals, archive — spec-driven development |
+| `backend/` | .NET services organized by archetype category |
+{{#if project.features.frontend}}
+| `frontend/` | {{#if (eq project.frontend.platform "both")}}React web + React Native mobile apps{{else if (eq project.frontend.platform "mobile")}}React Native mobile app{{else}}React web app{{/if}} |
+{{/if}}
+| `deployment/` | Docker, Kubernetes, deployment scripts |
+
+## Backend Structure
+
+{{#if project.archetype}}
+{{#if (eq project.archetype "api")}}
+```
+backend/
+└── apis/
+    └── {{project.name}}/                                  ← This API service
+        ├── {{project.dotnet.namespace}}.sln
+        ├── src/
+        │   ├── {{project.dotnet.namespace}}.Presentation/     ← ASP.NET Core controllers, middleware
+        │   │   └── Contexts/
+        │   │       └── <ContextName>/
+        │   │           └── Controllers/                       ← REST endpoints
+        │   ├── {{project.dotnet.namespace}}.Application/      ← Use cases, CQRS handlers, DTOs
+        │   │   ├── Contexts/
+        │   │   │   └── <ContextName>/
+        │   │   │       ├── Commands/                          ← Command handlers (write path)
+        │   │   │       ├── Queries/                           ← Query handlers (read path)
+        │   │   │       └── DTOs/                              ← Data transfer objects
+        │   │   └── Examples/                                  ← CQRS example handlers (delete after use)
+        │   ├── {{project.dotnet.namespace}}.Domain/           ← Entities, value objects, events
+        │   │   └── Contexts/
+        │   │       └── <ContextName>/
+        │   │           ├── Entities/                          ← Aggregates, entities
+        │   │           ├── ValueObjects/                      ← Immutable value types
+        │   │           ├── Events/                            ← Domain events
+        │   │           └── Interfaces/                        ← Repository interfaces
+        │   └── {{project.dotnet.namespace}}.Infrastructure/   ← Repos, DB, messaging
+        │       ├── Persistence/                               ← EF Core DbContext, configurations
+        │       └── Contexts/
+        │           └── <ContextName>/
+        │               └── Repositories/                      ← Repository implementations
+        └── tests/
+            ├── {{project.dotnet.namespace}}.UnitTests/
+            └── {{project.dotnet.namespace}}.IntegrationTests/
+```
+{{/if}}
+{{#if (eq project.archetype "bff-api")}}
+```
+backend/
+└── bffs/
+    └── {{project.name}}/                                  ← This BFF service
+        ├── {{project.dotnet.namespace}}.sln
+        ├── src/
+        │   ├── {{project.dotnet.namespace}}.Presentation/     ← ASP.NET Core controllers, auth middleware
+        │   │   └── Contexts/
+        │   │       └── <ContextName>/
+        │   │           └── Controllers/                       ← Frontend-facing endpoints
+        │   ├── {{project.dotnet.namespace}}.Application/      ← CQRS: queries → APIs, commands → broker
+        │   │   ├── Contexts/
+        │   │   │   └── <ContextName>/
+        │   │   │       ├── Commands/                          ← Command handlers (→ broker)
+        │   │   │       ├── Queries/                           ← Query handlers (→ API clients)
+        │   │   │       └── DTOs/                              ← Frontend-facing DTOs
+        │   │   └── Examples/                                  ← CQRS example handlers (delete after use)
+        │   ├── {{project.dotnet.namespace}}.Domain/           ← Contracts/interfaces ONLY (no entities)
+        │   │   └── Contexts/
+        │   │       └── <ContextName>/
+        │   │           └── Contracts/                         ← API client and message sender interfaces
+        │   └── {{project.dotnet.namespace}}.Infrastructure/   ← REST clients, message senders
+        │       ├── Clients/                                   ← Typed HttpClient implementations
+        │       ├── Messaging/                                 ← MassTransit message sender implementations
+        │       └── Contexts/
+        │           └── <ContextName>/
+        │               ├── Clients/                           ← Context-specific API clients
+        │               └── Messaging/                         ← Context-specific message senders
+        └── tests/
+            ├── {{project.dotnet.namespace}}.UnitTests/
+            └── {{project.dotnet.namespace}}.IntegrationTests/
+```
+{{/if}}
+{{#if (eq project.archetype "microservice")}}
+```
+backend/
+└── microservices/
+    └── {{project.name}}/                                  ← This microservice
+        ├── {{project.dotnet.namespace}}.sln
+        ├── src/
+        │   ├── {{project.dotnet.namespace}}.Presentation/     ← MassTransit consumers, health endpoints
+        │   │   └── Contexts/
+        │   │       └── <ContextName>/
+        │   │           └── Consumers/                         ← Message consumers (IConsumer<T>)
+        │   ├── {{project.dotnet.namespace}}.Application/      ← Command/event handlers, queries
+        │   │   ├── Contexts/
+        │   │   │   └── <ContextName>/
+        │   │   │       ├── Commands/                          ← Command handlers (triggered by messages)
+        │   │   │       ├── Queries/                           ← Query handlers (local read model)
+        │   │   │       └── Events/                            ← Integration event handlers
+        │   │   └── Examples/                                  ← CQRS example handlers (delete after use)
+        │   ├── {{project.dotnet.namespace}}.Domain/           ← Entities, value objects, events
+        │   │   └── Contexts/
+        │   │       └── <ContextName>/
+        │   │           ├── Entities/                          ← Aggregates, entities
+        │   │           ├── ValueObjects/                      ← Immutable value types
+        │   │           ├── Events/                            ← Domain events
+        │   │           └── Interfaces/                        ← Repository interfaces
+        │   └── {{project.dotnet.namespace}}.Infrastructure/   ← Repos, messaging, broker config
+        │       ├── Persistence/                               ← EF Core DbContext, configurations
+        │       ├── Messaging/                                 ← MassTransit config, event publishers
+        │       ├── Events/                                    ← Integration event publisher implementations
+        │       └── Contexts/
+        │           └── <ContextName>/
+        │               └── Repositories/                      ← Repository implementations
+        └── tests/
+            ├── {{project.dotnet.namespace}}.UnitTests/
+            └── {{project.dotnet.namespace}}.IntegrationTests/
+```
+{{/if}}
+{{else}}
+```
+backend/
+├── apis/             ← REST services (darkhorse-dotnet add api)
+│   └── (empty)       ← Add: darkhorse-dotnet add api --name <name> --namespace <Namespace>
+├── bffs/             ← BFF routing services (darkhorse-dotnet add bff-api)
+│   └── (empty)       ← Add: darkhorse-dotnet add bff-api --name <name> --namespace <Namespace>
+└── microservices/    ← Message-driven services (darkhorse-dotnet add microservice)
+    └── (empty)       ← Add: darkhorse-dotnet add microservice --name <name> --namespace <Namespace>
+```
+
+Each added service follows the Onion Architecture layout:
+```
+backend/<category>/<service-name>/
+├── <Namespace>.sln
+├── src/
+│   ├── <Namespace>.Presentation/     ← Controllers / Consumers
+│   ├── <Namespace>.Application/      ← CQRS handlers, use cases
+│   ├── <Namespace>.Domain/           ← Entities, value objects, events
+│   └── <Namespace>.Infrastructure/   ← Repos, DB, messaging clients
+└── tests/
+    ├── <Namespace>.UnitTests/
+    └── <Namespace>.IntegrationTests/
+```
+{{/if}}
+
+## OpenSpec Structure
+
+```
+openspec/
+├── AGENTS.md                        ← AI agent instructions
+├── specs/
+│   ├── architecture/                ← DDD, Onion Arch, CQRS rules
+│   ├── domain/                      ← Bounded context definitions
+│   ├── patterns/                    ← Backend{{#if project.features.frontend}} & frontend{{/if}} patterns
+│   ├── project/                     ← Roadmap, MVPs, progress
+│   └── workflow/                    ← Planning, implementation, troubleshooting
+├── changes/                         ← Active proposals (REQ-, BUG-, ENH-)
+└── archive/                         ← Completed proposals
+```
+
+{{#if project.features.frontend}}
+## Frontend Structure
+
+```
+frontend/
+{{#if (eq project.frontend.platform "both")}}
+├── web-app/
+│   ├── package.json
+│   └── src/
+│       ├── components/
+│       ├── pages/
+│       ├── hooks/
+│       ├── services/
+│       ├── store/
+│       └── utils/
+└── mobile-app/
+    ├── package.json
+    ├── app/              ← Expo Router screens & layouts
+    └── src/
+        ├── components/
+        ├── hooks/
+        ├── services/
+        ├── store/
+        └── utils/
+{{else if (eq project.frontend.platform "mobile")}}
+└── mobile-app/
+    ├── package.json
+    ├── app/              ← Expo Router screens & layouts
+    └── src/
+        ├── components/
+        ├── hooks/
+        ├── services/
+        ├── store/
+        └── utils/
+{{else}}
+└── web-app/
+    ├── package.json
+    └── src/
+        ├── components/
+        ├── pages/
+        ├── hooks/
+        ├── services/
+        ├── store/
+        └── utils/
+{{/if}}
+```
+{{/if}}
+
+## Deployment Structure
+
+```
+deployment/
+├── docker-compose.yml
+├── dev/                             ← Development environment
+└── prod/                            ← Production environment
+```

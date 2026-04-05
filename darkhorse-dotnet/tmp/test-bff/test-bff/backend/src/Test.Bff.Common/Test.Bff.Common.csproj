@@ -1,0 +1,15 @@
+<!-- Test.Bff.Common — Shared contracts (BFF-API archetype) -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <RootNamespace>Test.Bff.Common</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Test.Bff.Domain/Test.Bff.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,26 @@
+<!-- DarkHorse.Web.Presentation — ASP.NET Core Web API (BFF-API archetype) -->
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>DarkHorse.Web.Presentation</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Onion: Presentation depends on Application + Infrastructure -->
+    <ProjectReference Include="../DarkHorse.Web.Application/DarkHorse.Web.Application.csproj" />
+    <ProjectReference Include="../DarkHorse.Web.Infrastructure/DarkHorse.Web.Infrastructure.csproj" />
+    <ProjectReference Include="../DarkHorse.Web.Common/DarkHorse.Web.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.*" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.*" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.*" />
+    <!-- BFF handles auth/claims for frontend -->
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.*" />
+  </ItemGroup>
+
+</Project>

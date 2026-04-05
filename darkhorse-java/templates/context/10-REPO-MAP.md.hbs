@@ -1,0 +1,141 @@
+﻿# 10 — Repository Map
+
+> Folder layout for **{{project.name}}** (archetype: {{project.archetype}}).
+
+## Top-Level Structure
+
+| Folder | Purpose |
+|--------|---------|
+| `context/` | AI navigation — helps agents understand the repo |
+| `openspec/` | Specs, proposals, archive — spec-driven development |
+| `backend/` | Java/Quarkus code organized by archetype category |
+{{#if project.features.frontend}}
+| `frontend/` | {{#if (eq project.frontend.platform "both")}}React web + React Native mobile apps{{else if (eq project.frontend.platform "mobile")}}React Native mobile app{{else}}React web app{{/if}} |
+{{/if}}
+| `deployment/` | Docker, Kubernetes, deployment scripts |
+
+## Backend Structure
+
+{{#if (eq project.archetype "api")}}
+```
+backend/
+└── {{archetypeCategory}}/
+    ├── pom.xml                          ← Maven build (Quarkus + persistence)
+    ├── contexts/                        ← DDD bounded contexts
+    │   └── <context-name>/
+    │       ├── domain/                  ← Entities, value objects, events
+    │       │   └── GLOSSARY.md          ← Ubiquitous language
+    │       ├── application/             ← Commands, queries, handlers
+    │       ├── infrastructure/          ← Repos, messaging, persistence
+    │       ├── presentation/            ← REST controllers
+    │       └── tests/                   ← Unit + integration tests
+    └── examples/                        ← CQRS example handlers (delete after use)
+```
+{{/if}}
+{{#if (eq project.archetype "bff-api")}}
+```
+backend/
+└── {{archetypeCategory}}/
+    ├── pom.xml                          ← Maven build (Quarkus + REST Client + Messaging, NO persistence)
+    ├── contexts/                        ← DDD bounded contexts
+    │   └── <context-name>/
+    │       ├── domain/                  ← Contracts/interfaces ONLY (no entities, no aggregates)
+    │       │   └── GLOSSARY.md          ← Ubiquitous language
+    │       ├── application/             ← Command handlers (→ broker), query handlers (→ API clients)
+    │       ├── infrastructure/          ← REST API clients, message senders, auth adapters
+    │       ├── presentation/            ← REST controllers (frontend-facing), auth middleware
+    │       └── tests/                   ← Unit + integration tests
+    └── examples/                        ← CQRS example handlers (delete after use)
+```
+{{/if}}
+{{#if (eq project.archetype "microservice")}}
+```
+backend/
+└── {{archetypeCategory}}/
+    ├── pom.xml                          ← Maven build (Quarkus + Messaging + persistence)
+    ├── contexts/                        ← DDD bounded contexts
+    │   └── <context-name>/
+    │       ├── domain/                  ← Entities, value objects, events
+    │       │   └── GLOSSARY.md          ← Ubiquitous language
+    │       ├── application/             ← Command/event handlers, queries
+    │       ├── infrastructure/          ← Repos, broker config, event publishers
+    │       ├── presentation/            ← Message listeners, optional health endpoints
+    │       └── tests/                   ← Unit + integration tests
+    └── examples/                        ← CQRS example handlers (delete after use)
+```
+{{/if}}
+
+## OpenSpec Structure
+
+```
+openspec/
+├── AGENTS.md                        ← AI agent instructions
+├── specs/
+│   ├── architecture/                ← DDD, Onion Arch, CQRS rules
+│   ├── domain/                      ← Bounded context definitions
+│   ├── patterns/                    ← Backend{{#if project.features.frontend}} & frontend{{/if}} patterns
+│   ├── project/                     ← Roadmap, MVPs, progress
+{{#if project.features.frontend}}
+│   ├── toolkit/                     ← React component reference
+{{/if}}
+│   └── workflow/                    ← Planning, implementation, troubleshooting
+├── changes/                         ← Active proposals (REQ-, BUG-, ENH-)
+└── archive/                         ← Completed proposals
+```
+
+{{#if project.features.frontend}}
+## Frontend Structure
+
+```
+frontend/
+{{#if (eq project.frontend.platform "both")}}
+├── web-app/
+│   ├── package.json
+│   └── src/
+│       ├── components/
+│       ├── pages/
+│       ├── hooks/
+│       ├── services/
+│       ├── store/
+│       └── utils/
+└── mobile-app/
+    ├── package.json
+    ├── app/              ← Expo Router screens & layouts
+    └── src/
+        ├── components/
+        ├── hooks/
+        ├── services/
+        ├── store/
+        └── utils/
+{{else if (eq project.frontend.platform "mobile")}}
+└── mobile-app/
+    ├── package.json
+    ├── app/              ← Expo Router screens & layouts
+    └── src/
+        ├── components/
+        ├── hooks/
+        ├── services/
+        ├── store/
+        └── utils/
+{{else}}
+└── web-app/
+    ├── package.json
+    └── src/
+        ├── components/
+        ├── pages/
+        ├── hooks/
+        ├── services/
+        ├── store/
+        └── utils/
+{{/if}}
+```
+{{/if}}
+
+## Deployment Structure
+
+```
+deployment/
+├── docker-compose.yml
+├── dev/                             ← Development environment
+└── prod/                            ← Production environment
+```

@@ -1,0 +1,47 @@
+package {{project.java.groupId}}.examples;
+
+/**
+ * EXAMPLE: Command handler for a Microservice archetype.
+ *
+ * Microservice command handlers are triggered by inbound messages from
+ * a broker (AMQP, Kafka, etc.), NOT by HTTP requests. They execute
+ * domain logic and persist state.
+ *
+ * Location in a real context:
+ *   backend/contexts/<context>/application/commands/PlaceOrderCommandHandler.java
+ */
+public class ExampleCommandHandler {
+
+    // Inject repository and event publisher
+    // private final OrderRepository orderRepository;
+    // private final IntegrationEventPublisher eventPublisher;
+
+    /**
+     * Handle an inbound command message from the broker.
+     *
+     * Pattern:
+     * 1. Deserialise the inbound message
+     * 2. Validate the command payload
+     * 3. Execute domain logic (create/modify aggregate)
+     * 4. Persist via repository
+     * 5. Publish integration event for other services
+     *
+     * Triggered by: @Incoming("orders-commands") or equivalent
+     * NOT triggered by: HTTP endpoint
+     */
+    public void handle(/* PlaceOrderMessage message */) {
+        // 1. Deserialise is handled by the messaging framework
+
+        // 2. Validate
+        // Objects.requireNonNull(message.getCustomerId(), "Customer ID required");
+
+        // 3. Execute domain logic
+        // Order order = Order.place(message.getCustomerId(), message.getItems());
+
+        // 4. Persist
+        // orderRepository.save(order);
+
+        // 5. Publish integration event (other services may react)
+        // eventPublisher.publish(new OrderPlacedIntegrationEvent(order.getId()));
+    }
+}

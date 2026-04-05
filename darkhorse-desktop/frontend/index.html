@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dark Horse Desktop</title>
+    <link rel="stylesheet" href="/src/styles/main.css" />
+  </head>
+  <body>
+    <div id="app">
+      <header class="app-header">
+        <h1>Dark Horse Desktop</h1>
+        <nav class="app-nav">
+          <button data-page="dashboard" class="nav-btn active">Dashboard</button>
+          <button data-page="discovery" class="nav-btn">Discovery</button>
+          <button data-page="planning" class="nav-btn">Planning</button>
+          <button data-page="requirements" class="nav-btn">Requirements</button>
+          <button data-page="roadmap" class="nav-btn">Roadmap</button>
+          <button data-page="progress" class="nav-btn">Progress</button>
+          <button data-page="artifacts" class="nav-btn">Artifacts</button>
+          <button data-page="workspace" class="nav-btn">Workspace</button>
+          <button data-page="settings" class="nav-btn">Settings</button>
+        </nav>
+      </header>
+      <main id="page-content" class="app-main">
+        <!-- Pages rendered dynamically -->
+      </main>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

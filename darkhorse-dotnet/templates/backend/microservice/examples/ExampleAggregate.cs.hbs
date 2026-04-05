@@ -1,0 +1,81 @@
+namespace {{project.dotnet.namespace}}.Domain.Examples;
+
+/// <summary>
+/// EXAMPLE: Aggregate Root for a microservice archetype.
+///
+/// The aggregate root is the entry point for all mutations within its boundary.
+/// All state changes go through public methods using domain language.
+/// In a microservice, aggregates are typically modified by command handlers
+/// triggered by inbound MassTransit messages.
+///
+/// Location in a real context:
+///   {Namespace}.Domain/Contexts/{Context}/Entities/Payment.cs
+///
+/// DELETE THIS FILE — replace with your real domain aggregate.
+/// </summary>
+public class ExampleAggregate
+{
+    // ---- Identity ----
+    public Guid Id { get; private set; }
+
+    // ---- State ----
+    public string Status { get; private set; } = "Pending";
+
+    // ---- Domain events (collected, published after persistence) ----
+    private readonly List<IDomainEvent> _domainEvents = new();
+    public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
+
+    // ---- Constructor: use static factory methods, not new() from outside ----
+    private ExampleAggregate() { }
+
+    /// <summary>
+    /// Factory method — triggered by an inbound command message (MassTransit IConsumer).
+    /// Uses domain language, not generic "Create".
+    /// </summary>
+    public static ExampleAggregate Process(Guid correlationId)
+    {
+        var agg = new ExampleAggregate
+        {
+            Id = correlationId,
+            Status = "Processing",
+        };
+
+        // Raise domain event — past tense, broadcast via MassTransit after persistence
+        agg._domainEvents.Add(new ExampleProcessingStartedEvent(agg.Id));
+
+        return agg;
+    }
+
+    /// <summary>
+    /// Domain operation — complete the aggregate processing.
+    /// </summary>
+    public void Complete()
+    {
+        if (Status is "Completed" or "Failed")
+            throw new InvalidOperationException($"Cannot complete from state '{Status}'.");
+
+        Status = "Completed";
+        _domainEvents.Add(new ExampleCompletedEvent(Id));
+    }
+
+    /// <summary>
+    /// Domain operation — mark as failed with a reason.
+    /// </summary>
+    public void Fail(string reason)
+    {
+        Status = "Failed";
+        _domainEvents.Add(new ExampleFailedEvent(Id, reason));
+    }
+
+    public void ClearDomainEvents() => _domainEvents.Clear();
+}
+
+// ---- Domain events (same file for brevity; move to Events/ in real code) ----
+
+public interface IDomainEvent { }
+
+public record ExampleProcessingStartedEvent(Guid AggregateId) : IDomainEvent;
+
+public record ExampleCompletedEvent(Guid AggregateId) : IDomainEvent;
+
+public record ExampleFailedEvent(Guid AggregateId, string Reason) : IDomainEvent;

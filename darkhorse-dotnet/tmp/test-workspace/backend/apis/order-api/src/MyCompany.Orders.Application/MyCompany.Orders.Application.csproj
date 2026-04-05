@@ -1,0 +1,27 @@
+<!-- MyCompany.Orders.Application — Use cases, CQRS handlers (API archetype) -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>MyCompany.Orders.Application</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Onion: Application depends on Domain only -->
+    <ProjectReference Include="../MyCompany.Orders.Domain/MyCompany.Orders.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Common contracts/utilities (external NuGet package) -->
+    <PackageReference Include="MyCompany.Orders.Common" Version="1.0.*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.4.*" />
+    <PackageReference Include="FluentValidation" Version="11.9.*" />
+    <PackageReference Include="AutoMapper" Version="13.0.*" />
+  </ItemGroup>
+
+</Project>

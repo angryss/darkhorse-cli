@@ -1,0 +1,39 @@
+namespace {{project.dotnet.namespace}}.Application.Examples;
+
+/// <summary>
+/// EXAMPLE: Query handler for a standard API archetype.
+///
+/// Queries return data with no side effects. They may use optimised read
+/// models or go directly to the repository.
+///
+/// Location in a real context:
+///   {Namespace}.Application/Contexts/{Context}/Queries/GetOrderByIdQueryHandler.cs
+/// </summary>
+public class ExampleQueryHandler
+{
+    // Inject repository interface (defined in Application layer)
+    // private readonly IOrderRepository _orderRepository;
+
+    /// <summary>
+    /// Handle a query that returns data.
+    ///
+    /// Pattern:
+    /// 1. Validate the query
+    /// 2. Load data via repository
+    /// 3. Map to DTO (never return domain entities)
+    /// 4. Return the DTO
+    /// </summary>
+    public object Handle(/* GetOrderByIdQuery query */)
+    {
+        // 1. Validate
+        // ArgumentNullException.ThrowIfNull(query.OrderId);
+
+        // 2. Load from repository
+        // var order = await _orderRepository.GetByIdAsync(query.OrderId);
+
+        // 3. Map to DTO
+        // return OrderDto.FromDomain(order);
+
+        throw new NotImplementedException("Replace with real implementation");
+    }
+}

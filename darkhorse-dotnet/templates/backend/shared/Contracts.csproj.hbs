@@ -1,0 +1,32 @@
+﻿<!-- {{project.workspaceNamespace}}.Contracts — Workspace published language -->
+<!--                                                                            -->
+<!-- PURPOSE: Shared contracts that cross service boundaries.                   -->
+<!--          This is not a generic shared utilities project.                   -->
+<!--                                                                            -->
+<!-- MUST contain:                                                               -->
+<!--   - Integration events (past-tense domain actions: OrderPlacedEvent)       -->
+<!--   - Cross-service message contracts (broker command/event payloads)        -->
+<!--   - Shared value types / primitives (CorrelationId, PaginatedResult<T>)   -->
+<!--   - True cross-service abstractions used by 2+ services                    -->
+<!--                                                                            -->
+<!-- MUST NOT contain:                                                          -->
+<!--   - Service-specific DTOs (put in {Ns}.Application)                        -->
+<!--   - Domain entities or aggregates (put in {Ns}.Domain)                    -->
+<!--   - Repository interfaces (put in {Ns}.Domain)                            -->
+<!--   - EF models or persistence types (put in {Ns}.Infrastructure)           -->
+<!--   - Controller/request/response models (put in {Ns}.Presentation)         -->
+<!--   - Generic helpers or utilities                                           -->
+<!--                                                                            -->
+<!-- If only ONE service uses a type, it belongs INSIDE that service.           -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>{{project.workspaceNamespace}}.Contracts</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <!-- Contracts has ZERO external dependencies — published language only -->
+
+</Project>

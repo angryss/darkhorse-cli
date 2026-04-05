@@ -1,0 +1,200 @@
+/**
+ * TreeMap Component Styles
+ */
+
+.treeMap {
+  position: relative;
+  font-family: var(--font-family-base, system-ui, -apple-system, sans-serif);
+  background: var(--color-white, #ffffff);
+  border: 1px solid var(--color-gray-300, #d1d5db);
+  border-radius: var(--radius-md, 8px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Title */
+.title {
+  padding: var(--spacing-4, 16px);
+  font-size: var(--font-size-xl, 20px);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--color-gray-900, #111827);
+  border-bottom: 1px solid var(--color-gray-200, #e5e7eb);
+}
+
+/* Breadcrumb */
+.breadcrumb {
+  padding: var(--spacing-3, 12px) var(--spacing-4, 16px);
+  background: var(--color-gray-50, #f9fafb);
+  border-bottom: 1px solid var(--color-gray-200, #e5e7eb);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--spacing-1, 4px);
+}
+
+.breadcrumbItem {
+  padding: var(--spacing-1, 4px) var(--spacing-2, 8px);
+  background: transparent;
+  border: none;
+  color: var(--color-blue-600, #2563eb);
+  cursor: pointer;
+  font-size: var(--font-size-sm, 14px);
+  border-radius: var(--radius-sm, 4px);
+  transition: all var(--duration-fast, 150ms);
+}
+
+.breadcrumbItem:hover {
+  background: var(--color-blue-50, #eff6ff);
+  color: var(--color-blue-700, #1d4ed8);
+}
+
+.breadcrumbSeparator {
+  color: var(--color-gray-400, #9ca3af);
+  padding: 0 var(--spacing-1, 4px);
+}
+
+/* SVG */
+.svg {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+}
+
+/* Rectangles */
+.rect {
+  cursor: pointer;
+  transition: opacity var(--duration-fast, 150ms);
+}
+
+.rect:hover,
+.rect.hovered {
+  opacity: 0.85;
+  stroke-width: 3;
+}
+
+.rect.hasChildren {
+  cursor: pointer;
+}
+
+/* Labels */
+.label {
+  fill: var(--color-white, #ffffff);
+  font-size: var(--font-size-sm, 14px);
+  font-weight: var(--font-weight-medium, 500);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  user-select: none;
+}
+
+/* Tooltip */
+.tooltip {
+  position: fixed;
+  background: var(--color-gray-900, #111827);
+  color: var(--color-white, #ffffff);
+  padding: var(--spacing-2, 8px) var(--spacing-3, 12px);
+  border-radius: var(--radius-sm, 4px);
+  font-size: var(--font-size-sm, 14px);
+  box-shadow: var(--shadow-lg, 0 10px 15px -3px rgba(0, 0, 0, 0.1));
+  pointer-events: none;
+  z-index: 1000;
+  max-width: 300px;
+}
+
+.tooltipLabel {
+  font-weight: var(--font-weight-semibold, 600);
+  margin-bottom: var(--spacing-1, 4px);
+}
+
+.tooltipValue {
+  color: var(--color-gray-300, #d1d5db);
+}
+
+/* Legend */
+.legend {
+  padding: var(--spacing-3, 12px) var(--spacing-4, 16px);
+  background: var(--color-gray-50, #f9fafb);
+  border-top: 1px solid var(--color-gray-200, #e5e7eb);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-3, 12px);
+}
+
+.legendTop {
+  order: -1;
+  border-top: none;
+  border-bottom: 1px solid var(--color-gray-200, #e5e7eb);
+}
+
+.legendBottom {
+  border-top: 1px solid var(--color-gray-200, #e5e7eb);
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-2, 8px);
+}
+
+.legendColor {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--radius-sm, 4px);
+  border: 1px solid var(--color-gray-300, #d1d5db);
+}
+
+.legendLabel {
+  font-size: var(--font-size-sm, 14px);
+  color: var(--color-gray-700, #374151);
+}
+
+/* Empty State */
+.treeMap.empty {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyState {
+  color: var(--color-gray-500, #6b7280);
+  font-size: var(--font-size-base, 16px);
+  text-align: center;
+  padding: var(--spacing-8, 32px);
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .treeMap {
+    background: var(--color-gray-900, #111827);
+    border-color: var(--color-gray-700, #374151);
+  }
+
+  .title {
+    color: var(--color-gray-100, #f3f4f6);
+    border-bottom-color: var(--color-gray-700, #374151);
+  }
+
+  .breadcrumb {
+    background: var(--color-gray-800, #1f2937);
+    border-bottom-color: var(--color-gray-700, #374151);
+  }
+
+  .breadcrumbItem {
+    color: var(--color-blue-400, #60a5fa);
+  }
+
+  .breadcrumbItem:hover {
+    background: var(--color-blue-900, #1e3a8a);
+    color: var(--color-blue-300, #93c5fd);
+  }
+
+  .legend {
+    background: var(--color-gray-800, #1f2937);
+    border-top-color: var(--color-gray-700, #374151);
+  }
+
+  .legendLabel {
+    color: var(--color-gray-300, #d1d5db);
+  }
+}
+

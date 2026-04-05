@@ -1,0 +1,100 @@
+# 00 — Start Here
+
+> **Entry point for all AI agents and developers working on {{project.name}}.**
+
+## What Is This Project?
+
+**{{project.name}}** — {{project.description}}
+
+- **Architecture:** DDD + Onion Architecture + CQRS (per service)
+- **Backend:** ASP.NET Core (.NET, service-level)
+{{#if project.features.frontend}}
+- **Frontend:** {{#if (eq project.frontend.platform "both")}}React (Web) + React Native (Mobile){{else if (eq project.frontend.platform "mobile")}}React Native (Expo){{else}}React{{/if}}{{#if project.frontend.toolkit}} + DarkHorse Toolkit{{/if}}
+{{/if}}
+{{#if project.archetype}}
+> **Current service archetype:** {{project.archetype}}{{#if project.dotnet}} — {{project.dotnet.namespace}} (.NET {{project.dotnet.dotnetVersion}}){{/if}}
+{{else}}
+> **Workspace initialized.** No services yet. Run `darkhorse-dotnet add api` to scaffold your first service.
+{{/if}}
+
+## Navigation
+
+| File | Purpose |
+|------|---------|
+| `context/00-START-HERE.md` | You are here |
+| `context/10-REPO-MAP.md` | Folder layout and file descriptions |
+| `context/30-BOUNDED-CONTEXTS.md` | Domain contexts and relationships |
+| `context/50-SEARCH-QUERIES.md` | Search patterns for finding code |
+| `openspec/AGENTS.md` | **Read next** — AI agent rules and instructions |
+
+## Workspace Structure
+
+```
+{{project.name}}/
+├── context/                   ← AI navigation (this folder)
+├── openspec/                  ← Specs, proposals, workflow
+│   ├── AGENTS.md              ← AI reads this second
+│   ├── specs/
+│   │   ├── architecture/      ← Mandatory architecture rules
+│   │   ├── patterns/          ← Implementation patterns
+│   │   ├── workflow/
+│   │   │   ├── skills/        ← Workflow skill definitions
+│   │   │   └── commands/      ← CLI command invocation guides
+│   │   ├── domain/            ← Bounded contexts (your definitions)
+│   │   └── project/
+│   │       └── roadmap.md     ← MVP roadmap and archiving lifecycle
+│   ├── changes/
+│   │   └── mvp-1.0/           ← Active MVP (proposals + tracker)
+│   │       └── progress-tracker.md
+│   └── archive/               ← Completed MVPs (historical)
+├── .github/
+│   └── agents/                ← Copilot agent definitions
+├── backend/
+│   ├── apis/                  ← REST API services
+│   ├── bffs/                  ← Backend-for-Frontend services
+│   └── microservices/         ← Message-driven services
+{{#if project.features.frontend}}
+├── frontend/
+{{#if (eq project.frontend.platform "both")}}│   ├── web-app/               ← React web application
+│   └── mobile-app/            ← React Native mobile app
+{{else if (eq project.frontend.platform "mobile")}}│   └── mobile-app/            ← React Native (Expo)
+{{else}}│   └── web-app/               ← React web application
+{{/if}}{{/if}}
+├── deployment/                ← Docker, Kubernetes
+└── .darkhorse.yaml            ← Workspace configuration
+```
+
+{{#if project.archetype}}
+## Service Archetypes in This Workspace
+
+| Category | Path | Purpose |
+|----------|------|---------|
+{{#if (eq project.archetype "api")}}| API | `backend/apis/{{project.name}}/` | REST service with persistence |{{/if}}
+{{#if (eq project.archetype "bff-api")}}| BFF | `backend/bffs/{{project.name}}/` | Frontend routing, no persistence |{{/if}}
+{{#if (eq project.archetype "microservice")}}| Microservice | `backend/microservices/{{project.name}}/` | Message-driven, event handling |{{/if}}
+
+{{else}}
+## Service Archetypes
+
+| Command | Category | Purpose |
+|---------|----------|---------|
+| `darkhorse-dotnet add api` | `backend/apis/` | REST service with persistence |
+| `darkhorse-dotnet add bff-api` | `backend/bffs/` | BFF routing layer, no persistence |
+| `darkhorse-dotnet add microservice` | `backend/microservices/` | Message-driven, event handling |
+
+{{/if}}
+
+## What To Do Next
+
+{{#if project.archetype}}
+1. Read `openspec/AGENTS.md` for architecture rules and service structure
+2. Check `openspec/specs/domain/` for bounded contexts
+3. Check `openspec/specs/project/roadmap.md` for the MVP roadmap
+4. Check `openspec/changes/mvp-1.0/progress-tracker.md` for active work items
+5. Use `.github/agents/plan.agent.md` (Copilot agent) to create a new requirement proposal
+{{else}}
+1. Read `openspec/AGENTS.md` for workspace architecture rules
+2. Define your project roadmap in `openspec/specs/project/roadmap.md`
+3. Identify your bounded contexts in `openspec/specs/domain/`
+4. Add your first service: `darkhorse-dotnet add api --name <service-name> --namespace <Namespace>`
+{{/if}}

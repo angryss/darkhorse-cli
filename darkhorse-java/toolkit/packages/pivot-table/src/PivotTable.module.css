@@ -1,0 +1,292 @@
+/**
+ * Pivot Table Component Styles
+ */
+
+.pivotTable {
+  width: 100%;
+  font-family: var(--font-family-base, system-ui, -apple-system, sans-serif);
+  background: var(--color-white, #ffffff);
+  border: 1px solid var(--color-gray-300, #d1d5db);
+  border-radius: var(--radius-md, 8px);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Toolbar */
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-3, 12px) var(--spacing-4, 16px);
+  background: var(--color-gray-50, #f9fafb);
+  border-bottom: 1px solid var(--color-gray-200, #e5e7eb);
+}
+
+.toolbarTitle {
+  font-size: var(--font-size-lg, 18px);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--color-gray-900, #111827);
+}
+
+.toolbarActions {
+  display: flex;
+  gap: var(--spacing-2, 8px);
+}
+
+.toolbarButton {
+  padding: var(--spacing-2, 8px) var(--spacing-3, 12px);
+  background: var(--color-white, #ffffff);
+  border: 1px solid var(--color-gray-300, #d1d5db);
+  border-radius: var(--radius-sm, 4px);
+  font-size: var(--font-size-sm, 14px);
+  color: var(--color-gray-700, #374151);
+  cursor: pointer;
+  transition: all var(--duration-fast, 150ms);
+}
+
+.toolbarButton:hover {
+  background: var(--color-gray-50, #f9fafb);
+  border-color: var(--color-gray-400, #9ca3af);
+}
+
+.toolbarButton:active {
+  transform: translateY(1px);
+}
+
+/* Grid Container */
+.gridContainer {
+  flex: 1;
+  overflow: auto;
+  padding: var(--spacing-4, 16px);
+}
+
+.pivotGrid {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm, 14px);
+}
+
+/* Headers */
+.cornerCell {
+  background: var(--color-gray-100, #f3f4f6);
+  border: 1px solid var(--color-gray-300, #d1d5db);
+  padding: var(--spacing-2, 8px);
+  min-width: 150px;
+}
+
+.columnHeader,
+.rowHeader {
+  background: var(--color-gray-100, #f3f4f6);
+  border: 1px solid var(--color-gray-300, #d1d5db);
+  padding: var(--spacing-2, 8px) var(--spacing-3, 12px);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--color-gray-900, #111827);
+  text-align: left;
+  white-space: nowrap;
+}
+
+.columnHeader {
+  min-width: 100px;
+  text-align: center;
+}
+
+.rowHeader {
+  min-width: 150px;
+  text-align: left;
+  position: sticky;
+  left: 0;
+  z-index: 1;
+}
+
+/* Value Cells */
+.valueCell {
+  border: 1px solid var(--color-gray-200, #e5e7eb);
+  padding: var(--spacing-2, 8px) var(--spacing-3, 12px);
+  text-align: right;
+  color: var(--color-gray-700, #374151);
+  background: var(--color-white, #ffffff);
+}
+
+.valueCell.clickable {
+  cursor: pointer;
+  transition: background-color var(--duration-fast, 150ms);
+}
+
+.valueCell.clickable:hover {
+  background: var(--color-blue-50, #eff6ff);
+}
+
+/* Grand Totals */
+.grandTotalHeader {
+  background: var(--color-gray-200, #e5e7eb);
+  font-weight: var(--font-weight-bold, 700);
+}
+
+.grandTotalCell {
+  background: var(--color-gray-50, #f9fafb);
+  font-weight: var(--font-weight-semibold, 600);
+}
+
+.grandTotalRow {
+  background: var(--color-gray-50, #f9fafb);
+}
+
+/* Empty State */
+.pivotTable.empty {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyState {
+  color: var(--color-gray-500, #6b7280);
+  font-size: var(--font-size-base, 16px);
+  text-align: center;
+  padding: var(--spacing-8, 32px);
+}
+
+/* Drill-Through Dialog */
+.drillThroughOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.drillThroughDialog {
+  background: var(--color-white, #ffffff);
+  border-radius: var(--radius-lg, 8px);
+  box-shadow: var(--shadow-2xl, 0 25px 50px -12px rgba(0, 0, 0, 0.25));
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.drillThroughHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-4, 16px);
+  border-bottom: 1px solid var(--color-gray-200, #e5e7eb);
+}
+
+.drillThroughHeader h3 {
+  margin: 0;
+  font-size: var(--font-size-lg, 18px);
+  font-weight: var(--font-weight-semibold, 600);
+  color: var(--color-gray-900, #111827);
+}
+
+.closeButton {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  line-height: 1;
+  cursor: pointer;
+  color: var(--color-gray-500, #6b7280);
+  border-radius: var(--radius-sm, 4px);
+  transition: all var(--duration-fast, 150ms);
+}
+
+.closeButton:hover {
+  background: var(--color-gray-100, #f3f4f6);
+  color: var(--color-gray-900, #111827);
+}
+
+.drillThroughContent {
+  padding: var(--spacing-4, 16px);
+  overflow: auto;
+}
+
+.recordsTable {
+  margin-top: var(--spacing-3, 12px);
+  border: 1px solid var(--color-gray-200, #e5e7eb);
+  border-radius: var(--radius-sm, 4px);
+  overflow: auto;
+  max-height: 400px;
+}
+
+.recordsTable table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm, 14px);
+}
+
+.recordsTable th,
+.recordsTable td {
+  padding: var(--spacing-2, 8px);
+  border: 1px solid var(--color-gray-200, #e5e7eb);
+  text-align: left;
+}
+
+.recordsTable th {
+  background: var(--color-gray-100, #f3f4f6);
+  font-weight: var(--font-weight-semibold, 600);
+  position: sticky;
+  top: 0;
+}
+
+.recordsNote {
+  padding: var(--spacing-2, 8px);
+  color: var(--color-gray-500, #6b7280);
+  font-size: var(--font-size-sm, 14px);
+  text-align: center;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  .pivotTable {
+    background: var(--color-gray-900, #111827);
+    border-color: var(--color-gray-700, #374151);
+  }
+  
+  .toolbar {
+    background: var(--color-gray-800, #1f2937);
+    border-bottom-color: var(--color-gray-700, #374151);
+  }
+  
+  .toolbarTitle {
+    color: var(--color-gray-100, #f3f4f6);
+  }
+  
+  .toolbarButton {
+    background: var(--color-gray-700, #374151);
+    border-color: var(--color-gray-600, #4b5563);
+    color: var(--color-gray-100, #f3f4f6);
+  }
+  
+  .cornerCell,
+  .columnHeader,
+  .rowHeader {
+    background: var(--color-gray-800, #1f2937);
+    border-color: var(--color-gray-700, #374151);
+    color: var(--color-gray-100, #f3f4f6);
+  }
+  
+  .valueCell {
+    background: var(--color-gray-900, #111827);
+    border-color: var(--color-gray-700, #374151);
+    color: var(--color-gray-300, #d1d5db);
+  }
+  
+  .grandTotalHeader {
+    background: var(--color-gray-700, #374151);
+  }
+  
+  .grandTotalCell {
+    background: var(--color-gray-800, #1f2937);
+  }
+}
+

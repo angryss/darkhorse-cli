@@ -1,0 +1,33 @@
+namespace {{project.dotnet.namespace}}.Domain.Examples;
+
+/// <summary>
+/// EXAMPLE: Repository interface for a standard API archetype.
+///
+/// Repository interfaces belong in the DOMAIN layer. The implementation lives
+/// in the Infrastructure layer. The Application layer depends on the interface,
+/// never the implementation.
+///
+/// Rules:
+/// - One repository per Aggregate Root (not per entity)
+/// - Methods use domain language (not CRUD: SaveAsync, not CreateAsync)
+/// - Methods accept/return domain entities, not EF Core models or DTOs
+///
+/// Location in a real context:
+///   {Namespace}.Domain/Contexts/{Context}/Interfaces/IOrderRepository.cs
+///
+/// DELETE THIS FILE — replace with your real repository interface.
+/// </summary>
+public interface IExampleRepository
+{
+    /// <summary>Save a new or modified aggregate. Upsert semantics.</summary>
+    Task SaveAsync(ExampleAggregate aggregate, CancellationToken ct = default);
+
+    /// <summary>Find by identity. Returns null if not found.</summary>
+    Task<ExampleAggregate?> FindByIdAsync(Guid id, CancellationToken ct = default);
+
+    /// <summary>Find all active items. Returns empty list if none.</summary>
+    Task<IReadOnlyList<ExampleAggregate>> FindActiveAsync(CancellationToken ct = default);
+
+    /// <summary>Remove an aggregate (use sparingly — prefer soft delete in domain logic).</summary>
+    Task RemoveAsync(Guid id, CancellationToken ct = default);
+}

@@ -1,0 +1,41 @@
+package {{project.java.groupId}}.examples;
+
+/**
+ * EXAMPLE: Query handler for a BFF-API archetype.
+ *
+ * BFF queries do NOT access a database. They call downstream REST APIs
+ * and return aggregated/transformed responses to the frontend.
+ *
+ * Location in a real context:
+ *   backend/contexts/<context>/application/queries/GetOrderByIdQueryHandler.java
+ */
+public class ExampleQueryHandler {
+
+    // Inject REST API client (defined in domain layer as interface,
+    // implemented in infrastructure layer)
+    // private final OrderApiClient orderApiClient;
+
+    /**
+     * Handle a query by calling a downstream API.
+     *
+     * Pattern:
+     * 1. Validate the query
+     * 2. Call downstream API via REST client
+     * 3. Map/transform the response to a frontend-facing DTO
+     * 4. Return the DTO
+     *
+     * NOTE: No repository. No database. Data comes from downstream APIs.
+     */
+    public Object handle(/* GetOrderByIdQuery query */) {
+        // 1. Validate
+        // Objects.requireNonNull(query.getOrderId(), "Order ID required");
+
+        // 2. Call downstream API
+        // ExternalOrderResponse response = orderApiClient.getById(query.getOrderId());
+
+        // 3. Map to frontend DTO (anti-corruption layer)
+        // return OrderDto.fromExternal(response);
+
+        throw new UnsupportedOperationException("Replace with real implementation");
+    }
+}

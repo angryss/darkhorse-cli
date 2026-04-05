@@ -1,0 +1,45 @@
+package {{project.java.groupId}}.examples;
+
+/**
+ * EXAMPLE: Query handler for a Microservice archetype.
+ *
+ * Microservice queries read from the service's own database. They may
+ * use optimised read models (CQRS) or query the write model directly.
+ *
+ * Queries can be triggered by inbound messages OR by internal service calls.
+ * If exposed externally, add a thin REST endpoint that delegates here.
+ *
+ * Location in a real context:
+ *   backend/contexts/<context>/application/queries/GetOrderByIdQueryHandler.java
+ */
+public class ExampleQueryHandler {
+
+    // Inject read repository or read model
+    // private final OrderReadRepository readRepository;
+
+    /**
+     * Handle a query against the service's own data store.
+     *
+     * Pattern:
+     * 1. Validate the query
+     * 2. Load from local read model or repository
+     * 3. Map to DTO
+     * 4. Return the DTO
+     *
+     * NOTE: Microservices own their data. Queries hit the local database,
+     * never a downstream API. If data lives elsewhere, use integration events
+     * to replicate it into a local read model.
+     */
+    public Object handle(/* GetOrderByIdQuery query */) {
+        // 1. Validate
+        // Objects.requireNonNull(query.getOrderId(), "Order ID required");
+
+        // 2. Load from local store
+        // OrderReadModel order = readRepository.findById(query.getOrderId());
+
+        // 3. Map to DTO
+        // return OrderDto.from(order);
+
+        throw new UnsupportedOperationException("Replace with real implementation");
+    }
+}

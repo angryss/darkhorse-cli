@@ -1,0 +1,265 @@
+﻿# AGENTS.md — {{project.name}}
+
+> **AI Agent Entry Point.** Read this file first when working on this project.
+
+## Workspace
+
+- **Name:** {{project.name}}
+- **Description:** {{project.description}}
+- **Architecture:** DDD + Onion Architecture + CQRS (per service)
+{{#if project.archetype}}
+- **Service:** {{project.name}} ({{project.archetype}})
+{{#if project.dotnet}}
+- **Namespace:** {{project.dotnet.namespace}} (.NET {{project.dotnet.dotnetVersion}}, ASP.NET Core)
+{{/if}}
+{{else}}
+- **Services:** None yet — run `darkhorse-dotnet add api` to scaffold your first service
+{{/if}}
+- **Generated:** {{timestamp}} by DarkHorse .NET CLI v{{cliVersion}}
+
+## Reading Order
+
+1. `context/00-START-HERE.md` — Workspace overview and navigation
+2. **This file** — AI agent instructions
+3. `openspec/specs/architecture/archetype-rules.md` — Archetype constraints
+4. `openspec/specs/architecture/` — Mandatory architecture rules
+5. `openspec/specs/patterns/` — Implementation patterns
+6. `openspec/specs/workflow/skills/` — Development workflow skills
+7. `openspec/specs/workflow/commands/` — CLI command invocation guides
+8. `openspec/specs/domain/` — Bounded contexts (project-specific)
+9. `openspec/specs/project/roadmap.md` — MVP roadmap and archiving rules
+10. `openspec/changes/mvp-1.0/progress-tracker.md` — Active MVP progress tracker
+11. `openspec/changes/` — Active proposals and tasks
+
+## Copilot Agents
+
+This project ships with pre-configured GitHub Copilot agents in `.github/agents/`. Use them in VS Code with the `@plan`, `@implement`, or `@troubleshoot` chat participants.
+
+| Agent | File | Purpose |
+|-------|------|---------|
+| Plan | `.github/agents/plan.agent.md` | Create a requirement proposal in `openspec/changes/mvp-X.Y/REQ-*/` |
+| Implement | `.github/agents/implement.agent.md` | Execute an approved proposal, archive completed MVPs |
+| Troubleshoot | `.github/agents/troubleshoot.agent.md` | Investigate a bug and create a BUG proposal |
+
+{{#if project.archetype}}
+## Service Archetype: {{project.archetype}}
+
+{{#if (eq project.archetype "api")}}
+This service is a **standard API** — it owns its data, exposes HTTP endpoints, and contains full domain logic.
+- Commands persist via repositories (EF Core)
+- Queries read from repositories or read models
+- Full domain model: entities, value objects, aggregates
+{{/if}}
+{{#if (eq project.archetype "bff-api")}}
+This service is a **BFF API (Backend-for-Frontend)** — a routing layer between frontend and downstream services.
+- **Commands dispatch to a message broker (MassTransit/RabbitMQ)** — they do NOT persist
+- **Queries call downstream REST APIs (HttpClient)** — they do NOT access a database
+- Domain layer contains **interfaces and contracts only** — no business logic execution
+- **No persistence dependencies** — no EF Core, no repositories, no database
+{{/if}}
+{{#if (eq project.archetype "microservice")}}
+This service is a **Microservice** — message-driven, owns its data, NOT HTTP-first.
+- Commands triggered by inbound messages from a broker (MassTransit), not HTTP requests
+- Full domain logic with persistence (EF Core)
+- Publishes integration events for other services
+- REST endpoints only for health checks or admin
+{{/if}}
+
+{{else}}
+## Workspace Archetypes
+
+This workspace supports three service types. Add services with:
+
+| Command | Path | Purpose |
+|---------|------|---------|
+| `darkhorse-dotnet add api` | `backend/apis/<name>/` | REST service with persistence, full domain |
+| `darkhorse-dotnet add bff-api` | `backend/bffs/<name>/` | BFF routing layer, no persistence |
+| `darkhorse-dotnet add microservice` | `backend/microservices/<name>/` | Message-driven, event handling |
+
+{{/if}}
+
+## Architecture Rules (Mandatory)
+
+All code MUST follow:
+
+- **DDD:** Bounded contexts, ubiquitous language, aggregates, domain events
+- **Onion Architecture:** Domain → Application → Infrastructure → Presentation (dependencies point inward only)
+  - Domain: ZERO external dependencies
+  - Application: depends on Domain + Common (NuGet)
+  - Infrastructure: depends on Application, Domain + Common (NuGet)
+  - Presentation: depends on Application, Infrastructure + Common (NuGet)
+- **CQRS via MediatR:** Commands and queries are separate `IRequest<T>` types with separate handlers. MediatR is the only approved dispatch mechanism. Query handlers MUST NOT modify state or publish events.
+- **Repository Pattern:** One repository per aggregate root. Interfaces in Domain, implementations in Infrastructure.
+- **Integration Events:** Cross-context communication via async events (MassTransit)
+{{#if (eq project.archetype "bff-api")}}
+
+## BFF Rules (Enforced)
+
+- MUST NOT reference EF Core, Npgsql, or any database driver
+- Domain layer contains interfaces and contracts ONLY — no entities, no aggregates
+- Application queries MUST delegate to `IApiClient` implementations (HttpClient)
+- Application commands MUST delegate to `IMessageSender` implementations (MassTransit)
+- MUST NOT define or implement repository interfaces
+- All data comes from downstream services — never from a local store
+{{/if}}
+
+## Common Package
+
+{{#if project.dotnet}}
+`{{project.dotnet.namespace}}.Common` is an external NuGet package — not a local project.
+{{else}}
+`<Namespace>.Common` is an external NuGet package — not a local project.
+{{/if}}
+It contains shared DTOs, API contracts, and cross-service primitives. Do not duplicate its contents locally. Reference it via `PackageReference` only.
+
+See `openspec/specs/architecture/` for full rules.
+
+## Canonical Structure
+
+```
+{{project.name}}/
+├── context/          ← AI navigation (you are reading from here)
+├── openspec/         ← Specs, proposals, archive
+├── backend/
+{{#if project.archetype}}
+{{#if (eq project.archetype "api")}}│   └── apis/
+│       └── {{project.name}}/
+│           ├── {{project.dotnet.namespace}}.sln
+│           ├── src/
+│           │   ├── {{project.dotnet.namespace}}.Presentation/
+│           │   ├── {{project.dotnet.namespace}}.Application/
+│           │   ├── {{project.dotnet.namespace}}.Domain/
+│           │   └── {{project.dotnet.namespace}}.Infrastructure/
+│           └── tests/{{/if}}
+{{#if (eq project.archetype "bff-api")}}│   └── bffs/
+│       └── {{project.name}}/
+│           ├── {{project.dotnet.namespace}}.sln
+│           ├── src/
+│           │   ├── {{project.dotnet.namespace}}.Presentation/
+│           │   ├── {{project.dotnet.namespace}}.Application/
+│           │   ├── {{project.dotnet.namespace}}.Domain/
+│           │   └── {{project.dotnet.namespace}}.Infrastructure/
+│           └── tests/{{/if}}
+{{#if (eq project.archetype "microservice")}}│   └── microservices/
+│       └── {{project.name}}/
+│           ├── {{project.dotnet.namespace}}.sln
+│           ├── src/
+│           │   ├── {{project.dotnet.namespace}}.Presentation/
+│           │   ├── {{project.dotnet.namespace}}.Application/
+│           │   ├── {{project.dotnet.namespace}}.Domain/
+│           │   └── {{project.dotnet.namespace}}.Infrastructure/
+│           └── tests/{{/if}}
+{{else}}│   ├── apis/           ← (empty) add: darkhorse-dotnet add api
+│   ├── bffs/           ← (empty) add: darkhorse-dotnet add bff-api
+│   └── microservices/  ← (empty) add: darkhorse-dotnet add microservice{{/if}}
+{{#if project.features.frontend}}
+{{#if (eq project.frontend.platform "both")}}
+├── frontend/         ← React (Web) + React Native (Mobile)
+{{else if (eq project.frontend.platform "mobile")}}
+├── frontend/         ← React Native mobile application (Expo)
+{{else}}
+├── frontend/         ← React web application
+{{/if}}
+{{/if}}
+├── deployment/       ← Docker, Kubernetes, IaC
+└── .darkhorse.yaml   ← Workspace configuration
+```
+
+{{#if project.archetype}}
+{{#if project.dotnet}}
+## .NET Layer Mapping (Onion Architecture)
+
+| Layer | Project | Depends On |
+|-------|---------|------------|
+| **Domain** | `{{project.dotnet.namespace}}.Domain` | NOTHING (zero dependencies) |
+| **Application** | `{{project.dotnet.namespace}}.Application` | Domain + Common (NuGet) |
+| **Infrastructure** | `{{project.dotnet.namespace}}.Infrastructure` | Application, Domain + Common (NuGet) |
+| **Presentation** | `{{project.dotnet.namespace}}.Presentation` | Application, Infrastructure + Common (NuGet) |
+
+> **Common:** Shared contracts and utilities are consumed as a NuGet package (`{{project.dotnet.namespace}}.Common`), not as a local project.
+
+## Code Placement Rules
+
+{{#if (eq project.archetype "api")}}
+| Location | Contains |
+|----------|----------|
+| `*.Domain/Contexts/<Name>/Entities/` | Aggregates, entities, value objects |
+| `*.Domain/Contexts/<Name>/Events/` | Domain events |
+| `*.Domain/Contexts/<Name>/Interfaces/` | Repository interfaces |
+| `*.Application/Contexts/<Name>/Commands/` | Command handlers (write path) |
+| `*.Application/Contexts/<Name>/Queries/` | Query handlers (read path) |
+| `*.Application/Contexts/<Name>/DTOs/` | Data transfer objects |
+| `*.Infrastructure/Contexts/<Name>/Repositories/` | EF Core repository implementations |
+| `*.Infrastructure/Persistence/` | DbContext, entity configurations |
+| `*.Presentation/Contexts/<Name>/Controllers/` | REST controllers |
+{{/if}}
+{{#if (eq project.archetype "bff-api")}}
+| Location | Contains |
+|----------|----------|
+| `*.Domain/Contexts/<Name>/Contracts/` | API client interfaces, message sender interfaces ONLY |
+| `*.Application/Contexts/<Name>/Commands/` | Command handlers (→ broker via MassTransit) |
+| `*.Application/Contexts/<Name>/Queries/` | Query handlers (→ API clients via HttpClient) |
+| `*.Application/Contexts/<Name>/DTOs/` | Frontend-facing DTOs |
+| `*.Infrastructure/Clients/` | Typed HttpClient implementations |
+| `*.Infrastructure/Messaging/` | MassTransit message sender implementations |
+| `*.Presentation/Contexts/<Name>/Controllers/` | REST controllers (frontend-facing) |
+{{/if}}
+{{#if (eq project.archetype "microservice")}}
+| Location | Contains |
+|----------|----------|
+| `*.Domain/Contexts/<Name>/Entities/` | Aggregates, entities, value objects |
+| `*.Domain/Contexts/<Name>/Events/` | Domain events |
+| `*.Domain/Contexts/<Name>/Interfaces/` | Repository interfaces |
+| `*.Application/Contexts/<Name>/Commands/` | Command handlers (triggered by messages) |
+| `*.Application/Contexts/<Name>/Events/` | Integration event handlers |
+| `*.Application/Contexts/<Name>/Queries/` | Query handlers (local read model) |
+| `*.Infrastructure/Contexts/<Name>/Repositories/` | EF Core repository implementations |
+| `*.Infrastructure/Messaging/` | MassTransit config, event publishers |
+| `*.Presentation/Contexts/<Name>/Consumers/` | MassTransit consumers (IConsumer<T>) |
+{{/if}}
+{{/if}}
+{{/if}}
+{{#if project.features.frontend}}
+{{#if (eq project.frontend.platform "both")}}
+| `frontend/web-app/src/` | React components, pages, hooks, services |
+| `frontend/mobile-app/app/` | React Native screens, navigation, components |
+{{else if (eq project.frontend.platform "mobile")}}
+| `frontend/mobile-app/app/` | React Native screens, navigation, components |
+{{else}}
+| `frontend/web-app/src/` | React components, pages, hooks, services |
+{{/if}}
+{{/if}}
+
+## Forbidden
+
+- No agent frameworks (LangChain, AutoGen, CrewAI, Semantic Kernel)
+- No extra top-level directories
+- No code in `openspec/`
+- No cross-context direct dependencies (use integration events)
+- Domain layer has ZERO external dependencies
+{{#if (eq project.archetype "bff-api")}}
+- **No EF Core or persistence dependencies**
+- **No repository interfaces or implementations**
+- **No domain logic execution** — domain layer contains interfaces/contracts only
+- **No domain events** — BFF dispatches commands to broker, not events
+{{/if}}
+{{#if (eq project.archetype "microservice")}}
+- **No HTTP-first design** — messaging (MassTransit) is the primary interface
+- **No shared databases** — this service owns its data exclusively
+{{/if}}
+
+## Workflow
+
+```bash
+npx darkhorse-dotnet plan          # Create an architecture-compliant proposal
+npx darkhorse-dotnet implement     # Execute an approved proposal
+npx darkhorse-dotnet troubleshoot  # Investigate and fix a bug
+npx darkhorse-dotnet validate      # Validate specs and architecture compliance
+npx darkhorse-dotnet add api       # Add a new API service to the workspace
+```
+
+1. **Plan** — Create proposal in `openspec/changes/mvp-X.Y/<id>/`
+2. **Implement** — Follow `tasks.md`, write code inside-out: Domain → Application → Infrastructure → Presentation{{#if project.features.frontend}} → Frontend{{/if}}
+3. **Test** — Run tests, file bugs as `BUG-X.Y-###` proposals
+4. **Fix** — Investigate and fix bugs via `troubleshoot`
+5. **Archive MVP** — When all progress-tracker rows are `Done` and tests pass, move `openspec/changes/mvp-X.Y/` → `openspec/archive/mvp-X.Y/`, then mark the MVP as `Completed` in `openspec/specs/project/roadmap.md`

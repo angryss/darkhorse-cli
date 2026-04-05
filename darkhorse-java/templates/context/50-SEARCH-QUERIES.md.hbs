@@ -1,0 +1,98 @@
+﻿# 50 — Search Queries
+
+> Search patterns for AI agents to find code by architectural pattern in **{{project.name}}** (archetype: {{project.archetype}}).
+
+## Find by Layer
+
+{{#if (eq project.archetype "api")}}
+| Pattern | Query |
+|---------|-------|
+| Domain entities | `backend/{{archetypeCategory}}/contexts/*/domain/**/*.java` |
+| Value objects | Search for `record` in `backend/{{archetypeCategory}}/contexts/*/domain/` |
+| Domain events | Search for `Event` in `backend/{{archetypeCategory}}/contexts/*/domain/` |
+| Commands | `backend/{{archetypeCategory}}/contexts/*/application/commands/**/*.java` |
+| Queries | `backend/{{archetypeCategory}}/contexts/*/application/queries/**/*.java` |
+| Handlers | Search for `Handler` in `backend/{{archetypeCategory}}/contexts/*/application/` |
+| Repositories (interface) | Search for `Repository` in `backend/{{archetypeCategory}}/contexts/*/application/` |
+| Repositories (impl) | Search for `Repository` in `backend/{{archetypeCategory}}/contexts/*/infrastructure/` |
+| REST controllers | `backend/{{archetypeCategory}}/contexts/*/presentation/**/*.java` |
+| Integration events | Search for `IntegrationEvent` across `backend/{{archetypeCategory}}/` |
+{{/if}}
+
+{{#if (eq project.archetype "bff-api")}}
+| Pattern | Query |
+|---------|-------|
+| API client interfaces | Search for `Client` in `backend/{{archetypeCategory}}/contexts/*/domain/` |
+| Message sender interfaces | Search for `Sender` in `backend/{{archetypeCategory}}/contexts/*/domain/` |
+| Command handlers | `backend/{{archetypeCategory}}/contexts/*/application/commands/**/*.java` |
+| Query handlers | `backend/{{archetypeCategory}}/contexts/*/application/queries/**/*.java` |
+| REST client implementations | Search for `Client` in `backend/{{archetypeCategory}}/contexts/*/infrastructure/` |
+| Message sender implementations | Search for `Sender` in `backend/{{archetypeCategory}}/contexts/*/infrastructure/` |
+| REST controllers | `backend/{{archetypeCategory}}/contexts/*/presentation/**/*.java` |
+| Auth middleware | Search for `Auth` or `Permission` in `backend/{{archetypeCategory}}/contexts/*/presentation/` |
+{{/if}}
+
+{{#if (eq project.archetype "microservice")}}
+| Pattern | Query |
+|---------|-------|
+| Domain entities | `backend/{{archetypeCategory}}/contexts/*/domain/**/*.java` |
+| Value objects | Search for `record` in `backend/{{archetypeCategory}}/contexts/*/domain/` |
+| Domain events | Search for `Event` in `backend/{{archetypeCategory}}/contexts/*/domain/` |
+| Command handlers | `backend/{{archetypeCategory}}/contexts/*/application/commands/**/*.java` |
+| Event handlers | `backend/{{archetypeCategory}}/contexts/*/application/events/**/*.java` |
+| Query handlers | `backend/{{archetypeCategory}}/contexts/*/application/queries/**/*.java` |
+| Repositories (interface) | Search for `Repository` in `backend/{{archetypeCategory}}/contexts/*/application/` |
+| Repositories (impl) | Search for `Repository` in `backend/{{archetypeCategory}}/contexts/*/infrastructure/` |
+| Message listeners | Search for `@Incoming` in `backend/{{archetypeCategory}}/contexts/*/presentation/` |
+| Integration event publishers | Search for `Emitter` or `Publisher` in `backend/{{archetypeCategory}}/contexts/*/infrastructure/` |
+{{/if}}
+
+## Find by Bounded Context
+
+```
+backend/{{archetypeCategory}}/contexts/<context-name>/
+├── domain/          ← grep here for business rules
+├── application/     ← grep here for use cases
+├── infrastructure/  ← grep here for persistence/messaging
+└── presentation/    ← grep here for API endpoints
+```
+
+## Find by Convention
+
+| Convention | Pattern |
+|------------|---------|
+| Aggregate roots | Classes with `@AggregateRoot` or implementing `AggregateRoot` |
+| CQRS commands | Classes ending in `Command` |
+| CQRS queries | Classes ending in `Query` |
+| Event handlers | Classes with `@EventHandler` or methods with `@ConsumeEvent` |
+| REST endpoints | Classes with `@Path` annotation |
+| Tests | `*Test.java` or `*IT.java` files |
+
+{{#if project.features.frontend}}
+## Frontend Search
+
+| Pattern | Query |
+|---------|-------|
+{{#if (eq project.frontend.platform "both")}}
+| React components | `frontend/web-app/src/components/**/*.tsx` |
+| Pages | `frontend/web-app/src/pages/**/*.tsx` |
+| Custom hooks (web) | `frontend/web-app/src/hooks/use*.ts` |
+| API services (web) | `frontend/web-app/src/services/**/*.ts` |
+| Screens & layouts | `frontend/mobile-app/app/**/*.tsx` |
+| Shared components (mobile) | `frontend/mobile-app/src/components/**/*.tsx` |
+| Custom hooks (mobile) | `frontend/mobile-app/src/hooks/use*.ts` |
+| API services (mobile) | `frontend/mobile-app/src/services/**/*.ts` |
+{{else if (eq project.frontend.platform "mobile")}}
+| Screens & layouts | `frontend/mobile-app/app/**/*.tsx` |
+| Shared components | `frontend/mobile-app/src/components/**/*.tsx` |
+| Custom hooks | `frontend/mobile-app/src/hooks/use*.ts` |
+| API services | `frontend/mobile-app/src/services/**/*.ts` |
+| State stores | `frontend/mobile-app/src/store/**/*.ts` |
+{{else}}
+| React components | `frontend/web-app/src/components/**/*.tsx` |
+| Pages | `frontend/web-app/src/pages/**/*.tsx` |
+| Custom hooks | `frontend/web-app/src/hooks/use*.ts` |
+| API services | `frontend/web-app/src/services/**/*.ts` |
+| State stores | `frontend/web-app/src/store/**/*.ts` |
+{{/if}}
+{{/if}}

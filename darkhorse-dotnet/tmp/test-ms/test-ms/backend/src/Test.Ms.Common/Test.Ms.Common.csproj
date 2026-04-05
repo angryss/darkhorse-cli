@@ -1,0 +1,15 @@
+<!-- Test.Ms.Common — Shared contracts, event schemas (Microservice archetype) -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <RootNamespace>Test.Ms.Common</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Test.Ms.Domain/Test.Ms.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
