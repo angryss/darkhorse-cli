@@ -4,10 +4,10 @@
   "version": "{{project.version}}",
   "identifier": "com.darkhorse.{{snakeCase project.name}}",
   "build": {
-    "beforeBuildCommand": "cd ../frontend && npm run build",
-    "beforeDevCommand": "cd ../frontend && npm run dev",
+    "beforeBuildCommand": "cd ../../frontend && npm run build",
+    "beforeDevCommand": "cd ../../frontend && npm run dev",
     "devUrl": "http://localhost:5173",
-    "frontendDist": "../frontend/dist"
+    "frontendDist": "../../frontend/dist"
   },
   "app": {
     "windows": [

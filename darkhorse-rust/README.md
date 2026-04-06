@@ -105,7 +105,7 @@ npx darkhorse-rust troubleshoot  # Investigate a bug
 | `plan` | 🔜 v1 | Create architecture-compliant proposals for features/bugs |
 | `implement` | 🔜 v1 | Execute an approved proposal with inside-out implementation |
 | `troubleshoot` | 🔜 v1 | Investigate and fix bugs with architecture compliance checks |
-| `validate` | 🔜 v1 | Validate project specs and architecture compliance |
+| `validate` | ✅ Implemented | Validate project structure and architecture compliance |
 | `mcp-serve` | 🔜 v1 | Start an MCP server exposing CLI tools to AI agents |
 
 ### `init` Options
@@ -134,17 +134,39 @@ darkhorse-rust init [options]
 ├── rustfmt.toml                   # Formatting config
 ├── crates/
 │   ├── <prefix>-domain/           # Entities, value objects, domain services
+│   │   └── src/
+│   │       ├── lib.rs             # Module declarations
+│   │       ├── entities.rs        # Entity stubs
+│   │       ├── errors.rs          # Domain errors
+│   │       ├── services.rs        # Domain services
+│   │       └── values.rs          # Value objects
 │   ├── <prefix>-application/      # Commands, handlers, port traits
+│   │   └── src/
+│   │       ├── lib.rs
+│   │       ├── commands.rs        # Command stubs
+│   │       ├── errors.rs          # Application errors
+│   │       ├── ports.rs           # Port trait definitions
+│   │       └── services.rs        # Application services
 │   ├── <prefix>-infrastructure/   # SQLite repos, filesystem, persistence
+│   │   └── src/
+│   │       ├── lib.rs
+│   │       ├── database.rs        # SQLite persistence
+│   │       ├── errors.rs          # Infrastructure errors
+│   │       ├── filesystem.rs      # File I/O
+│   │       ├── logging.rs         # Tracing setup
+│   │       └── settings.rs        # App settings
 │   └── <prefix>-desktop/          # Tauri commands, app state, entry point
+│       ├── src/main.rs            # Tauri entry point
+│       ├── build.rs               # Tauri build script
+│       ├── tauri.conf.json        # Tauri 2 configuration
+│       └── icons/                 # App icon assets (ICO, ICNS, PNG)
 ├── frontend/
 │   ├── src/main.ts                # TypeScript entry point
 │   ├── index.html                 # App shell
 │   ├── package.json
 │   ├── tsconfig.json
 │   └── vite.config.ts
-└── deployment/
-    └── tauri.conf.json            # Tauri 2 configuration
+└── .darkhorse.yaml                # Dark Horse project config
 ```
 
 ### Process (Development Guidance System)

@@ -13,7 +13,7 @@
 {{#if project.features.frontend}}
 | `frontend/` | Vite + TypeScript frontend UI |
 {{/if}}
-| `deployment/` | Tauri build configuration (`tauri.conf.json`) |
+| `crates/{{project.rust.cratePrefix}}-desktop/tauri.conf.json` | Tauri build configuration (lives alongside desktop crate) |
 | `context/` | AI navigation layer (these files) |
 | `openspec/` | Specifications, proposals, architecture rules, workflow docs |
 | `.vscode/` | VS Code and MCP configuration |

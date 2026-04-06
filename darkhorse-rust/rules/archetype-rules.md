@@ -32,7 +32,7 @@ The `desktop` archetype generates a Tauri 2 application with local-first design.
 
 - Use Tauri plugins for system capabilities (shell, dialog, filesystem).
 - Frontend communicates with Rust via `@tauri-apps/api` IPC — never via HTTP.
-- Tauri configuration lives in `deployment/tauri.conf.json`.
+- Tauri configuration lives in `crates/<prefix>-desktop/tauri.conf.json` (alongside the desktop crate's `Cargo.toml`).
 - Build commands use `cargo tauri dev` (development) and `cargo tauri build` (production).
 
 ### What This Archetype Does NOT Include

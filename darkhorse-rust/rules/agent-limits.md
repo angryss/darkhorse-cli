@@ -25,6 +25,6 @@
 - Add runtime dependencies to the domain crate (beyond serde, chrono, uuid, thiserror)
 - Create Tauri commands that contain business logic
 - Bypass the port-adapter pattern (no direct infrastructure calls from application)
-- Modify `deployment/tauri.conf.json` without explicit request
+- Modify `crates/<prefix>-desktop/tauri.conf.json` without explicit request
 - Delete or restructure the crate layout
 - Remove or ignore architecture rules in `openspec/specs/architecture/`

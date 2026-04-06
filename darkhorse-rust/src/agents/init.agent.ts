@@ -10,6 +10,7 @@ import { writeConfig } from '../core/config.js';
 import { scaffoldProject } from '../skills/scaffolding.js';
 import { seedOpenSpec } from '../skills/openspec.js';
 import { generateContext } from '../skills/context.js';
+import { validateScaffold } from '../skills/validation.js';
 
 export async function initAgent(config: DarkhorseConfig): Promise<void> {
   logger.header(`Initializing project: ${config.name}`);
@@ -38,6 +39,11 @@ export async function initAgent(config: DarkhorseConfig): Promise<void> {
   // 4. Write .darkhorse.yaml
   logger.step('Writing project config...');
   await writeConfig(config);
+
+  // 5. Validate scaffolded output
+  logger.step('Validating scaffolded project...');
+  const validationResult = await validateScaffold(config);
+  results.push(validationResult);
 
   // Report results
   logger.blank();

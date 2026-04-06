@@ -8,14 +8,15 @@
 import path from 'node:path';
 import type { DarkhorseConfig, SkillResult, TemplateContext } from '../core/types.js';
 import { TemplateEngine } from '../core/template-engine.js';
-import { ensureDir } from '../core/fs.js';
+import { ensureDir, writeFile } from '../core/fs.js';
 import { getTemplatesDir } from './registry.js';
+import { generateDefaultIcons } from './icons.js';
 
 export async function scaffoldProject(config: DarkhorseConfig): Promise<SkillResult> {
   const filesCreated: string[] = [];
   const errors: string[] = [];
   const engine = new TemplateEngine(getTemplatesDir());
-  const { root, crates, frontend, deployment, context, openspec, vscode } = config.paths;
+  const { root, crates, frontend, context, openspec, vscode } = config.paths;
   const prefix = config.rust.cratePrefix;
 
   const ctx: TemplateContext = {
@@ -33,7 +34,6 @@ export async function scaffoldProject(config: DarkhorseConfig): Promise<SkillRes
     await ensureDir(path.join(openspec, 'specs'));
     await ensureDir(path.join(openspec, 'changes'));
     await ensureDir(path.join(openspec, 'archive'));
-    await ensureDir(deployment);
     await ensureDir(vscode);
 
     // Crate directories (4-layer architecture)
@@ -78,6 +78,14 @@ export async function scaffoldProject(config: DarkhorseConfig): Promise<SkillRes
     await engine.render('backend/domain/lib.rs.hbs', ctx, path.join(crates, `${prefix}-domain`, 'src', 'lib.rs'));
     filesCreated.push(`crates/${prefix}-domain/Cargo.toml`, `crates/${prefix}-domain/src/lib.rs`);
 
+    // Domain module stubs
+    const domainModules = ['entities', 'errors', 'services', 'values'];
+    for (const mod of domainModules) {
+      const stubPath = path.join(crates, `${prefix}-domain`, 'src', `${mod}.rs`);
+      await writeFile(stubPath, `//! ${mod} module for ${config.name} domain layer.\n`);
+      filesCreated.push(`crates/${prefix}-domain/src/${mod}.rs`);
+    }
+
     // Application crate
     await engine.render(
       'backend/application/Cargo.toml.hbs',
@@ -91,6 +99,14 @@ export async function scaffoldProject(config: DarkhorseConfig): Promise<SkillRes
     );
     filesCreated.push(`crates/${prefix}-application/Cargo.toml`, `crates/${prefix}-application/src/lib.rs`);
 
+    // Application module stubs
+    const appModules = ['commands', 'errors', 'ports', 'services'];
+    for (const mod of appModules) {
+      const stubPath = path.join(crates, `${prefix}-application`, 'src', `${mod}.rs`);
+      await writeFile(stubPath, `//! ${mod} module for ${config.name} application layer.\n`);
+      filesCreated.push(`crates/${prefix}-application/src/${mod}.rs`);
+    }
+
     // Infrastructure crate
     await engine.render(
       'backend/infrastructure/Cargo.toml.hbs',
@@ -103,6 +119,14 @@ export async function scaffoldProject(config: DarkhorseConfig): Promise<SkillRes
       path.join(crates, `${prefix}-infrastructure`, 'src', 'lib.rs'),
     );
     filesCreated.push(`crates/${prefix}-infrastructure/Cargo.toml`, `crates/${prefix}-infrastructure/src/lib.rs`);
+
+    // Infrastructure module stubs
+    const infraModules = ['database', 'errors', 'filesystem', 'logging', 'settings'];
+    for (const mod of infraModules) {
+      const stubPath = path.join(crates, `${prefix}-infrastructure`, 'src', `${mod}.rs`);
+      await writeFile(stubPath, `//! ${mod} module for ${config.name} infrastructure layer.\n`);
+      filesCreated.push(`crates/${prefix}-infrastructure/src/${mod}.rs`);
+    }
 
     // Desktop shell crate
     await engine.render(
@@ -145,8 +169,17 @@ export async function scaffoldProject(config: DarkhorseConfig): Promise<SkillRes
 
     // ── Render deployment files ────────────────────────────────
 
-    await engine.render('deployment/tauri.conf.json.hbs', ctx, path.join(deployment, 'tauri.conf.json'));
-    filesCreated.push('deployment/tauri.conf.json');
+    // Tauri config — must live alongside the desktop crate's Cargo.toml
+    const desktopCrateDir = path.join(crates, `${prefix}-desktop`);
+    await engine.render('deployment/tauri.conf.json.hbs', ctx, path.join(desktopCrateDir, 'tauri.conf.json'));
+    filesCreated.push(`crates/${prefix}-desktop/tauri.conf.json`);
+
+    // ── Generate default icons ─────────────────────────────────
+
+    const iconsDir = path.join(desktopCrateDir, 'icons');
+    await ensureDir(iconsDir);
+    const iconFiles = await generateDefaultIcons(iconsDir);
+    filesCreated.push(...iconFiles.map((f) => `crates/${prefix}-desktop/icons/${f}`));
 
     // ── VS Code config ─────────────────────────────────────────
 
