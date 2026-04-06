@@ -1,0 +1,45 @@
+# 00 — START HERE
+
+> Entry point for developers and AI agents working on **{{project.name}}**.
+
+## What Is This Project?
+
+{{project.description}}
+
+This is a **Tauri 2 desktop application** built with Rust and TypeScript, following Dark Horse architectural conventions: DDD, Clean Architecture, command-oriented flow, and local-first persistence.
+
+## Navigation
+
+| File | Purpose |
+|------|---------|
+| `context/00-START-HERE.md` | You are here — project overview and navigation |
+| `context/10-REPO-MAP.md` | What lives where in the repository |
+| `context/30-BOUNDED-CONTEXTS.md` | Domain contexts, relationships, and boundaries |
+| `context/50-SEARCH-QUERIES.md` | Search patterns for finding code by concern |
+| `openspec/AGENTS.md` | AI agent config, reading order, architecture rules |
+| `openspec/specs/project/roadmap.md` | MVP roadmap and requirements |
+
+## Project Structure
+
+```
+{{project.name}}/
+├── context/                       ← AI navigation (you are here)
+├── openspec/                      ← Specs, proposals, workflow docs
+├── crates/
+│   ├── {{project.rust.cratePrefix}}-domain/           ← Domain: entities, values, services
+│   ├── {{project.rust.cratePrefix}}-application/      ← Application: commands, ports, orchestration
+│   ├── {{project.rust.cratePrefix}}-infrastructure/   ← Infrastructure: SQLite, filesystem, settings
+│   └── {{project.rust.cratePrefix}}-desktop/          ← Desktop: Tauri shell, command bridge
+{{#if project.features.frontend}}
+├── frontend/                      ← Vite + TypeScript UI
+{{/if}}
+├── deployment/                    ← Tauri build config
+└── .darkhorse.yaml                ← Project config
+```
+
+## What to Do Next
+
+1. Read `openspec/AGENTS.md` for architecture rules and crate responsibilities
+2. Define bounded contexts in `openspec/specs/domain/`
+3. Plan your first feature in `openspec/specs/project/roadmap.md`
+4. Implement inside-out: Domain → Application → Infrastructure → Desktop → Frontend

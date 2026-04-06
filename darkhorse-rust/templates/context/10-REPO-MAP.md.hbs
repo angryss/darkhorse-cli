@@ -1,0 +1,65 @@
+# 10 — Repository Map
+
+> What lives where in **{{project.name}}**.
+
+## Top-Level Layout
+
+| Path | Purpose |
+|------|---------|
+| `Cargo.toml` | Workspace root — defines crate members and shared dependencies |
+| `rustfmt.toml` | Rust formatting configuration |
+| `.darkhorse.yaml` | Dark Horse project configuration (provenance only) |
+| `crates/` | All Rust crates (domain, application, infrastructure, desktop) |
+{{#if project.features.frontend}}
+| `frontend/` | Vite + TypeScript frontend UI |
+{{/if}}
+| `deployment/` | Tauri build configuration (`tauri.conf.json`) |
+| `context/` | AI navigation layer (these files) |
+| `openspec/` | Specifications, proposals, architecture rules, workflow docs |
+| `.vscode/` | VS Code and MCP configuration |
+| `.github/agents/` | GitHub Copilot agent definitions |
+
+## Crate Map
+
+| Crate | Layer | Path | Dependencies |
+|-------|-------|------|--------------|
+| `{{project.rust.cratePrefix}}-domain` | Domain | `crates/{{project.rust.cratePrefix}}-domain/` | None (serde, chrono, uuid, thiserror only) |
+| `{{project.rust.cratePrefix}}-application` | Application | `crates/{{project.rust.cratePrefix}}-application/` | `{{project.rust.cratePrefix}}-domain` |
+| `{{project.rust.cratePrefix}}-infrastructure` | Infrastructure | `crates/{{project.rust.cratePrefix}}-infrastructure/` | `{{project.rust.cratePrefix}}-domain`, `{{project.rust.cratePrefix}}-application` |
+| `{{project.rust.cratePrefix}}-desktop` | Presentation | `crates/{{project.rust.cratePrefix}}-desktop/` | All three above + Tauri |
+
+## Dependency Direction
+
+```
+{{project.rust.cratePrefix}}-infrastructure → {{project.rust.cratePrefix}}-application → {{project.rust.cratePrefix}}-domain
+            ↓
+{{project.rust.cratePrefix}}-desktop ──────────────────→┘
+```
+
+Outer layers depend on inner layers. Never the reverse.
+
+{{#if project.features.frontend}}
+## Frontend Layout
+
+| Path | Purpose |
+|------|---------|
+| `frontend/src/main.ts` | Application entry point |
+| `frontend/src/pages/` | Feature-area pages |
+| `frontend/src/services/` | Tauri IPC wrappers |
+| `frontend/src/stores/` | Client-side state |
+| `frontend/src/components/` | Reusable UI components |
+| `frontend/src/styles/` | CSS styles |
+
+{{/if}}
+## OpenSpec Layout
+
+| Path | Purpose |
+|------|---------|
+| `openspec/AGENTS.md` | AI agent entry point |
+| `openspec/specs/architecture/` | Architecture rules (copied from scaffolder) |
+| `openspec/specs/patterns/` | Development patterns (copied from scaffolder) |
+| `openspec/specs/domain/` | Bounded context definitions |
+| `openspec/specs/project/` | Roadmap and progress tracking |
+| `openspec/specs/workflow/` | Development workflow docs |
+| `openspec/changes/` | Active MVP changes and proposals |
+| `openspec/archive/` | Completed MVP archives |

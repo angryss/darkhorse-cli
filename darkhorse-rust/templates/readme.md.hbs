@@ -1,0 +1,92 @@
+# {{project.name}}
+
+> {{project.description}}
+
+## Project
+
+- **Architecture:** DDD + Clean Architecture + Command-oriented flow
+- **Backend:** Rust ({{project.rust.edition}} edition) with Cargo workspace
+- **Desktop Shell:** Tauri 2
+{{#if project.features.frontend}}
+- **Frontend:** Vite + TypeScript
+{{/if}}
+- **Persistence:** SQLite (local-first, WAL mode)
+- **Initialized:** {{timestamp}} by DarkHorse Rust CLI v{{cliVersion}}
+
+## Project Structure
+
+```
+{{project.name}}/
+├── context/                       ← AI navigation layer
+├── openspec/                      ← Specs, proposals, workflow docs
+├── crates/
+│   ├── {{project.rust.cratePrefix}}-domain/           ← Domain core: entities, values, services
+│   ├── {{project.rust.cratePrefix}}-application/      ← Application: commands, ports, orchestration
+│   ├── {{project.rust.cratePrefix}}-infrastructure/   ← Infrastructure: SQLite, filesystem, settings
+│   └── {{project.rust.cratePrefix}}-desktop/          ← Tauri shell: command bridge, state, plugins
+{{#if project.features.frontend}}
+├── frontend/                      ← Vite + TypeScript UI
+{{/if}}
+├── deployment/                    ← Tauri build config
+├── .darkhorse.yaml                ← Dark Horse project config
+└── Cargo.toml                     ← Workspace root
+```
+
+## Architecture
+
+### Layer Dependencies
+
+```
+Infrastructure → Application → Domain
+       ↓
+Desktop (Tauri) ──────→┘
+```
+
+| Layer | Crate | Responsibility |
+|-------|-------|----------------|
+| **Domain** | `{{project.rust.cratePrefix}}-domain` | Entities, value objects, policies, domain services. Zero external deps. |
+| **Application** | `{{project.rust.cratePrefix}}-application` | Commands, use-case handlers, port traits, orchestration |
+| **Infrastructure** | `{{project.rust.cratePrefix}}-infrastructure` | SQLite persistence, filesystem, settings, logging |
+| **Desktop** | `{{project.rust.cratePrefix}}-desktop` | Tauri host, command bridge, window lifecycle, plugins |
+
+### Design Principles
+
+- **Command-oriented** — UI actions map to application commands. No event-driven foundation.
+- **Clean Architecture** — Domain is protected from infrastructure and UI concerns.
+- **Strong modularity** — Each crate has distinct, explicit responsibilities.
+- **Local-first** — SQLite for structured data, filesystem for artifacts.
+- **Trait-based ports** — Application defines port traits; infrastructure implements them.
+
+## Getting Started
+
+```bash
+# Check that the workspace compiles
+cargo check
+
+# Run in development mode
+cargo tauri dev
+
+# Build for production
+cargo tauri build
+```
+
+{{#if project.features.frontend}}
+### Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev        # Dev server on :5173
+npm run build      # Production build
+```
+
+{{/if}}
+## Development Guidance
+
+This project was generated with the full Dark Horse development guidance system:
+
+- **Start here:** `context/00-START-HERE.md`
+- **AI agent entry:** `openspec/AGENTS.md`
+- **Architecture rules:** `openspec/specs/architecture/`
+- **Development patterns:** `openspec/specs/patterns/`
+- **Roadmap:** `openspec/specs/project/roadmap.md`

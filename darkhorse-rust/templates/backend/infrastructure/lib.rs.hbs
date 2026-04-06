@@ -1,0 +1,29 @@
+//! # {{project.rust.cratePrefix}}-infrastructure
+//!
+//! Infrastructure layer for {{project.name}}.
+//! Implements port traits defined in the application crate.
+//!
+//! ## Design Rules
+//!
+//! - Depends on both domain and application crates.
+//! - Implements port traits from the application layer.
+//! - Owns all external I/O: database, filesystem, network, settings.
+//! - SQLite via rusqlite with WAL mode for local-first persistence.
+//!
+//! ## Module Structure
+//!
+//! ```text
+//! src/
+//! ├── database/       ← SQLite persistence, migrations, repositories
+//! ├── filesystem/     ← File I/O operations
+//! ├── settings.rs     ← App settings / preferences
+//! ├── logging.rs      ← Tracing subscriber setup
+//! ├── errors.rs       ← Infrastructure error types
+//! └── lib.rs          ← Public API
+//! ```
+
+pub mod database;
+pub mod errors;
+pub mod filesystem;
+pub mod logging;
+pub mod settings;

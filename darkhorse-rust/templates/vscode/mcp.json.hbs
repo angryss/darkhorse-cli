@@ -1,0 +1,15 @@
+{
+  "inputs": [
+    {
+      "type": "promptString",
+      "id": "ado-org",
+      "description": "Azure DevOps Organization URL (e.g. https://dev.azure.com/myorg)"
+    }
+  ],
+  "servers": {
+    "darkhorse": {
+      "command": "npx",
+      "args": ["-y", "darkhorse-rust", "mcp-serve"]
+    }
+  }
+}

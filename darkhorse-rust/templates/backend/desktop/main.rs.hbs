@@ -1,0 +1,26 @@
+//! # {{project.rust.cratePrefix}}-desktop
+//!
+//! Tauri application shell for {{project.name}}.
+//! Bridges the frontend UI to the application layer via Tauri commands.
+//!
+//! ## Design Rules
+//!
+//! - This crate is the Tauri host. It owns window lifecycle and plugin setup.
+//! - All business logic lives in the application crate — this crate only dispatches.
+//! - Tauri commands are thin wrappers that call application-layer handlers.
+//! - State is managed via Tauri's managed state API.
+
+#![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
+
+use {{snakeCase project.rust.cratePrefix}}_infrastructure::logging;
+
+fn main() {
+    logging::init();
+
+    tauri::Builder::default()
+        .plugin(tauri_plugin_shell::init())
+        .plugin(tauri_plugin_dialog::init())
+        .plugin(tauri_plugin_fs::init())
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
+}

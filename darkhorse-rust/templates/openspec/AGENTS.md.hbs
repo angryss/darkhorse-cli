@@ -1,0 +1,56 @@
+# AGENTS.md — {{project.name}}
+
+> AI agent entry point. Read this file first.
+
+## Project Configuration
+
+| Property | Value |
+|----------|-------|
+| **Name** | {{project.name}} |
+| **Description** | {{project.description}} |
+| **Archetype** | Tauri Desktop Application |
+| **Rust Edition** | {{project.rust.edition}} |
+| **Crate Prefix** | {{project.rust.cratePrefix}} |
+| **Framework** | Tauri 2 |
+| **Persistence** | SQLite (local-first) |
+{{#if project.features.frontend}}
+| **Frontend** | Vite + TypeScript |
+{{/if}}
+| **Generated** | {{timestamp}} by DarkHorse Rust CLI v{{cliVersion}} |
+
+## Reading Order
+
+1. **This file** — project config and agent rules
+2. **`context/00-START-HERE.md`** — project overview and navigation
+3. **`context/10-REPO-MAP.md`** — what lives where
+4. **`context/30-BOUNDED-CONTEXTS.md`** — domain contexts and relationships
+5. **`specs/architecture/`** — mandatory architecture rules
+6. **`specs/patterns/`** — development patterns and examples
+7. **`specs/project/roadmap.md`** — MVP roadmap and requirements
+
+## Crate Architecture
+
+| Crate | Layer | Responsibility |
+|-------|-------|----------------|
+| `{{project.rust.cratePrefix}}-domain` | Domain | Entities, value objects, policies, domain services. **Zero external deps.** |
+| `{{project.rust.cratePrefix}}-application` | Application | Commands, use-case handlers, port traits, orchestration |
+| `{{project.rust.cratePrefix}}-infrastructure` | Infrastructure | SQLite, filesystem, settings, logging. Implements port traits. |
+| `{{project.rust.cratePrefix}}-desktop` | Presentation | Tauri host, command bridge, state management, window lifecycle |
+
+## Mandatory Architecture Rules
+
+1. **Dependency direction**: Domain ← Application ← Infrastructure ← Desktop. Never reverse.
+2. **Domain purity**: `{{project.rust.cratePrefix}}-domain` has zero dependencies on other crates or external I/O.
+3. **Port-adapter pattern**: Application defines port traits. Infrastructure implements them.
+4. **Command-oriented flow**: UI actions dispatch application commands. No event-driven foundation.
+5. **Local-first persistence**: SQLite via rusqlite. WAL mode. Embedded migrations.
+6. **Tauri commands are thin**: Desktop crate dispatches to application layer. No business logic in commands.
+
+## GitHub Copilot Agents
+
+| Agent | File | Purpose |
+|-------|------|---------|
+| Discover | `.github/agents/discover.agent.md` | Run discovery sessions |
+| Plan | `.github/agents/plan.agent.md` | Create implementation plans |
+| Implement | `.github/agents/implement.agent.md` | Execute approved proposals |
+| Troubleshoot | `.github/agents/troubleshoot.agent.md` | Diagnose and resolve issues |

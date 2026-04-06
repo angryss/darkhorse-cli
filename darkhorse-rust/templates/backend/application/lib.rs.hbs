@@ -1,0 +1,27 @@
+//! # {{project.rust.cratePrefix}}-application
+//!
+//! Application layer for {{project.name}}.
+//! Contains commands, use-case handlers, port traits, and orchestration services.
+//!
+//! ## Design Rules
+//!
+//! - Depends on the domain crate. Does **not** depend on infrastructure.
+//! - Ports (traits) define what the application needs; infrastructure implements them.
+//! - Commands are simple structs that represent user intent.
+//! - Handlers execute use cases by coordinating domain logic and port calls.
+//!
+//! ## Module Structure
+//!
+//! ```text
+//! src/
+//! ├── commands/      ← Command structs and handlers
+//! ├── ports/          ← Trait definitions for infrastructure contracts
+//! ├── services/       ← Application services (orchestration)
+//! ├── errors.rs       ← Application error types
+//! └── lib.rs          ← Public API
+//! ```
+
+pub mod commands;
+pub mod errors;
+pub mod ports;
+pub mod services;

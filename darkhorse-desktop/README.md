@@ -1,8 +1,21 @@
 # Dark Horse Desktop
 
-Cross-platform desktop application for the Dark Horse product-development platform, built with **Tauri 2 + Rust** and a lightweight TypeScript frontend.
+> **Product** — Local-first desktop application for the Dark Horse product-development platform
 
-Dark Horse Desktop is the local workspace companion for shaping, planning, and tracking product initiatives. It supports the full Dark Horse lifecycle — from discovery sessions through MVP scoping, planning outputs, implementation slices, and delivery progress — all local-first, all offline-capable.
+Dark Horse Desktop is a **product application**, not a scaffolder. It is the local workspace companion for shaping, planning, and tracking product initiatives. Built with **Tauri 2 + Rust** and a lightweight TypeScript frontend, it supports the full Dark Horse lifecycle — from discovery sessions through MVP scoping, planning outputs, implementation slices, and delivery progress — all local-first, all offline-capable.
+
+### Role in the Dark Horse Ecosystem
+
+| Concern | Dark Horse Desktop |
+|---------|-------------------|
+| **Is** | A runtime desktop application — a product |
+| **Does** | Models the Dark Horse lifecycle: discovery → planning → implementation → delivery |
+| **Consumes** | Dark Horse architectural principles (Clean Architecture, DDD, CQRS) |
+| **Does not** | Own templates, init commands, generation workflows, or scaffold logic |
+
+Dark Horse Desktop does not scaffold projects. It does not generate code, copy rules, or render templates. Future Rust/Tauri project scaffolding will be handled by a dedicated scaffolder (`darkhorse-rust`), following the same pattern as `darkhorse-dotnet` and `darkhorse-java`.
+
+When `openspec/`, `context/`, `rules/`, `guides/`, or `workflows/` folders exist in this repo, they are **authored project documentation** — development guidance for building Dark Horse Desktop itself, not scaffold source material.
 
 ## Architecture
 

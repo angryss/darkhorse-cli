@@ -1,8 +1,16 @@
-﻿# DarkHorse .NET CLI
+﻿# DarkHorse .NET
 
-> Opinionated .NET full product scaffolding CLI — DDD, ASP.NET Core, Clean Architecture
+> **Scaffolder** — Generates .NET products with the full Dark Horse development guidance system
 
-**DarkHorse .NET** scaffolds a **complete product** — ASP.NET Core backend, React frontend, and Docker Compose deployment — from a single `init` command. Backend services are added to the workspace with `add`. Each service enforces **Domain-Driven Design (DDD)**, **Onion Architecture**, and **CQRS** patterns. Products become fully self-contained after scaffolding — no runtime dependency on the CLI.
+**DarkHorse .NET** is a scaffolder CLI. It generates a complete project — ASP.NET Core backend, React frontend, Docker Compose deployment, **and** the development guidance system (OpenSpec, context, rules, guides, workflows, roadmap) — from a single `init` command. Backend services are added with `add`. Each service enforces DDD, Onion Architecture, and CQRS. Generated projects are fully self-contained — no runtime dependency on the CLI.
+
+### Role in the Dark Horse Ecosystem
+
+| Concern | DarkHorse .NET |
+|---------|---------------|
+| **Is** | A scaffolder — a CLI tool that generates project repositories |
+| **Generates** | Runtime product structure + development guidance system |
+| **Does not** | Run as part of the generated project or manage runtime concerns |
 
 ---
 
@@ -27,10 +35,10 @@
 
 ## Why DarkHorse?
 
-Most scaffolding tools give you a folder structure and walk away. DarkHorse goes further:
+Most scaffolding tools give you a folder structure and walk away. DarkHorse generates **both the product and the process**:
 
-- **Full product in one command** — `init --frontend` scaffolds a complete product: ASP.NET Core workspace, React frontend (web and/or mobile), and Docker Compose deployment — all structured and ready to develop.
-- **Workspace-first** — `init` creates the project root: context layer, OpenSpec specs, backend/frontend/deployment directories, and config. Backend services are added with `add`.
+- **Product + process in one command** — `init` scaffolds the runtime product (ASP.NET Core workspace, React frontend, Docker Compose) and the development guidance system (OpenSpec, context, rules, guides, workflows, roadmap) — all structured and ready to develop.
+- **Workspace-first** — `init` creates the project root with the full guidance system. Backend services are added with `add`.
 - **Three clear archetypes** — `api`, `bff-api`, and `microservice` produce structurally different .NET solutions with enforced constraints per type.
 - **Architecture is law** — DDD, Onion Architecture, CQRS, and SOLID are baked into every generated project via living documentation that AI agents and developers follow.
 - **AI-native from day one** — A `context/` navigation layer and `openspec/` spec system guide AI coding agents through the codebase without hallucinating structure.
@@ -248,6 +256,8 @@ Inbound Message → Consumer (MassTransit) → Command Handler → Domain Logic 
 ---
 
 ## What Gets Scaffolded
+
+`init` generates two halves: the **runtime product** (backend, frontend, deployment) and the **development guidance system** (context, OpenSpec, rules, guides, workflows, roadmap). Together they form a self-contained project repository.
 
 ### `darkhorse-dotnet init` — Workspace Structure
 
@@ -486,7 +496,7 @@ When scaffolded with `--frontend`, your project includes a reference to the **Re
 
 ## AI-Native Workflow
 
-DarkHorse workspaces are designed for AI coding agents (GitHub Copilot, Claude, Codex).
+DarkHorse projects are designed for AI coding agents (GitHub Copilot, Claude, Codex). The development guidance system includes:
 
 ### Context Layer (`context/`)
 

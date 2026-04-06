@@ -1,0 +1,33 @@
+# Domain Bounded Contexts — {{project.name}}
+
+> Define your application's bounded contexts here.
+
+## Context Template
+
+For each bounded context, create a subdirectory under `openspec/specs/domain/` with:
+
+```
+openspec/specs/domain/<context-name>/
+├── README.md              ← Context overview, responsibility, boundaries
+├── GLOSSARY.md            ← Ubiquitous language for this context
+├── entities.md            ← Entity definitions and invariants
+├── values.md              ← Value object definitions
+└── services.md            ← Domain service contracts
+```
+
+## Rust Module Mapping
+
+Each bounded context maps to modules inside the domain crate:
+
+```rust
+// crates/{{project.rust.cratePrefix}}-domain/src/entities/<context_name>/
+// crates/{{project.rust.cratePrefix}}-domain/src/values/<context_name>/
+// crates/{{project.rust.cratePrefix}}-domain/src/services/<context_name>/
+```
+
+## Guidelines
+
+- Each context is autonomous — no direct imports between contexts.
+- Shared types go in a `shared/` module, not cross-context imports.
+- Use domain events or application-layer orchestration for cross-context communication.
+- Every entity and value object must derive `serde::Serialize` and `serde::Deserialize`.

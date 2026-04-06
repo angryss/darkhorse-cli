@@ -1,0 +1,40 @@
+# 50 — Search Queries
+
+> Rust/Tauri-specific search patterns for AI agents navigating **{{project.name}}**.
+
+## Find by Architectural Concern
+
+| Concern | Search Pattern | Expected Location |
+|---------|---------------|-------------------|
+| Domain entities | `pub struct` in `*/entities/` | `crates/{{project.rust.cratePrefix}}-domain/src/entities/` |
+| Value objects | `pub struct` in `*/values/` | `crates/{{project.rust.cratePrefix}}-domain/src/values/` |
+| Domain services | `pub trait\|pub fn` in `*/services/` | `crates/{{project.rust.cratePrefix}}-domain/src/services/` |
+| Application commands | `pub struct.*Command` | `crates/{{project.rust.cratePrefix}}-application/src/commands/` |
+| Port traits | `pub trait` in `*/ports/` | `crates/{{project.rust.cratePrefix}}-application/src/ports/` |
+| Port implementations | `impl.*for` in infrastructure | `crates/{{project.rust.cratePrefix}}-infrastructure/src/` |
+| Tauri commands | `#[tauri::command]` | `crates/{{project.rust.cratePrefix}}-desktop/src/` |
+| Database migrations | `CREATE TABLE\|ALTER TABLE` | `crates/{{project.rust.cratePrefix}}-infrastructure/src/database/` |
+| Error types | `pub enum.*Error` | `*/errors.rs` in any crate |
+
+## Find by Layer
+
+| Layer | Glob Pattern |
+|-------|-------------|
+| Domain | `crates/{{project.rust.cratePrefix}}-domain/src/**/*.rs` |
+| Application | `crates/{{project.rust.cratePrefix}}-application/src/**/*.rs` |
+| Infrastructure | `crates/{{project.rust.cratePrefix}}-infrastructure/src/**/*.rs` |
+| Desktop | `crates/{{project.rust.cratePrefix}}-desktop/src/**/*.rs` |
+{{#if project.features.frontend}}
+| Frontend | `frontend/src/**/*.ts` |
+{{/if}}
+
+## Find by Cross-Cutting Concern
+
+| Concern | Search Pattern |
+|---------|---------------|
+| Logging | `tracing::\|#[instrument]` |
+| Serialization | `#[derive(.*Serialize.*)]` |
+| Error handling | `thiserror\|anyhow\|Result<` |
+| Tests | `#[cfg(test)]\|#[test]` |
+| SQLite queries | `rusqlite\|execute\|query_row` |
+| Tauri state | `tauri::State\|manage(` |

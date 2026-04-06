@@ -1,0 +1,27 @@
+//! # {{project.rust.cratePrefix}}-domain
+//!
+//! Domain core for {{project.name}}.
+//! Contains entities, value objects, policies, and domain services.
+//!
+//! ## Design Rules
+//!
+//! - **Zero external dependencies** beyond serialization and error handling.
+//! - Outer layers depend on the domain — never the reverse.
+//! - All domain logic is synchronous and pure where possible.
+//! - Domain errors are strongly typed via `thiserror`.
+//!
+//! ## Module Structure
+//!
+//! ```text
+//! src/
+//! ├── entities/      ← Aggregate roots and entities
+//! ├── values/         ← Value objects
+//! ├── services/       ← Domain services (stateless logic)
+//! ├── errors.rs       ← Domain error types
+//! └── lib.rs          ← Public API
+//! ```
+
+pub mod entities;
+pub mod errors;
+pub mod services;
+pub mod values;

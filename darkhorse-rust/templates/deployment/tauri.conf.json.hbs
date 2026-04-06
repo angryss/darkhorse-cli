@@ -1,0 +1,37 @@
+{
+  "$schema": "https://raw.githubusercontent.com/niccoloraspa/tauri2-schema/refs/heads/main/schema.json",
+  "productName": "{{project.name}}",
+  "version": "{{project.version}}",
+  "identifier": "com.darkhorse.{{snakeCase project.name}}",
+  "build": {
+    "beforeBuildCommand": "cd ../frontend && npm run build",
+    "beforeDevCommand": "cd ../frontend && npm run dev",
+    "devUrl": "http://localhost:5173",
+    "frontendDist": "../frontend/dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "{{project.name}}",
+        "width": 1200,
+        "height": 800,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; style-src 'self' 'unsafe-inline'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  }
+}

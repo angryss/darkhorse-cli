@@ -1,8 +1,16 @@
-# DarkHorse Java CLI
+# DarkHorse Java
 
-> Opinionated Java project scaffolding CLI — DDD, Quarkus, Clean Architecture
+> **Scaffolder** — Generates Java products with the full Dark Horse development guidance system
 
-**DarkHorse Java** scaffolds a **complete product** — Quarkus backend, React frontend, and Docker Compose deployment — from a single `init` command. Each project enforces **Domain-Driven Design (DDD)**, **Onion Architecture**, and **CQRS** patterns at every layer. Products become fully self-contained after scaffolding — no runtime dependency on the CLI.
+**DarkHorse Java** is a scaffolder CLI. It generates a complete project — Quarkus backend, React frontend, Docker Compose deployment, **and** the development guidance system (OpenSpec, context, rules, guides, workflows, roadmap) — from a single `init` command. Each project enforces DDD, Onion Architecture, and CQRS at every layer. Generated projects are fully self-contained — no runtime dependency on the CLI.
+
+### Role in the Dark Horse Ecosystem
+
+| Concern | DarkHorse Java |
+|---------|---------------|
+| **Is** | A scaffolder — a CLI tool that generates project repositories |
+| **Generates** | Runtime product structure + development guidance system |
+| **Does not** | Run as part of the generated project or manage runtime concerns |
 
 ---
 
@@ -27,9 +35,9 @@
 
 ## Why DarkHorse?
 
-Most scaffolding tools give you a folder structure and walk away. DarkHorse goes further:
+Most scaffolding tools give you a folder structure and walk away. DarkHorse generates **both the product and the process**:
 
-- **Full product in one command** — `init --frontend` scaffolds a complete product: Quarkus backend, React frontend (web and/or mobile), and Docker Compose deployment — all structured and ready to develop.
+- **Product + process in one command** — `init` scaffolds the runtime product (Quarkus backend, React frontend, Docker Compose) and the development guidance system (OpenSpec, context, rules, guides, workflows, roadmap) — all structured and ready to develop.
 - **Architecture is law** — DDD, Onion Architecture, CQRS, and SOLID principles are baked into every generated project via living documentation that AI agents and developers follow.
 - **Three clear archetypes** — `api`, `bff-api`, and `microservice` generate structurally different projects with enforced constraints per type.
 - **AI-native from day one** — A `context/` navigation layer and `openspec/` spec system guide AI coding agents through the codebase without hallucinating structure.
@@ -201,6 +209,8 @@ Inbound Message → Listener → Command Handler → Domain Logic → Repository
 ---
 
 ## What Gets Scaffolded
+
+`init` generates two halves: the **runtime product** (backend, frontend, deployment) and the **development guidance system** (context, OpenSpec, rules, guides, workflows, roadmap). Together they form a self-contained project repository.
 
 ```
 <project>/
@@ -394,7 +404,7 @@ When scaffolded with `--frontend`, your project includes a reference to the **Re
 
 ## AI-Native Workflow
 
-DarkHorse projects are designed to work with AI coding agents (GitHub Copilot, Claude, Codex). The scaffolded structure includes:
+DarkHorse projects are designed for AI coding agents (GitHub Copilot, Claude, Codex). The development guidance system includes:
 
 ### Context Layer (`context/`)
 

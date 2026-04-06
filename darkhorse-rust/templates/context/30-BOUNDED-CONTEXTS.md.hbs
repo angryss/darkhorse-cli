@@ -1,0 +1,40 @@
+# 30 — Bounded Contexts
+
+> Domain context inventory for **{{project.name}}**.
+
+## Contexts
+
+No bounded contexts have been defined yet.
+
+Define your first context:
+
+1. Create a directory: `openspec/specs/domain/<context-name>/`
+2. Add `README.md` with context purpose, boundaries, and responsibilities
+3. Add `GLOSSARY.md` with the ubiquitous language for that context
+4. Create matching Rust modules under `crates/{{project.rust.cratePrefix}}-domain/src/entities/<context_name>/`
+
+## Context Map
+
+```
+┌─────────────────────────────────────────┐
+│           {{project.name}}              │
+│                                         │
+│  [Define your bounded contexts here]    │
+│                                         │
+└─────────────────────────────────────────┘
+```
+
+## Integration Patterns
+
+When multiple contexts exist, document their relationships:
+
+| Source Context | Target Context | Pattern | Description |
+|---------------|----------------|---------|-------------|
+| — | — | — | No integrations defined yet |
+
+### Available Patterns
+
+- **Shared Kernel** — Shared types used by both contexts (sparingly)
+- **Customer-Supplier** — One context provides; the other consumes
+- **Anti-Corruption Layer** — Translation boundary to protect context integrity
+- **Domain Events** — Loose coupling via events (application-layer orchestration in Rust)

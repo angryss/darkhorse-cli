@@ -1,32 +1,79 @@
-# Dark Horse CLI
+# Dark Horse
 
-> Product-development platform — opinionated scaffolding CLIs and a local-first desktop companion
+> Scaffold the product. Scaffold the process. Ship with a development operating system built in.
 
-Dark Horse is a suite of tools that scaffold **complete products** with enforced architecture patterns (DDD, Clean Architecture, CQRS) and guide teams through the full delivery lifecycle — discovery, planning, implementation, and troubleshooting.
+Dark Horse is a product-development platform. Its scaffolders generate **both** a runtime codebase and a development guidance system — architecture rules, AI navigation, workflow docs, and planning artifacts — so every new project ships ready for guided development from day one.
 
-The monorepo contains three sub-projects:
+---
 
-| Project | Tech | Description |
-|---------|------|-------------|
-| [`darkhorse-dotnet`](darkhorse-dotnet/) | TypeScript CLI | .NET scaffolding — ASP.NET Core, React frontend, Docker Compose |
-| [`darkhorse-java`](darkhorse-java/) | TypeScript CLI | Java scaffolding — Quarkus, React frontend, Docker Compose |
+## System Summary
+
+Dark Horse consists of:
+
+- **Scaffolders** — CLI tools that generate complete project repositories. Each scaffolder produces the runtime product structure (backend, frontend, deployment) **and** the development guidance system (OpenSpec, context, rules, guides, workflows, roadmap). Currently: .NET, Java, and Rust/Tauri.
+- **Products** — Runtime applications built with Dark Horse principles. Currently: Dark Horse Desktop, a local-first Tauri app for shaping, planning, and tracking product initiatives.
+- **Capabilities** — Discovery, planning, implementation, troubleshooting, and Nx monorepo analysis — available as CLI commands and workflow skills that AI agents execute.
+
+A generated project is fully self-contained. No runtime dependency on the CLI.
+
+---
+
+## What Makes a Complete Scaffold
+
+A Dark Horse scaffolder is only complete if it generates both halves:
+
+1. **The runtime product** — language/platform-specific application foundation, architecture layout, platform defaults
+2. **The development guidance system** — `openspec/`, `context/`, `AGENTS.md`, architecture rules, patterns/guides, workflows, roadmap/progress starters, `.darkhorse.yaml`
+
+Initial code generation alone is not full Dark Horse. Guided development is the differentiator.
+
+---
+
+## Ecosystem
+
+This monorepo contains **scaffolders** (tools) and **products** (applications).
+
+### Scaffolders (Tools)
+
+| Project | Tech | What It Does |
+|---------|------|--------------|
+| [`darkhorse-dotnet`](darkhorse-dotnet/) | TypeScript CLI | Scaffolds .NET products — ASP.NET Core, React frontend, Docker Compose |
+| [`darkhorse-java`](darkhorse-java/) | TypeScript CLI | Scaffolds Java products — Quarkus, React frontend, Docker Compose |
+| [`darkhorse-rust`](darkhorse-rust/) | TypeScript CLI | Scaffolds Rust/Tauri desktop products — Cargo workspace, Vite frontend |
+
+Scaffolders own templates, generation logic, and development asset source material (`rules/`, `guides/`, `workflows/`, `templates/`). They produce complete, self-contained project repositories with both the product and the guidance system.
+
+### Products (Applications)
+
+| Project | Tech | What It Does |
+|---------|------|--------------|
 | [`darkhorse-desktop`](darkhorse-desktop/) | Rust / Tauri 2 | Local-first desktop app for shaping, planning, and tracking initiatives |
+
+Products are runtime applications. They follow Dark Horse architectural principles but do not own generation logic or template packaging.
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) for the complete ecosystem design, including the desktop scaffolder specification.
 
 ---
 
 ## How It Works
 
-### CLI Tools (dotnet & java)
+### CLI Scaffolders
 
-Both CLIs follow the same pattern: **agent → command → skill**.
+All three scaffolders follow the same pattern: **command → agent → skill**.
 
-- **`init`** scaffolds a complete product — backend workspace, React frontend, and deployment config — from a single command
-- **`add`** adds services to an existing workspace (.NET only, currently)
+- **`init`** scaffolds a complete project — the runtime product (backend, frontend, deployment) **and** the development guidance system (`openspec/`, `context/`, rules, guides, workflows, roadmap)
+- **`add`** adds services to an existing workspace (dotnet only)
 - **`discover` / `plan` / `implement` / `troubleshoot`** form a continuous development cycle driven by AI-native workflow skills
-- **`nx-monorepo`** analyzes workspace fit for Nx and produces a full adoption plan with scoring, tradeoffs, and phased migration steps
+- **`nx-monorepo`** analyzes workspace fit for Nx and produces a full adoption plan with scoring, tradeoffs, and phased migration steps (dotnet and java)
 - **`mcp-serve`** exposes CLI tools to AI agents via the Model Context Protocol
 
-Products are fully self-contained after scaffolding — no runtime dependency on the CLI.
+The `init` pipeline runs three skills in sequence:
+
+```
+scaffoldWorkspace(config)   → dirs + root files + backend/frontend/deployment
+seedOpenSpec(config)        → openspec/ (templates + copied rules/guides/workflows)
+generateContext(config)     → context/ (4 navigation files)
+```
 
 ### Desktop App
 
@@ -39,13 +86,15 @@ Dark Horse Desktop is the local workspace companion. Built with Tauri 2 + Rust a
 
 All data is local-first — SQLite for structured data, filesystem for generated artifacts, no external services required.
 
+> **Note**: Dark Horse Desktop is a product, not a scaffolder. It does not generate projects. Rust/Tauri project scaffolding is handled by the [`darkhorse-rust`](darkhorse-rust/) CLI.
+
 ---
 
 ## Architecture
 
 ### CLI Architecture
 
-Both TypeScript CLIs share the same layered structure:
+All three scaffolder CLIs share the same layered structure:
 
 ```
 src/
@@ -56,7 +105,14 @@ src/
 └── mcp/          # MCP server integration
 ```
 
-Skills are ecosystem-agnostic — identical across both platforms. Commands differ only in ecosystem-specific defaults.
+Scaffolder-owned source assets (packaged with the CLI):
+
+```
+rules/            # Architecture rules — copied into openspec/specs/architecture/
+guides/           # Development patterns — copied into openspec/specs/patterns/
+workflows/        # Skills, commands, agents — copied into openspec/specs/workflow/
+templates/        # Handlebars templates — rendered with project vars into output
+```
 
 ### Desktop Architecture
 
@@ -76,10 +132,10 @@ crates/
 
 ### Prerequisites
 
-- **Node.js ≥ 18** (for CLIs)
+- **Node.js ≥ 18** (for all CLIs)
 - **.NET 8 or 9 SDK** (for darkhorse-dotnet)
 - **Java 17 or 21 + Maven** (for darkhorse-java)
-- **Rust 1.75+ + Tauri CLI v2** (for darkhorse-desktop)
+- **Rust toolchain + Tauri prerequisites** (for darkhorse-rust and darkhorse-desktop)
 
 ### CLI Usage
 
@@ -93,7 +149,10 @@ npx darkhorse-dotnet add api --name orders
 # Java — scaffold a full product
 npx darkhorse-java init --type api --name my-service --group-id com.mycompany
 
-# Either CLI — analyze Nx monorepo fit
+# Rust — scaffold a Tauri desktop app
+npx darkhorse-rust init --name my-desktop-app --description "My desktop application"
+
+# Analyze Nx monorepo fit (dotnet / java)
 npx darkhorse-dotnet nx-monorepo
 npx darkhorse-java nx-monorepo
 ```
@@ -123,7 +182,7 @@ npx tsc --noEmit
 npx vitest run
 ```
 
-Same commands apply to `darkhorse-java`.
+Same commands apply to `darkhorse-java` and `darkhorse-rust`.
 
 ### Desktop Development
 
@@ -144,18 +203,18 @@ cargo tauri build
 
 ## Project Status
 
-All three sub-projects are at **v0.1.0**.
+All four sub-projects are at **v0.1.0**.
 
-| Capability | dotnet | java | desktop |
-|------------|--------|------|---------|
-| Product scaffolding (`init`) | ✅ | ✅ | — |
-| Service addition (`add`) | ✅ | — | — |
-| Nx monorepo analysis | ✅ | ✅ | — |
-| Discovery workflow | 🔜 v1 | 🔜 v1 | ✅ |
-| Planning workflow | 🔜 v1 | 🔜 v1 | ✅ |
-| Implementation workflow | 🔜 v1 | 🔜 v1 | ✅ |
-| Troubleshooting workflow | 🔜 v1 | 🔜 v1 | — |
-| MCP server | 🔜 v1 | 🔜 v1 | — |
+| Capability | dotnet | java | rust | desktop |
+|------------|--------|------|------|---------|
+| Product scaffolding (`init`) | ✅ | ✅ | ✅ | — (product, not scaffolder) |
+| Service addition (`add`) | ✅ | — | — | — |
+| Nx monorepo analysis | ✅ | ✅ | — | — |
+| Discovery workflow | 🔜 v1 | 🔜 v1 | 🔜 v1 | ✅ |
+| Planning workflow | 🔜 v1 | 🔜 v1 | 🔜 v1 | ✅ |
+| Implementation workflow | 🔜 v1 | 🔜 v1 | 🔜 v1 | ✅ |
+| Troubleshooting workflow | 🔜 v1 | 🔜 v1 | 🔜 v1 | — |
+| MCP server | 🔜 v1 | 🔜 v1 | 🔜 v1 | — |
 
 ---
 
