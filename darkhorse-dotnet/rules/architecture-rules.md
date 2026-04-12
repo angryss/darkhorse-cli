@@ -1,4 +1,4 @@
-# Architecture Rules (v1.8)
+# Architecture Rules (v2.0)
 
 **Mandatory architectural rules for all development.**
 
@@ -187,7 +187,85 @@ public class PricingService
 
 ---
 
-## Rule 7: Repository Pattern
+## Rule 7: System Topology
+
+> **The BFF is the ONLY entry point for frontend clients.** All traffic flows through the BFF, which enforces authentication, authorization, and request validation before routing to backend services.
+
+### Traffic Flow
+
+```
+Frontend (Web / Mobile)
+  │
+  ▼
+BFF-API  ── security boundary, JWT auth, claims, permissions ──
+  │                                │
+  │ Queries (reads)                │ Commands (writes)
+  ▼                                ▼
+API Services                   Message Broker (RabbitMQ)
+  │                                │
+  ▼                                ▼
+Read Database(s)               Microservices
+                                   │
+                                   ▼
+                               Write Database(s)
+```
+
+### Routing Rules
+
+| Flow | Route | Why |
+|------|-------|-----|
+| **Queries** | BFF → downstream API (HttpClient) → read database | APIs own read-optimized data; BFF aggregates for frontend |
+| **Commands** | BFF → broker (MassTransit) → microservice → write database | Async processing, eventual consistency, decoupled writes |
+| **Events** | Microservice → broker → other services | Integration events propagate state changes across contexts |
+
+### Mandatory Rules
+
+1. **Frontend MUST NOT call APIs or microservices directly** — all traffic goes through the BFF
+2. **BFF MUST NOT access any database** — it routes queries to APIs and commands to the broker
+3. **APIs own read-optimized databases** — they serve query results to the BFF
+4. **Microservices own write databases** — they process commands from the broker and persist state
+5. **Cross-service communication is event-driven** — microservices publish integration events; other services subscribe
+
+### Violations
+
+```
+❌ Frontend calling an API directly (bypassing BFF security boundary)
+❌ BFF connecting to a database
+❌ API processing commands from the broker (APIs serve queries)
+❌ Microservice serving as primary HTTP API for the frontend
+❌ Any service sharing a database with another service
+```
+
+---
+
+## Rule 8: Read/Write Database Separation
+
+> **Separate read and write databases to avoid locking, contention, and scaling bottlenecks.**
+
+### Pattern
+
+| Concern | Database | Owner | Purpose |
+|---------|----------|-------|---------|
+| **Writes** | Write DB (primary) | Microservice | Command processing, domain state, ACID transactions |
+| **Reads** | Read DB (replica or projection) | API | Query-optimized views, denormalized for fast reads |
+
+### Rules
+
+1. **Write path**: Commands arrive via broker → microservice validates → persists to write DB → publishes integration event
+2. **Read path**: Integration event → API updates its read model/projection → BFF queries the API
+3. **Eventual consistency**: Read models may lag behind writes — this is by design
+4. **No shared locks**: Reads never block writes; writes never block reads
+5. **Database-per-service**: Each service owns exactly one database — no cross-service database access
+
+### Implementation
+
+- Write DB: Standard normalized schema, optimized for transactional integrity
+- Read DB: Denormalized projections, materialized views, or separate read replicas
+- Sync mechanism: Integration events (MassTransit) keep read models updated
+
+---
+
+## Rule 9: Repository Pattern
 
 - Define interfaces in Domain layer (`IOrderRepository`)
 - Implement in Infrastructure layer (`OrderRepository : IOrderRepository`)
@@ -213,7 +291,7 @@ public class OrderRepository : IOrderRepository
 
 ---
 
-## Rule 8: Event-Driven Design
+## Rule 10: Event-Driven Design
 
 | Pattern | Usage |
 |---------|-------|
@@ -241,7 +319,7 @@ public class OrderRepository : IOrderRepository
 
 ---
 
-## Rule 9: API Design
+## Rule 11: API Design
 
 ### RESTful Resources
 
@@ -263,7 +341,7 @@ GET    /api/{resource}/{id}        → Get one
 
 ---
 
-## Rule 10: Data Ownership
+## Rule 12: Data Ownership
 
 - Each **bounded context** owns its database (or schema)
 - No direct database sharing across contexts
@@ -272,7 +350,7 @@ GET    /api/{resource}/{id}        → Get one
 
 ---
 
-## Rule 11: Error Handling
+## Rule 13: Error Handling
 
 ```csharp
 // ✅ Domain-specific exceptions
@@ -289,7 +367,7 @@ Map domain exceptions to HTTP status codes in Presentation layer middleware.
 
 ---
 
-## Rule 12: Context Boundary Violations
+## Rule 14: Context Boundary Violations
 
 > ⛔ **These violations MUST be prevented**
 
@@ -303,7 +381,7 @@ Map domain exceptions to HTTP status codes in Presentation layer middleware.
 
 ---
 
-## Rule 13: BFF-API Architectural Constraints
+## Rule 15: BFF-API Architectural Constraints
 
 These constraints apply **globally** to any project with archetype `bff-api`. They are enforced by structure (no persistence packages in `.csproj`) and must not be bypassed.
 
@@ -328,7 +406,7 @@ These constraints apply **globally** to any project with archetype `bff-api`. Th
 
 ---
 
-## Rule 14: Workspace Contracts Project
+## Rule 16: Workspace Contracts Project
 
 `<WorkspaceNs>.Contracts` is a workspace-level class library at `backend/shared/`. It is scaffolded once during `init` and represents the **published language** of the workspace — the shared contracts that cross service boundaries.
 
@@ -381,4 +459,4 @@ The `Contracts` project MUST NOT reference any NuGet package beyond the .NET SDK
 
 ---
 
-*Rule Version: 1.8*
+*Rule Version: 2.0*

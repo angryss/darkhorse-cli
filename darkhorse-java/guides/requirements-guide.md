@@ -48,9 +48,23 @@ So that [benefit].
 
 ## Technical Context
 
+### Architecture Context (MANDATORY)
+- [ ] Bounded Context: [name — new or existing?]
+- [ ] Service Archetype: [api / bff-api / microservice]
+- [ ] System Topology:
+  - [ ] Query path: BFF → API → read DB (describe)
+  - [ ] Command path: BFF → broker → microservice → write DB (describe)
+- [ ] Read/Write Separation: [which service owns reads? which owns writes?]
+
+### Domain Model (MANDATORY)
+- [ ] Aggregate Root(s): [name — consistency boundary]
+- [ ] Value Object(s): [name — immutable value types]
+- [ ] Domain Event(s): [name — past-tense domain actions, NOT CRUD]
+- [ ] Ubiquitous Language: [list domain terms with definitions]
+
 ### Backend Requirements
 - [ ] New API endpoint(s): [yes/no, describe]
-- [ ] Database changes: [yes/no, describe]
+- [ ] Database changes: [read DB / write DB / both — describe]
 - [ ] Message broker events: [yes/no, describe]
 - [ ] Pattern to follow: [pattern name]
 
@@ -92,6 +106,9 @@ So that [benefit].
 | Practice | Example |
 |----------|---------|
 | Be specific | "Display top 10 customers by revenue" not "Show customers" |
+| Use ubiquitous language | Domain terms, not CRUD (Place order, not Create order) |
+| Map to system topology | Specify query path (BFF→API) vs command path (BFF→broker→MS) |
+| Define domain model | Aggregates, value objects, events before implementation |
 | Include acceptance criteria | Testable, measurable criteria |
 | Reference patterns | "Follow CQRS query pattern" |
 | List toolkit components | "Use @react-toolkit/charts for visualization" |
@@ -104,6 +121,9 @@ So that [benefit].
 | Anti-Pattern | Problem |
 |--------------|---------|
 | Vague descriptions | "Make it better" - not actionable |
+| Generic CRUD terms | "Create order" instead of "Place order" — violates DDD |
+| Missing topology | Not specifying BFF→API vs BFF→broker routing |
+| Mixed read/write | Putting reads and writes in the same service |
 | Missing acceptance criteria | Can't verify completion |
 | Skipping test requirements | Tests become afterthought |
 | Ignoring patterns | Leads to inconsistent architecture |
@@ -201,4 +221,4 @@ So that I can identify opportunities and risks in my portfolio.
 
 ---
 
-*Guide Version: 1.5*
+*Guide Version: 2.0*
