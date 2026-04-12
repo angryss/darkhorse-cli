@@ -1,0 +1,49 @@
+# Copilot Instructions — {{project.name}}
+
+> Workspace-level instructions for GitHub Copilot and Claude.
+
+## Entry Point
+
+Read `openspec/AGENTS.md` first. It contains the full project configuration, architecture rules, and code placement guidelines.
+
+## Agentic Workflow
+
+This project uses a three-layer agentic workflow: **Agent → Command → Skill**.
+
+| Layer | Location | Invoked As | Purpose |
+|-------|----------|------------|---------|
+| **Agents** | `.github/agents/` | `@agent-name` in Copilot chat | Enforce behavioral rules, guide interaction |
+| **Commands** | `.github/prompts/` | `/command-name` in chat | Structured invocation, parameterized execution |
+| **Skills** | `openspec/specs/workflow/skills/` | Referenced by commands | Detailed step-by-step workflow execution |
+
+### Available Workflows
+
+| Command | Agent | Skill | Purpose |
+|---------|-------|-------|---------|
+| `/discover` | `@discover` | `discovery.md` | Explore and shape ideas before planning |
+| `/plan` | `@plan` | `planning.md` | Create DDD-compliant proposals |
+| `/implement` | `@implement` | `implementation.md` | Execute approved proposals inside-out |
+| `/troubleshoot` | `@troubleshoot` | `troubleshooting.md` | Diagnose bugs and architecture violations |
+
+### Execution Chain
+
+1. **Agent** receives user request and enforces hard rules (no code in discovery, proposal required for implementation, etc.)
+2. **Agent** loads the corresponding **Command** from `.github/prompts/`
+3. **Command** references the **Skill** in `openspec/specs/workflow/skills/`
+4. **Skill** defines the step-by-step execution, context loading, and output format
+
+### Direct Command Use
+
+Commands can be invoked directly as `/discover`, `/plan`, `/implement`, `/troubleshoot` without going through an agent. The agent adds behavioral guardrails and interaction style on top.
+
+## Architecture Rules
+
+- **DDD + Onion Architecture + CQRS** — see `openspec/specs/architecture/`
+- Dependencies point inward: Domain ← Application ← Infrastructure ← Presentation
+- Domain layer has ZERO external dependencies
+- One repository per aggregate root
+- Cross-context communication via integration events only
+
+## Approved AI Tools
+
+Only GitHub Copilot, Claude, and Codex. No agent frameworks (LangChain, AutoGen, CrewAI, Semantic Kernel). See `openspec/specs/architecture/agent-limits.md`.

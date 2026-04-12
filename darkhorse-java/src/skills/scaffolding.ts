@@ -20,8 +20,10 @@ export async function scaffold(config: DarkhorseConfig): Promise<SkillResult> {
       path.join(p.openspec, 'specs'),
       path.join(p.openspec, 'changes'),
       path.join(p.openspec, 'archive'),
-      p.backend,
-      path.join(p.backend, 'contexts'),
+      // Backend category folders (empty at init; projects added later)
+      path.join(p.root, 'backend', 'apis'),
+      path.join(p.root, 'backend', 'bffs'),
+      path.join(p.root, 'backend', 'microservices'),
       p.deployment,
       p.vscode,
     ];
@@ -61,12 +63,6 @@ export async function scaffold(config: DarkhorseConfig): Promise<SkillResult> {
     const engine = new TemplateEngine(getTemplatesDir());
     const ctx = buildTemplateContext(config);
 
-    // Backend: pom.xml (archetype-specific)
-    const pomTemplate = `backend/${config.archetype}/pom.xml.hbs`;
-    const pomPath = path.join(p.backend, 'pom.xml');
-    await engine.render(pomTemplate, ctx, pomPath);
-    filesCreated.push(pomPath);
-
     // Deployment: docker-compose.yml
     const dockerPath = path.join(p.deployment, 'docker-compose.yml');
     await engine.render('deployment/docker-compose.yml.hbs', ctx, dockerPath);
@@ -102,42 +98,11 @@ export async function scaffold(config: DarkhorseConfig): Promise<SkillResult> {
         filesCreated.push(pkgPath);
       }
     }
-
-    // Archetype-specific example files
-    const exampleFiles = await scaffoldArchetypeExamples(config, engine, ctx);
-    filesCreated.push(...exampleFiles);
   } catch (err) {
     errors.push(`Scaffolding error: ${err instanceof Error ? err.message : String(err)}`);
   }
 
   return { success: errors.length === 0, filesCreated, filesModified: [], errors };
-}
-
-/**
- * Scaffold CQRS example files that vary by archetype.
- */
-async function scaffoldArchetypeExamples(
-  config: DarkhorseConfig,
-  engine: TemplateEngine,
-  ctx: TemplateContext,
-): Promise<string[]> {
-  const filesCreated: string[] = [];
-  const examplesDir = path.join(config.paths.backend, 'examples');
-  await fsUtil.ensureDir(examplesDir);
-
-  const templateBase = `backend/${config.archetype}/examples`;
-
-  // Command handler example (all archetypes)
-  const cmdPath = path.join(examplesDir, 'ExampleCommandHandler.java');
-  await engine.render(`${templateBase}/ExampleCommandHandler.java.hbs`, ctx, cmdPath);
-  filesCreated.push(cmdPath);
-
-  // Query handler example (all archetypes)
-  const queryPath = path.join(examplesDir, 'ExampleQueryHandler.java');
-  await engine.render(`${templateBase}/ExampleQueryHandler.java.hbs`, ctx, queryPath);
-  filesCreated.push(queryPath);
-
-  return filesCreated;
 }
 
 function buildTemplateContext(config: DarkhorseConfig): TemplateContext {

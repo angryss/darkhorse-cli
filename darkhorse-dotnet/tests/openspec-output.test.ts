@@ -243,14 +243,23 @@ describe('OpenSpec output — init workspace', () => {
   describe('workflow specs', () => {
     it('workflow directory has skill files', () => {
       const wfFiles = files.filter((f) =>
-        f.startsWith('openspec/specs/workflow/') && !f.includes('commands/')
+        f.startsWith('openspec/specs/workflow/skills/')
       );
       expect(wfFiles.length).toBeGreaterThanOrEqual(1);
     });
 
-    it('workflow commands are seeded as reference', () => {
-      const cmdFiles = files.filter((f) => f.startsWith('openspec/specs/workflow/commands/'));
-      expect(cmdFiles.length).toBeGreaterThanOrEqual(1);
+    it('prompt commands are seeded into .github/prompts/', () => {
+      const promptFiles = files.filter((f) => f.startsWith('.github/prompts/'));
+      expect(promptFiles.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it('copilot agents are seeded into .github/agents/', () => {
+      const agentFiles = files.filter((f) => f.startsWith('.github/agents/'));
+      expect(agentFiles.length).toBeGreaterThanOrEqual(1);
+    });
+
+    it('generates .github/copilot-instructions.md', () => {
+      expect(files).toContain('.github/copilot-instructions.md');
     });
   });
 

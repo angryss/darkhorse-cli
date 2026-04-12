@@ -37,11 +37,12 @@ export async function seedOpenSpec(config: DarkhorseConfig): Promise<SkillResult
     const guideFiles = await copyMarkdownDir(getGuidesDir(), patternsDir);
     filesCreated.push(...guideFiles);
 
-    // 4. Seed workflow specs (from workflows/)
+    // 4. Seed workflow skills (from workflows/skills/) — skills stay in openspec
     const workflowDir = path.join(specsDir, 'workflow');
-    await fsUtil.ensureDir(workflowDir);
-    const workflowFiles = await seedWorkflows(getWorkflowsDir(), workflowDir);
-    filesCreated.push(...workflowFiles);
+    const skillsDest = path.join(workflowDir, 'skills');
+    await fsUtil.ensureDir(skillsDest);
+    const skillFiles = await copyMarkdownDir(path.join(getWorkflowsDir(), 'skills'), skillsDest);
+    filesCreated.push(...skillFiles);
 
     // 5. Seed domain templates (empty structure for project to fill)
     const domainDir = path.join(specsDir, 'domain');
@@ -78,6 +79,17 @@ export async function seedOpenSpec(config: DarkhorseConfig): Promise<SkillResult
     await fsUtil.ensureDir(githubAgentsDir);
     const agentFiles = await copyMarkdownDir(path.join(getWorkflowsDir(), 'agents'), githubAgentsDir);
     filesCreated.push(...agentFiles);
+
+    // 10. Seed prompt commands into .github/prompts/
+    const promptsDir = path.join(config.paths.root, '.github', 'prompts');
+    await fsUtil.ensureDir(promptsDir);
+    const promptFiles = await copyMarkdownDir(path.join(getWorkflowsDir(), 'commands'), promptsDir);
+    filesCreated.push(...promptFiles);
+
+    // 11. Generate .github/copilot-instructions.md
+    const copilotInstructions = path.join(config.paths.root, '.github', 'copilot-instructions.md');
+    await engine.render('github/copilot-instructions.md.hbs', ctx, copilotInstructions);
+    filesCreated.push(copilotInstructions);
   } catch (err) {
     errors.push(`OpenSpec seeding error: ${err instanceof Error ? err.message : String(err)}`);
   }
@@ -107,27 +119,5 @@ async function copyMarkdownDir(srcDir: string, destDir: string): Promise<string[
   } catch {
     // Directory may not exist yet during development — non-fatal
   }
-  return copied;
-}
-
-/**
- * Seed workflow specs from both commands/ and skills/ subdirectories.
- * Skills land in destDir/skills/, commands land in destDir/commands/.
- */
-async function seedWorkflows(workflowsDir: string, destDir: string): Promise<string[]> {
-  const copied: string[] = [];
-
-  // Skills go into destDir/skills/ (explicit subfolder, machine-readable as skills)
-  const skillsDest = path.join(destDir, 'skills');
-  await fsUtil.ensureDir(skillsDest);
-  const skillFiles = await copyMarkdownDir(path.join(workflowsDir, 'skills'), skillsDest);
-  copied.push(...skillFiles);
-
-  // Commands go into destDir/commands/
-  const cmdsDest = path.join(destDir, 'commands');
-  await fsUtil.ensureDir(cmdsDest);
-  const cmdFiles = await copyMarkdownDir(path.join(workflowsDir, 'commands'), cmdsDest);
-  copied.push(...cmdFiles);
-
   return copied;
 }

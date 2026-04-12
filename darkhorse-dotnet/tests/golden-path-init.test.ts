@@ -77,25 +77,6 @@ describe('init — no frontend', () => {
     expect(await fileExists(path.join(projectRoot, 'backend', 'microservices'))).toBe(true);
   });
 
-  it('creates backend/shared/ with workspace Contracts project', async () => {
-    expect(await fileExists(path.join(projectRoot, 'backend', 'shared'))).toBe(true);
-    expect(await fileExists(path.join(projectRoot, 'backend', 'shared', 'TestProject.Contracts'))).toBe(true);
-  });
-
-  it('creates Contracts.csproj with correct namespace', async () => {
-    const csprojPath = path.join(projectRoot, 'backend', 'shared', 'TestProject.Contracts', 'TestProject.Contracts.csproj');
-    expect(await fileExists(csprojPath)).toBe(true);
-    const content = await readText(csprojPath);
-    expect(content).toContain('<RootNamespace>TestProject.Contracts</RootNamespace>');
-  });
-
-  it('creates Contracts subdirectories (Events, Abstractions, Primitives)', async () => {
-    const contractsDir = path.join(projectRoot, 'backend', 'shared', 'TestProject.Contracts');
-    expect(await fileExists(path.join(contractsDir, 'Events'))).toBe(true);
-    expect(await fileExists(path.join(contractsDir, 'Abstractions'))).toBe(true);
-    expect(await fileExists(path.join(contractsDir, 'Primitives'))).toBe(true);
-  });
-
   it('creates deployment/docker-compose.yml', () => {
     expect(files).toContain('deployment/docker-compose.yml');
   });

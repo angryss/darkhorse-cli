@@ -22,11 +22,14 @@
 
 1. **This file** — project config and agent rules
 2. **`context/00-START-HERE.md`** — project overview and navigation
-3. **`context/10-REPO-MAP.md`** — what lives where
-4. **`context/30-BOUNDED-CONTEXTS.md`** — domain contexts and relationships
-5. **`specs/architecture/`** — mandatory architecture rules
-6. **`specs/patterns/`** — development patterns and examples
-7. **`specs/project/roadmap.md`** — MVP roadmap and requirements
+3. **`.github/copilot-instructions.md`** — workspace-level Copilot/Claude instructions
+4. **`context/10-REPO-MAP.md`** — what lives where
+5. **`context/30-BOUNDED-CONTEXTS.md`** — domain contexts and relationships
+6. **`specs/architecture/`** — mandatory architecture rules
+7. **`specs/patterns/`** — development patterns and examples
+8. **`.github/prompts/`** — prompt commands (invoke as `/discover`, `/plan`, `/implement`, `/troubleshoot`)
+9. **`specs/workflow/skills/`** — workflow skills (referenced by commands)
+10. **`specs/project/roadmap.md`** — MVP roadmap and requirements
 
 ## Crate Architecture
 
@@ -46,11 +49,32 @@
 5. **Local-first persistence**: SQLite via rusqlite. WAL mode. Embedded migrations.
 6. **Tauri commands are thin**: Desktop crate dispatches to application layer. No business logic in commands.
 
-## GitHub Copilot Agents
+## Agentic Workflow
 
-| Agent | File | Purpose |
-|-------|------|---------|
-| Discover | `.github/agents/discover.agent.md` | Run discovery sessions |
-| Plan | `.github/agents/plan.agent.md` | Create implementation plans |
-| Implement | `.github/agents/implement.agent.md` | Execute approved proposals |
-| Troubleshoot | `.github/agents/troubleshoot.agent.md` | Diagnose and resolve issues |
+This project uses a three-layer agentic workflow: **Agent → Command → Skill**.
+
+| Layer | Location | Invoked As | Purpose |
+|-------|----------|------------|---------|
+| **Agents** | `.github/agents/` | `@agent-name` in Copilot chat | Enforce behavioral rules, guide interaction |
+| **Commands** | `.github/prompts/` | `/command-name` in chat | Structured invocation, parameterized execution |
+| **Skills** | `openspec/specs/workflow/skills/` | Referenced by commands | Detailed step-by-step workflow execution |
+
+### Available Workflows
+
+| Command | Agent | Skill | Purpose |
+|---------|-------|-------|---------|
+| `/discover` | `@discover` | `discovery.md` | Explore and shape ideas before planning |
+| `/plan` | `@plan` | `planning.md` | Create DDD-compliant proposals |
+| `/implement` | `@implement` | `implementation.md` | Execute approved proposals inside-out |
+| `/troubleshoot` | `@troubleshoot` | `troubleshooting.md` | Diagnose bugs and architecture violations |
+
+### Execution Chain
+
+Agents invoke commands. Commands invoke skills. Do not bypass this chain.
+
+1. **Agent** receives user request and enforces hard rules
+2. **Agent** loads the corresponding **Command** from `.github/prompts/`
+3. **Command** references the **Skill** in `openspec/specs/workflow/skills/`
+4. **Skill** defines the step-by-step execution, context loading, and output format
+
+Commands can also be invoked directly as `/discover`, `/plan`, `/implement`, `/troubleshoot` without going through an agent.

@@ -44,9 +44,13 @@ export async function seedOpenSpec(config: DarkhorseConfig): Promise<SkillResult
     const patternCopied = await copyMarkdownDir(getGuidesDir(), patternDir);
     filesCreated.push(...patternCopied.map((f) => `openspec/specs/patterns/${path.basename(f)}`));
 
-    // ── Workflow specs (copied from workflows/) ────────────────
+    // ── Workflow skills (copied from workflows/skills/) ────────────
 
-    await seedWorkflows(getWorkflowsDir(), path.join(openspec, 'specs', 'workflow'), filesCreated);
+    const workflowDir = path.join(openspec, 'specs', 'workflow');
+    const skillsDest = path.join(workflowDir, 'skills');
+    await ensureDir(skillsDest);
+    const skillCopied = await copyMarkdownDir(path.join(getWorkflowsDir(), 'skills'), skillsDest);
+    filesCreated.push(...skillCopied.map((f) => `openspec/specs/workflow/skills/${path.basename(f)}`));
 
     // ── Domain starter ─────────────────────────────────────────
 
@@ -80,6 +84,22 @@ export async function seedOpenSpec(config: DarkhorseConfig): Promise<SkillResult
       const agentsCopied = await copyMarkdownDir(workflowAgentsDir, ghAgentsDir);
       filesCreated.push(...agentsCopied.map((f) => `.github/agents/${path.basename(f)}`));
     }
+
+    // ── Prompt commands (copied from workflows/commands/) ─────
+
+    const promptsDir = path.join(root, '.github', 'prompts');
+    const workflowCmdsDir = path.join(getWorkflowsDir(), 'commands');
+    if (await pathExists(workflowCmdsDir)) {
+      await ensureDir(promptsDir);
+      const promptsCopied = await copyMarkdownDir(workflowCmdsDir, promptsDir);
+      filesCreated.push(...promptsCopied.map((f) => `.github/prompts/${path.basename(f)}`));
+    }
+
+    // ── Copilot instructions ────────────────────────────
+
+    const copilotInstructions = path.join(root, '.github', 'copilot-instructions.md');
+    await engine.render('github/copilot-instructions.md.hbs', ctx, copilotInstructions);
+    filesCreated.push('.github/copilot-instructions.md');
   } catch (err) {
     errors.push(`seedOpenSpec failed: ${err instanceof Error ? err.message : String(err)}`);
   }
@@ -108,20 +128,4 @@ async function copyMarkdownDir(srcDir: string, destDir: string): Promise<string[
     }
   }
   return copied;
-}
-
-async function seedWorkflows(
-  workflowsDir: string,
-  destBase: string,
-  filesCreated: string[],
-): Promise<void> {
-  for (const sub of ['skills', 'commands']) {
-    const srcDir = path.join(workflowsDir, sub);
-    if (!(await pathExists(srcDir))) continue;
-
-    const destDir = path.join(destBase, sub);
-    await ensureDir(destDir);
-    const copied = await copyMarkdownDir(srcDir, destDir);
-    filesCreated.push(...copied.map((f) => `openspec/specs/workflow/${sub}/${path.basename(f)}`));
-  }
 }

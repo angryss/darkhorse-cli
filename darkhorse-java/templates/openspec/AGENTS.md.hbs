@@ -37,26 +37,47 @@ This is a **Microservice** — it is message-driven, owns its data, and is NOT H
 ## Reading Order
 
 1. `context/00-START-HERE.md` — Project overview and navigation
-2. **This file** — AI agent instructions
-3. `openspec/specs/architecture/archetype-rules.md` — **Archetype constraints (read this)**
-4. `openspec/specs/architecture/` — Mandatory architecture rules
-5. `openspec/specs/patterns/` — Implementation patterns
-6. `openspec/specs/workflow/skills/` — Development workflow skills
-7. `openspec/specs/workflow/commands/` — CLI command invocation guides
-8. `openspec/specs/domain/` — Bounded contexts (project-specific)
-9. `openspec/specs/project/roadmap.md` — MVP roadmap and archiving rules
-10. `openspec/changes/mvp-1.0/progress-tracker.md` — Active MVP progress tracker
-11. `openspec/changes/` — Active proposals and tasks
+2. **This file** — AI agent instructions and workflow system
+3. `.github/copilot-instructions.md` — Workspace-level Copilot/Claude instructions
+4. `openspec/specs/architecture/archetype-rules.md` — Archetype constraints
+5. `openspec/specs/architecture/` — Mandatory architecture rules
+6. `openspec/specs/patterns/` — Implementation patterns
+7. `.github/prompts/` — Prompt commands (invoke as `/discover`, `/plan`, `/implement`, `/troubleshoot`)
+8. `openspec/specs/workflow/skills/` — Development workflow skills (referenced by commands)
+9. `openspec/specs/domain/` — Bounded contexts (project-specific)
+10. `openspec/specs/project/roadmap.md` — MVP roadmap and archiving rules
+11. `openspec/changes/mvp-1.0/progress-tracker.md` — Active MVP progress tracker
+12. `openspec/changes/` — Active proposals and tasks
 
-## Copilot Agents
+## Agentic Workflow
 
-This project ships with pre-configured GitHub Copilot agents in `.github/agents/`. Use them in VS Code with the `@plan`, `@implement`, or `@troubleshoot` chat participants.
+This project uses a three-layer agentic workflow: **Agent → Command → Skill**.
 
-| Agent | File | Purpose |
-|-------|------|---------|
-| Plan | `.github/agents/plan.agent.md` | Create a requirement proposal in `openspec/changes/mvp-X.Y/REQ-*/` |
-| Implement | `.github/agents/implement.agent.md` | Execute an approved proposal, archive completed MVPs |
-| Troubleshoot | `.github/agents/troubleshoot.agent.md` | Investigate a bug and create a BUG proposal |
+| Layer | Location | Invoked As | Purpose |
+|-------|----------|------------|---------|
+| **Agents** | `.github/agents/` | `@agent-name` in Copilot chat | Enforce behavioral rules, guide interaction |
+| **Commands** | `.github/prompts/` | `/command-name` in chat | Structured invocation, parameterized execution |
+| **Skills** | `openspec/specs/workflow/skills/` | Referenced by commands | Detailed step-by-step workflow execution |
+
+### Available Workflows
+
+| Command | Agent | Skill | Purpose |
+|---------|-------|-------|---------|
+| `/discover` | `@discover` | `discovery.md` | Explore and shape ideas before planning |
+| `/plan` | `@plan` | `planning.md` | Create DDD-compliant proposals |
+| `/implement` | `@implement` | `implementation.md` | Execute approved proposals inside-out |
+| `/troubleshoot` | `@troubleshoot` | `troubleshooting.md` | Diagnose bugs and architecture violations |
+
+### Execution Chain
+
+Agents invoke commands. Commands invoke skills. Do not bypass this chain.
+
+1. **Agent** receives user request and enforces hard rules
+2. **Agent** loads the corresponding **Command** from `.github/prompts/`
+3. **Command** references the **Skill** in `openspec/specs/workflow/skills/`
+4. **Skill** defines the step-by-step execution, context loading, and output format
+
+Commands can also be invoked directly as `/discover`, `/plan`, `/implement`, `/troubleshoot` without going through an agent. The agent adds behavioral guardrails on top.
 
 ## Architecture Rules (Mandatory)
 

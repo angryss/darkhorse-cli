@@ -425,7 +425,7 @@ Scaffolds `frontend/web-app/` with a production-ready React stack:
 |---------|---------|------|
 | react + react-dom | ^18.3.0 | UI framework |
 | react-router-dom | ^7.0.0 | Client-side routing |
-| @chakra-ui/react | ^3.0.0 | Accessible component library |
+| @chakra-ui/react | ^2.0.0 | Accessible component library |
 | tailwindcss | ^4.0.0 | Utility-first CSS (via `@tailwindcss/vite`) |
 | zustand | ^5.0.0 | Lightweight global state |
 | react-hook-form | ^7.0.0 | Form state management |

@@ -22,17 +22,11 @@ export async function scaffoldWorkspace(config: DarkhorseConfig): Promise<SkillR
       path.join(p.openspec, 'specs'),
       path.join(p.openspec, 'changes'),
       path.join(p.openspec, 'archive'),
-      // Backend placeholder directories (services will be added under these)
+      // Backend category folders (empty at init; services added later via `add`)
       p.backend,
       path.join(p.backend, 'apis'),
       path.join(p.backend, 'bffs'),
       path.join(p.backend, 'microservices'),
-      // Workspace-shared Contracts project
-      path.join(p.backend, 'shared'),
-      path.join(p.backend, 'shared', `${config.workspaceNamespace}.Contracts`),
-      path.join(p.backend, 'shared', `${config.workspaceNamespace}.Contracts`, 'Events'),
-      path.join(p.backend, 'shared', `${config.workspaceNamespace}.Contracts`, 'Abstractions'),
-      path.join(p.backend, 'shared', `${config.workspaceNamespace}.Contracts`, 'Primitives'),
       p.deployment,
       p.vscode,
     ];
@@ -61,19 +55,6 @@ export async function scaffoldWorkspace(config: DarkhorseConfig): Promise<SkillR
 
     const engine = new TemplateEngine(getTemplatesDir());
     const ctx = buildTemplateContext(config);
-
-    // Workspace-shared Contracts class library
-    const wsNs = config.workspaceNamespace;
-    const contractsCsprojPath = path.join(p.backend, 'shared', `${wsNs}.Contracts`, `${wsNs}.Contracts.csproj`);
-    await engine.render('backend/shared/Contracts.csproj.hbs', ctx, contractsCsprojPath);
-    filesCreated.push(contractsCsprojPath);
-
-    // .gitkeep files so empty Contracts subdirectories are tracked
-    for (const subdir of ['Events', 'Abstractions', 'Primitives']) {
-      const gitkeepPath = path.join(p.backend, 'shared', `${wsNs}.Contracts`, subdir, '.gitkeep');
-      await fsUtil.writeFile(gitkeepPath, '');
-      filesCreated.push(gitkeepPath);
-    }
 
     // Deployment: docker-compose.yml
     const dockerPath = path.join(p.deployment, 'docker-compose.yml');
@@ -167,6 +148,22 @@ export async function scaffoldService(config: DarkhorseConfig): Promise<SkillRes
 
     const engine = new TemplateEngine(getTemplatesDir());
     const ctx = buildTemplateContext(config);
+
+    // Workspace-shared Contracts project (created on first `add`, skipped if exists)
+    const wsNs = config.workspaceNamespace;
+    const sharedDir = path.join(p.root, 'backend', 'shared');
+    const contractsDir = path.join(sharedDir, `${wsNs}.Contracts`);
+    const contractsCsprojPath = path.join(contractsDir, `${wsNs}.Contracts.csproj`);
+    if (!(await fsUtil.pathExists(contractsCsprojPath))) {
+      for (const sub of ['Events', 'Abstractions', 'Primitives']) {
+        await fsUtil.ensureDir(path.join(contractsDir, sub));
+        const gitkeepPath = path.join(contractsDir, sub, '.gitkeep');
+        await fsUtil.writeFile(gitkeepPath, '');
+        filesCreated.push(gitkeepPath);
+      }
+      await engine.render('backend/shared/Contracts.csproj.hbs', ctx, contractsCsprojPath);
+      filesCreated.push(contractsCsprojPath);
+    }
 
     // Solution file
     const slnPath = path.join(p.backend, `${ns}.sln`);
