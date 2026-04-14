@@ -1,0 +1,40 @@
+{
+  "name": "@react-toolkit/tree-grid",
+  "version": "1.0.0",
+  "description": "Hierarchical data grid component with expand/collapse, sorting, filtering, and selection",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest",
+    "test:coverage": "vitest --coverage"
+  },
+  "keywords": [
+    "react",
+    "tree-grid",
+    "hierarchical",
+    "data-grid",
+    "table",
+    "tree"
+  ],
+  "author": "Frontend Toolkit Team",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "dependencies": {
+    "@react-toolkit/core": "workspace:*",
+    "@react-toolkit/design-tokens": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "typescript": "^5.3.3"
+  }
+}
+

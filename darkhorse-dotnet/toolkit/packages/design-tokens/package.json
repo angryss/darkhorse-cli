@@ -1,0 +1,56 @@
+{
+  "name": "@react-toolkit/design-tokens",
+  "version": "1.0.0",
+  "description": "Design tokens for React Toolkit components",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./colors": {
+      "import": "./dist/colors.js",
+      "types": "./dist/colors.d.ts"
+    },
+    "./spacing": {
+      "import": "./dist/spacing.js",
+      "types": "./dist/spacing.d.ts"
+    },
+    "./typography": {
+      "import": "./dist/typography.js",
+      "types": "./dist/typography.d.ts"
+    },
+    "./shadows": {
+      "import": "./dist/shadows.js",
+      "types": "./dist/shadows.d.ts"
+    },
+    "./borders": {
+      "import": "./dist/borders.js",
+      "types": "./dist/borders.d.ts"
+    },
+    "./animation": {
+      "import": "./dist/animation.js",
+      "types": "./dist/animation.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rimraf dist *.tsbuildinfo",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "design-tokens",
+    "design-system",
+    "react",
+    "typescript"
+  ],
+  "author": "React Toolkit Team",
+  "license": "MIT"
+}
+

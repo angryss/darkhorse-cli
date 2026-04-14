@@ -1,0 +1,40 @@
+{
+  "name": "@react-toolkit/timeline",
+  "version": "1.0.0",
+  "description": "Timeline component for visualizing ordered events and milestones",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "clean": "rimraf dist"
+  },
+  "keywords": [
+    "react",
+    "timeline",
+    "component",
+    "events",
+    "milestones",
+    "history"
+  ],
+  "author": "React Toolkit",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  },
+  "dependencies": {
+    "@react-toolkit/core": "workspace:*",
+    "@react-toolkit/design-tokens": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "typescript": "^5.0.0"
+  }
+}
+

@@ -1,0 +1,41 @@
+{
+  "name": "@react-toolkit/core",
+  "version": "1.0.0",
+  "description": "Core utilities and types for React Toolkit components",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "clean": "rimraf dist *.tsbuildinfo",
+    "type-check": "tsc --noEmit"
+  },
+  "keywords": [
+    "react",
+    "typescript",
+    "utilities",
+    "core"
+  ],
+  "author": "React Toolkit Team",
+  "license": "MIT",
+  "peerDependencies": {
+    "react": "^18.2.0"
+  },
+  "dependencies": {
+    "@react-toolkit/design-tokens": "workspace:*"
+  }
+}
+

@@ -1,0 +1,25 @@
+import type { Meta, StoryObj } from '@storybook/react';
+import { KanbanBoard } from './KanbanBoard';
+import './KanbanBoard.module.css';
+declare const meta: Meta<typeof KanbanBoard>;
+export default meta;
+type Story = StoryObj<typeof KanbanBoard>;
+export declare const Basic: Story;
+export declare const WithDragAndDrop: Story;
+export declare const WithSwimlanes: Story;
+export declare const WithCustomSwimlaneLabels: Story;
+export declare const WithColumnToggle: Story;
+export declare const WithSingleSelection: Story;
+export declare const WithMultipleSelection: Story;
+export declare const WithTooltips: Story;
+export declare const WithDialogEditing: Story;
+export declare const WithCustomCardTemplate: Story;
+export declare const WithCustomColumnHeader: Story;
+export declare const WithWIPLimits: Story;
+export declare const EmptyBoard: Story;
+export declare const SingleColumn: Story;
+export declare const ManyCards: Story;
+export declare const FullFeatured: Story;
+export declare const CustomDimensions: Story;
+export declare const WithPriorityColors: Story;
+//# sourceMappingURL=KanbanBoard.stories.d.ts.map

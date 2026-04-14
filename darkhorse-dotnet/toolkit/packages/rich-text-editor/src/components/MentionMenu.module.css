@@ -1,0 +1,100 @@
+/**
+ * Mention Menu Styles
+ */
+
+.mentionMenu {
+  position: absolute;
+  z-index: 1000;
+  min-width: 260px;
+  max-width: 360px;
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: var(--color-background-primary, #ffffff);
+  border: 1px solid var(--color-border-primary, #e5e7eb);
+  border-radius: var(--border-radius-md, 8px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  padding: 8px;
+}
+
+.mentionMenu__item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: var(--border-radius-sm, 6px);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.mentionMenu__item:hover {
+  background-color: var(--color-background-secondary, #f9fafb);
+}
+
+.mentionMenu__item--selected {
+  background-color: var(--color-primary-light, #dbeafe);
+}
+
+.mentionMenu__avatar {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 14px;
+  background-color: var(--color-background-secondary, #f9fafb);
+  color: var(--color-text-secondary, #6b7280);
+  object-fit: cover;
+}
+
+.mentionMenu__content {
+  flex: 1;
+  min-width: 0;
+}
+
+.mentionMenu__name {
+  font-size: var(--font-size-md, 14px);
+  font-weight: 500;
+  color: var(--color-text-primary, #1f2937);
+  margin-bottom: 2px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mentionMenu__email {
+  font-size: var(--font-size-sm, 12px);
+  color: var(--color-text-secondary, #6b7280);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.mentionMenu__loading,
+.mentionMenu__empty {
+  padding: 16px;
+  text-align: center;
+  color: var(--color-text-secondary, #6b7280);
+  font-size: var(--font-size-sm, 12px);
+}
+
+/* Scrollbar styling */
+.mentionMenu::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mentionMenu::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.mentionMenu::-webkit-scrollbar-thumb {
+  background-color: var(--color-border-primary, #e5e7eb);
+  border-radius: 4px;
+}
+
+.mentionMenu::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-text-tertiary, #9ca3af);
+}
+

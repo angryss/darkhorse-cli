@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { fsUtil, TemplateEngine, type DarkhorseConfig, type SkillResult, type TemplateContext } from '../core/index.js';
 import { ARCHETYPE_CATEGORIES } from '../core/types.js';
-import { getTemplatesDir } from './registry.js';
+import { getTemplatesDir, getToolkitDir } from './registry.js';
 
 // ---------------------------------------------------------------------------
 // scaffoldWorkspace — called by `darkhorse-dotnet init`
@@ -76,7 +76,7 @@ export async function scaffoldWorkspace(config: DarkhorseConfig): Promise<SkillR
     await engine.render('readme.md.hbs', ctx, readmePath);
     filesCreated.push(readmePath);
 
-    // Frontend package.json files (optional)
+    // Frontend package.json files + toolkit copy (optional)
     if (config.features.frontend) {
       const platforms = config.frontend?.platform === 'both'
         ? ['web', 'mobile'] as const
@@ -89,6 +89,14 @@ export async function scaffoldWorkspace(config: DarkhorseConfig): Promise<SkillR
         const pkgPath = path.join(p.frontend, appDir, 'package.json');
         await engine.render(template, ctx, pkgPath);
         filesCreated.push(pkgPath);
+      }
+
+      // Copy bundled toolkit into generated project's frontend/toolkit/
+      if (config.frontend?.toolkit) {
+        const toolkitSrc = getToolkitDir();
+        const toolkitDest = path.join(p.frontend, 'toolkit');
+        await fsUtil.copyDir(toolkitSrc, toolkitDest);
+        filesCreated.push(toolkitDest);
       }
     }
   } catch (err) {

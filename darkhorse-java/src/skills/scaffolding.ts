@@ -1,7 +1,7 @@
 ﻿import path from 'node:path';
 import { fsUtil, TemplateEngine, type DarkhorseConfig, type SkillResult, type TemplateContext } from '../core/index.js';
 import { ARCHETYPE_CATEGORIES } from '../core/types.js';
-import { getTemplatesDir } from './registry.js';
+import { getTemplatesDir, getToolkitDir } from './registry.js';
 
 /**
  * Scaffolding skill — creates the canonical directory structure and base project files.
@@ -96,6 +96,14 @@ export async function scaffold(config: DarkhorseConfig): Promise<SkillResult> {
         const pkgPath = path.join(p.frontend, appDir, 'package.json');
         await engine.render(template, ctx, pkgPath);
         filesCreated.push(pkgPath);
+      }
+
+      // Copy bundled toolkit into generated project's frontend/toolkit/
+      if (config.frontend?.toolkit) {
+        const toolkitSrc = getToolkitDir();
+        const toolkitDest = path.join(p.frontend, 'toolkit');
+        await fsUtil.copyDir(toolkitSrc, toolkitDest);
+        filesCreated.push(toolkitDest);
       }
     }
   } catch (err) {

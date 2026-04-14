@@ -1,0 +1,1 @@
+{"version":3,"file":"TimelineView.d.ts","sourceRoot":"","sources":["../../src/views/TimelineView.tsx"],"names":[],"mappings":"AAAA;;;GAGG;AAEH,OAAO,KAAkB,MAAM,OAAO,CAAC;AACvC,OAAO,EAAE,kBAAkB,EAAkB,aAAa,EAAE,MAAM,UAAU,CAAC;AAa7E,UAAU,iBAAkB,SAAQ,kBAAkB;IACpD,IAAI,EAAE,aAAa,CAAC;CACrB;AAED,eAAO,MAAM,YAAY,EAAE,KAAK,CAAC,EAAE,CAAC,iBAAiB,CA+NpD,CAAC"}
