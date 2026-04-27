@@ -4,15 +4,15 @@
 
 ```yaml
 id: troubleshooting
-version: 1.1.0
+version: 2.0.0
 category: workflow
 status: active
-next_skill: planning
+next_skill: discovery
 ```
 
 ## Purpose
 
-Identify, categorize, and document bugs with architecture compliance. Determine the root cause, classify the change type (code fix, architecture refactor, cross-context integration), and produce an actionable bug report that chains into the Planning and Implementation skills.
+Reset the deployment environment to a known-clean state, redeploy the full stack, guide the user through manual testing, identify root cause from reported findings, and produce an actionable bug report that chains into the Discovery skill.
 
 ## Required Context
 
@@ -20,23 +20,70 @@ Load these files before executing the skill:
 
 ```yaml
 architecture:
-  - openspec/specs/architecture/ddd-principles.md
-  - openspec/specs/architecture/onion-architecture.md
-  - openspec/specs/architecture/cqrs-patterns.md
+  - openspec/specs/architecture/architecture-rules.md
+  - openspec/specs/architecture/archetype-rules.md
+  - openspec/specs/architecture/scaffolding-rules.md
+  - openspec/specs/architecture/testing-rules.md
+  - openspec/specs/architecture/agent-limits.md
 
 patterns:
-  - openspec/specs/patterns/backend.md
-  - openspec/specs/patterns/frontend.md
+  - openspec/specs/patterns/backend-patterns.md
+  - openspec/specs/patterns/frontend-patterns.md
 
 context:
-  - context/20-WORKSPACE-PROJECTS.md
+  - context/00-START-HERE.md
+  - context/10-REPO-MAP.md
   - context/30-BOUNDED-CONTEXTS.md
 
-project:
-  - backend/contexts/<affected_context>/domain/GLOSSARY.md
+codebase:
+  - backend/        # inspect affected bounded context / service
+  - frontend/       # if applicable
+  - deployment/     # docker compose, env, scripts
 ```
 
 ## Steps
+
+### Phase 0 — Environment Reset (Clean Slate)
+
+Before any testing begins, tear down the entire deployment and rebuild from scratch. This guarantees that findings reflect the current codebase, not a stale image or leftover volume state.
+
+**Execute these commands autonomously in the terminal** from the `deployment/` directory. Do NOT ask the user to run them:
+
+```powershell
+# Step 1 — Stop all running services and remove containers, networks, and volumes
+cd deployment
+docker compose down --volumes --remove-orphans
+
+# Step 2 — Remove all images built by this compose project (no stale layers)
+docker compose images -q | ForEach-Object { if ($_) { docker rmi -f $_ } }
+
+# Step 3 — Rebuild all images from source with no cache
+docker compose build --no-cache
+
+# Step 4 — Start the full stack in detached mode
+docker compose up -d
+
+# Step 5 — Confirm all services are healthy
+docker compose ps
+```
+
+> Wait for all services to reach `healthy` or `running` status before proceeding.
+> If any service fails to start, capture the logs: `docker compose logs <service-name>`
+
+### Phase 1 — Manual Testing
+
+With a clean deployment running, instruct the user to exercise the system:
+
+1. Confirm the environment is fully up and accessible.
+2. Ask the user to reproduce the reported issue or perform exploratory testing.
+3. Collect all findings: error messages, unexpected behaviour, logs, screenshots.
+4. Ask the user: **"What did you find? Describe each issue with steps to reproduce."**
+
+Continue collecting findings until the user signals they are done testing.
+
+### Phase 2 — Root Cause Analysis
+
+For each finding reported by the user:
 
 1. **Load Rules & Patterns** — Read architecture rules, patterns, and context maps.
 2. **Identify Affected Bounded Context** — Determine which context contains the bug.
@@ -53,10 +100,22 @@ project:
 9. **Define Regression Test** — Specify a test that would have caught this bug.
 10. **Update Progress Tracker** — Add the bug row to `openspec/changes/mvp-[MVP]/progress-tracker.md` with status `Not Started`.
 
+### Phase 3 — Handoff to Discovery
+
+Once all findings are documented, do NOT proceed to planning directly. Instead:
+
+- Present a summary of all bugs found.
+- Explicitly ask the user: **"Are you ready to move to @discover to explore solutions before planning?"**
+- When confirmed, hand off to the `@discover` agent with the `/discover` command, passing the identified issues as context.
+
 ## Output Format
 
 ```markdown
 # Troubleshooting Report: [Issue Description]
+
+## Environment Reset
+- Teardown completed: yes / no
+- Services healthy at test start: yes / no (list any that failed)
 
 ## Problem Summary
 [One-line description using ubiquitous language]
@@ -85,7 +144,7 @@ project:
 | CQRS patterns followed             | ok / violation |
 
 ## Evidence
-[Code snippets, error messages, or traces supporting the analysis]
+[Code snippets, error messages, logs, or traces supporting the analysis]
 
 ## Recommended Change Type
 config / code-fix / infrastructure / architecture-refactor
@@ -101,26 +160,25 @@ config / code-fix / infrastructure / architecture-refactor
 ## Next Actions
 - [ ] Create planning proposal: `openspec/changes/mvp-[MVP]/BUG-[MVP]-[###]/`
 - [ ] Add to `openspec/changes/mvp-[MVP]/progress-tracker.md` (status: Not Started)
-- [ ] Proceed to **Planning** skill to formalize the fix as a proposal
-- [ ] Then proceed to **Implementation** skill to apply the fix
+- [ ] Proceed to **@discover** to explore the solution space before planning
 ```
 
 ## Constraints
 
-- **HARD STOP — Reports Only:** This skill produces bug reports and proposal documents ONLY. Writing source code or modifying application files in `backend/`, `frontend/`, or `deployment/` is a HARD STOP violation. Document the suggested fix in the report but do NOT implement it.
+- The environment reset in Phase 0 is mandatory. Do not skip it. Run all commands autonomously in the terminal.
+- NO source code modifications are allowed during troubleshooting. Restrict edits to `openspec/changes/` (BUG proposals + tasks) and other documentation updates required by the skill. All fixes must flow through **Discovery → Planning → Implementation**.
 - Do not attempt to fix toolkit problems (toolkit is frozen).
-- Bug fixes go to `backend/`, `frontend/`, or `deployment/` only.
 - Bug fixes must respect bounded context boundaries.
 - Cross-context bugs require ACL or Events, never direct imports.
 - Do not assume missing context — prefer explicit reasoning.
 - Architecture violations require refactoring, not workarounds.
+- Do not chain directly into Planning. Always route through Discovery first.
 
 ## Next Skill
 
-After troubleshooting is complete:
+After troubleshooting is complete, route to **Discovery** — not Planning:
 
-- **Code/config change needed** → proceed to **Planning** (`workflows/skills/planning.md`) to create a formal proposal, then **Implementation** (`workflows/skills/implementation.md`) to apply the fix.
-- **Architecture violation** → proceed to **Planning** to design the refactor, then **Implementation** to execute.
+- All findings → proceed to **Discovery** (`/discover`) to explore the solution space and shape a fix before committing to a plan.
 - **Toolkit bug** → OUT OF SCOPE. Document workaround if critical.
 
-Typical chain: **Troubleshooting → Planning → Implementation**
+Typical chain: **Troubleshooting → Discovery → Planning → Implementation**

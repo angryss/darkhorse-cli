@@ -44,9 +44,15 @@ Load these files before executing the skill:
 
 ```yaml
 architecture:
-  - openspec/specs/architecture/ddd-principles.md
-  - openspec/specs/architecture/onion-architecture.md
-  - openspec/specs/architecture/cqrs-patterns.md
+  - openspec/specs/architecture/architecture-rules.md
+  - openspec/specs/architecture/archetype-rules.md
+  - openspec/specs/architecture/scaffolding-rules.md
+  - openspec/specs/architecture/testing-rules.md
+  - openspec/specs/architecture/agent-limits.md
+
+patterns:
+  - openspec/specs/patterns/backend-patterns.md
+  - openspec/specs/patterns/frontend-patterns.md
 
 context:
   - context/00-START-HERE.md
@@ -56,7 +62,7 @@ project:
   - openspec/specs/project/roadmap.md
 
 existing_discoveries:
-  - openspec/changes/discoveries/  # scan for prior DISC-### files
+  - openspec/changes/  # scan for prior DISC-### files (if any exist)
 
 toolkit:
   - openspec/specs/toolkit/README.md  # if frontend is relevant

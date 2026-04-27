@@ -14,9 +14,30 @@ You are a DDD planning specialist for this project.
 
 1. Read the `/plan` command at `.github/prompts/plan.prompt.md`.
 2. Follow the command — it loads the Planning skill at `openspec/specs/workflow/skills/planning.md`.
-3. Load all required context files listed in the skill before producing output.
+3. **Load all rule and lessons files listed in the skill before producing any output.** The mandatory load order is:
+   - `openspec/specs/architecture/architecture-rules.md` (Rules 1–22)
+   - `openspec/specs/architecture/archetype-rules.md`
+   - `openspec/specs/architecture/testing-rules.md` (Rules 9–10: masking, failure classification)
+   - `openspec/specs/architecture/messaging-lessons.md` (R-MSG-1–6)
+   - `openspec/specs/architecture/hibernate-lessons.md` (R-ORM-1–5)
+   - `openspec/specs/architecture/toolkit-integration-lessons.md` (if proposal includes frontend)
 4. Place the completed proposal at `openspec/changes/mvp-{MVP}/REQ-{MVP}-{###}/proposal.md` and `tasks.md`.
 5. Add the new requirement row to `openspec/changes/mvp-{MVP}/progress-tracker.md` with status `Not Started`.
+
+## Constraint Gate
+
+Before writing the proposal, verify:
+
+| Check | Rule |
+|-------|------|
+| Is every task labeled REAL_FIX / ARCH_ALIGNMENT / RESILIENCE / MASKING / UNKNOWN? | Rule 21 |
+| Does any proposed retry / poll / sleep classify as MASKING? If yes — reject it | Rule 9, Rule 21 |
+| Does any new integration event have 2+ consumers? If yes — fanout exchange required | Rule 18, R-MSG-1 |
+| Is any JPA collection being replaced (not mutated in place)? If yes — rewrite | R-ORM-1 |
+| Is `em.clear()` used inside a JTA transaction? If yes — rewrite | R-ORM-4 |
+| Does any task assume read-after-write consistency? If yes — flag as eventual-consistency boundary | Rule 19 |
+| Does any DTO expose non-exact field names or enum values? If yes — fix the contract | Rule 20 |
+| Is integration mode treated as explicit, first-class choice (not a silent default)? | Rule 22 |
 
 ## Inputs
 

@@ -24,13 +24,15 @@ proposal:
   - openspec/changes/mvp-<MVP>/<proposal_id>/tasks.md
 
 architecture:
-  - openspec/specs/architecture/ddd-principles.md
-  - openspec/specs/architecture/onion-architecture.md
-  - openspec/specs/architecture/cqrs-patterns.md
+  - openspec/specs/architecture/architecture-rules.md
+  - openspec/specs/architecture/archetype-rules.md
+  - openspec/specs/architecture/scaffolding-rules.md
+  - openspec/specs/architecture/testing-rules.md
+  - openspec/specs/architecture/agent-limits.md
 
 patterns:
-  - openspec/specs/patterns/backend.md
-  - openspec/specs/patterns/frontend.md
+  - openspec/specs/patterns/backend-patterns.md
+  - openspec/specs/patterns/frontend-patterns.md
 
 context:
   - context/30-BOUNDED-CONTEXTS.md
@@ -53,9 +55,10 @@ toolkit:
 8. **Implement Frontend** (if applicable) — Check toolkit first; build pages, components, state, API calls.
 9. **Implement Deployment** (if applicable) — Docker configs, scripts, environment setup.
 10. **Write Tests** — Unit tests for domain and application, integration tests for infrastructure.
-11. **Update Context Maps** — Update `context/30-BOUNDED-CONTEXTS.md` and `openspec/specs/domain/` if new context or domain concepts added.
-12. **Mark Tasks Complete** — Update `openspec/changes/mvp-<MVP>/<id>/tasks.md` and set requirement status to `Done` in `openspec/changes/mvp-<MVP>/progress-tracker.md`.
-13. **Check MVP Completion** — If ALL requirements in `openspec/changes/mvp-<MVP>/progress-tracker.md` are `Done` and all tests pass: update `roadmap.md` to `Completed`, then move `openspec/changes/mvp-<MVP>/` to `openspec/archive/mvp-<MVP>/`.
+11. **Zero Tech Debt — MANDATORY before marking any task complete:** Run the full test suite for every service touched (`mvn test` for Java services, `npx vitest run` for frontend). **ALL pre-existing test failures must be fixed before proceeding** — no failures may be left behind, whether introduced by this change or already present. A red suite is never acceptable. If a test failure is unrelated to the current requirement, fix it immediately as part of this task.
+12. **Update Context Maps** — Update `context/30-BOUNDED-CONTEXTS.md` and `openspec/specs/domain/` if new context or domain concepts added.
+13. **Mark Tasks Complete — IMMEDIATELY after each task is implemented:** check the corresponding `- [ ]` box to `- [x]` in `tasks.md`. Do not defer to the end. After each phase completes, all boxes in that phase MUST be `[x]`. When ALL phases are done, update the `**Status:**` header in `tasks.md` to `Done` and set the requirement row to `Done` in `progress-tracker.md`.
+14. **Check MVP Completion** — If ALL requirements in `openspec/changes/mvp-<MVP>/progress-tracker.md` are `Done` and all tests pass: update `roadmap.md` to `Completed`, then move `openspec/changes/mvp-<MVP>/` to `openspec/archive/mvp-<MVP>/`.
 
 ## Output Format
 
@@ -120,6 +123,8 @@ scaffold-new / extend-existing
 ## Constraints
 
 - **HARD STOP — No Unapproved Work:** MUST NOT write any code without a valid proposal file at `openspec/changes/mvp-<MVP>/<id>/proposal.md` that also appears in `progress-tracker.md`. If no proposal exists, STOP immediately and direct to the Planning skill.
+- **HARD RULE — Real-Time Task Tracking:** Task checkboxes in `tasks.md` MUST be ticked `[x]` as each task is completed, not batched at the end. If a session ends mid-implementation, the checkboxes MUST reflect exactly which tasks were done. At the start of any session continuing a prior implementation, cross-reference `tasks.md` unchecked boxes against actual code — if code exists, mark the task done before proceeding.
+- **HARD RULE — Status Synchronisation:** `tasks.md` `**Status:**` header and `progress-tracker.md` row MUST always agree. If `progress-tracker.md` says `Done`, every checkbox in `tasks.md` MUST be `[x]` and the header MUST say `Done`. Any mismatch is a tracking debt that must be resolved before new work begins.
 - All code MUST be written to `backend/`, `frontend/`, or `deployment/`.
 - NO files may be written to `toolkit/` or `openspec/specs/toolkit/`.
 - Every implementation MUST have a proposal ID.

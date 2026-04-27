@@ -24,6 +24,7 @@ Load the proposal from `openspec/changes/mvp-{MVP}/{proposal_id}/` and all requi
 
 - Proposal MUST exist before implementation begins
 - Follow inside-out order: Domain → Application → Infrastructure → Presentation → Frontend → Deployment
+- **Zero tech debt:** run the full test suite for every service touched after each phase. Fix ALL failures — pre-existing or introduced — before moving on. Never leave a red suite.
 - Update `openspec/changes/mvp-{MVP}/progress-tracker.md` as tasks complete
 - When ALL MVP requirements are Done, archive to `openspec/archive/mvp-{MVP}/`
 

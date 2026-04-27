@@ -30,9 +30,10 @@ patterns:
   - openspec/specs/patterns/frontend-patterns.md
 
 context:
-  - context/20-WORKSPACE-PROJECTS.md
+  - context/00-START-HERE.md
+  - context/10-REPO-MAP.md
   - context/30-BOUNDED-CONTEXTS.md
-  - openspec/specs/domain/context-map.md
+  - openspec/specs/domain/README.md
 
 mvp:
   - openspec/specs/project/roadmap.md
