@@ -41,6 +41,21 @@ Domain → Application → Infrastructure → Presentation → Frontend.
 Instruct Kiro: *"Troubleshoot [issue]"*
 Kiro reads `openspec/specs/workflow/skills/troubleshooting.md`. No source changes without a bug proposal.
 
+## Spec Output Paths
+
+Kiro's built-in `.kiro/specs/` directory is **not used** in this project. All outputs must follow the OpenSpec path structure:
+
+| Output | Path |
+|---|---|
+| Discovery document | `openspec/changes/discoveries/DISC-###.md` |
+| MVP planning folder | `openspec/changes/<mvp-name>/` |
+| Requirements | `openspec/changes/<mvp-name>/REQ-###.md` |
+| Proposal / design | `openspec/changes/<mvp-name>/proposal.md` |
+| Task list | `openspec/changes/<mvp-name>/tasks.md` |
+| Bug report | `openspec/changes/bugs/BUG-###.md` |
+
+**Never create or write files under `.kiro/specs/`.** If Kiro prompts to create a spec folder, redirect the output to the matching path above.
+
 ## Kiro-Specific Notes
 
 - Kiro does **not** have slash commands. Use natural-language instructions referencing the phase names above.
