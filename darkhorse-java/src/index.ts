@@ -9,6 +9,7 @@ import { registerTroubleshootCommand } from './commands/troubleshoot.js';
 import { registerValidateCommand } from './commands/validate.js';
 import { registerNxMonorepoCommand } from './commands/nx-monorepo.js';
 import { registerMcpCommand } from './commands/mcp-serve.js';
+import { registerAiCommand } from './commands/ai.js';
 import { setVerbose } from './core/logger.js';
 
 const program = new Command();
@@ -31,5 +32,6 @@ registerTroubleshootCommand(program);
 registerValidateCommand(program);
 registerNxMonorepoCommand(program);
 registerMcpCommand(program);
+registerAiCommand(program);
 
 program.parse();

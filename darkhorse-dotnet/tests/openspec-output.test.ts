@@ -326,3 +326,78 @@ describe('OpenSpec output — no frontend', () => {
     expect(content).not.toContain('UI components + State + API integration');
   });
 });
+
+// ---------------------------------------------------------------------------
+// Kiro steering files — generated when ai.tools.kiro = true
+// ---------------------------------------------------------------------------
+
+describe('Kiro steering output', () => {
+  let projectRoot: string;
+  let files: string[];
+
+  beforeAll(async () => {
+    const tmpDir = await createTempDir('dh-kiro-');
+    // Enable Kiro explicitly via aiTools flag
+    const config = buildInitConfig({
+      outputDir: tmpDir,
+      name: 'kiro-test',
+      description: 'Project to validate Kiro steering output',
+      includeFrontend: false,
+      aiTools: { copilot: true, kiro: true },
+    });
+    await initAgent(config);
+    projectRoot = config.paths.root;
+    files = await getRelativeFiles(projectRoot);
+  });
+
+  afterAll(cleanupTempDirs);
+
+  it('creates .kiro/steering/ directory', async () => {
+    expect(await fileExists(path.join(projectRoot, '.kiro', 'steering'))).toBe(true);
+  });
+
+  it('creates 00-project.md', () => {
+    expect(files).toContain('.kiro/steering/00-project.md');
+  });
+
+  it('creates 01-workflow.md', () => {
+    expect(files).toContain('.kiro/steering/01-workflow.md');
+  });
+
+  it('creates 02-architecture.md', () => {
+    expect(files).toContain('.kiro/steering/02-architecture.md');
+  });
+
+  it('creates 03-tooling.md', () => {
+    expect(files).toContain('.kiro/steering/03-tooling.md');
+  });
+
+  it('00-project.md references openspec/AGENTS.md', async () => {
+    const content = await readText(path.join(projectRoot, '.kiro', 'steering', '00-project.md'));
+    expect(content).toContain('openspec/AGENTS.md');
+  });
+
+  it('01-workflow.md references OpenSpec workflow skills', async () => {
+    const content = await readText(path.join(projectRoot, '.kiro', 'steering', '01-workflow.md'));
+    expect(content).toContain('openspec/specs/workflow/skills/');
+  });
+
+  it('02-architecture.md references openspec/specs/architecture/', async () => {
+    const content = await readText(path.join(projectRoot, '.kiro', 'steering', '02-architecture.md'));
+    expect(content).toContain('openspec/specs/architecture/');
+  });
+
+  it('03-tooling.md lists both Kiro and Copilot in AI tools table', async () => {
+    const content = await readText(path.join(projectRoot, '.kiro', 'steering', '03-tooling.md'));
+    expect(content).toContain('Kiro');
+    expect(content).toContain('GitHub Copilot');
+  });
+
+  it('does NOT create .kiro/steering/ when kiro = false (default)', async () => {
+    const tmpDir2 = await createTempDir('dh-nokiro-');
+    const config2 = buildInitConfig({ outputDir: tmpDir2, name: 'nokiro-test' });
+    await initAgent(config2);
+    const kiroExists = await fileExists(path.join(config2.paths.root, '.kiro', 'steering'));
+    expect(kiroExists).toBe(false);
+  });
+});

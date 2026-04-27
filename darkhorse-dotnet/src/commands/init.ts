@@ -2,7 +2,7 @@ import { Command } from 'commander';
 import inquirer, { type DistinctQuestion } from 'inquirer';
 import path from 'node:path';
 import { logger } from '../core/logger.js';
-import { type InitInput, type FrontendPlatform, buildConfig } from '../core/types.js';
+import { type InitInput, type FrontendPlatform, type AiToolsConfig, buildConfig } from '../core/types.js';
 import { initAgent } from '../agents/init.agent.js';
 import { fsUtil } from '../core/index.js';
 
@@ -18,6 +18,8 @@ export function registerInitCommand(program: Command): void {
     .option('--frontend', 'Include React frontend scaffold')
     .option('--no-frontend', 'Skip frontend')
     .option('--platform <platform>', 'Frontend platform: web, mobile, or both')
+    .option('--kiro', 'Generate Kiro steering files (.kiro/steering/)')
+    .option('--no-kiro', 'Skip Kiro steering files')
     .option('-o, --output <dir>', 'Output directory', '.')
     .action(async (opts) => {
       logger.header('DarkHorse .NET — Initialize Workspace');
@@ -36,6 +38,7 @@ export function registerInitCommand(program: Command): void {
         includeFrontend: answers.includeFrontend,
         frontendPlatform: answers.frontendPlatform,
         outputDir: path.resolve(answers.output),
+        aiTools: answers.aiTools,
       };
 
       const projectDir = path.join(input.outputDir, input.name);
@@ -60,6 +63,7 @@ interface PromptAnswers {
   includeFrontend: boolean;
   frontendPlatform: FrontendPlatform;
   output: string;
+  aiTools: Partial<AiToolsConfig>;
 }
 
 async function promptMissing(opts: Record<string, unknown>): Promise<PromptAnswers> {
@@ -122,5 +126,9 @@ async function promptMissing(opts: Record<string, unknown>): Promise<PromptAnswe
     includeFrontend,
     frontendPlatform,
     output: (opts.output as string) ?? '.',
+    aiTools: {
+      copilot: true, // always on
+      kiro: opts.kiro === true,
+    },
   };
 }

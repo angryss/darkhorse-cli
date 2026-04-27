@@ -1,9 +1,53 @@
 # Prompt Starters Guide
 
-**Ready-to-use prompts for Codex, Claude, and Copilot on scaffolded .NET projects.**
+**Ready-to-use prompts for Copilot, Kiro, Codex, and Claude on scaffolded .NET projects.**
 
 > Copy, paste, and customize. Each prompt is designed to work with the self-contained
 > project structure. No external reference needed.
+
+---
+
+## Kiro Prompts
+
+> Kiro uses natural-language instructions. Use these when working in the Kiro IDE.
+> Kiro reads `.kiro/steering/` on session start; you do not need to re-explain the project.
+
+### Kiro: Onboard to the Project
+```
+Read openspec/AGENTS.md and summarize:
+1. The project structure and archetype
+2. Architecture constraints from openspec/specs/architecture/
+3. The available development workflow phases
+```
+
+### Kiro: Run Discovery for a Feature
+```
+Run the Discover workflow for [feature description].
+Follow openspec/specs/workflow/skills/discovery.md.
+Write output to openspec/changes/discoveries/DISC-001.md.
+```
+
+### Kiro: Plan a Change
+```
+Plan [feature] based on DISC-001.
+Follow openspec/specs/workflow/skills/planning.md.
+Write a proposal to openspec/changes/mvp-1.0/proposal.md.
+```
+
+### Kiro: Implement an Approved Proposal
+```
+Implement the approved proposal at openspec/changes/mvp-1.0/proposal.md.
+Follow openspec/specs/workflow/skills/implementation.md.
+Build inside-out: Domain → Application → Infrastructure → Presentation.
+Update openspec/changes/mvp-1.0/progress-tracker.md after each completed item.
+```
+
+---
+
+## Copilot Prompts
+
+> Copilot users can use slash commands defined in `.github/prompts/`.
+> The same workflows are available via `/discover`, `/plan`, `/implement`, `/troubleshoot`.
 
 ---
 

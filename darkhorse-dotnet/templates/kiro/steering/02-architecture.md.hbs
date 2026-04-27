@@ -1,0 +1,71 @@
+# {{project.name}} — Architecture Constraints
+
+> **AI Steering File** — Kiro architecture adapter.
+> Full architecture rules are in `openspec/specs/architecture/`. This file summarizes the non-negotiables.
+
+## Canonical Rules
+
+All architecture rules live in `openspec/specs/architecture/`. Read them before generating any code.
+
+Key rule files:
+- `openspec/specs/architecture/architecture-rules.md` — structural invariants
+- `openspec/specs/architecture/archetype-rules.md` — archetype-specific constraints
+- `openspec/specs/architecture/scaffolding-rules.md` — how new services must be structured
+- `openspec/specs/architecture/testing-rules.md` — test organization and coverage expectations
+- `openspec/specs/architecture/agent-limits.md` — what AI agents are and are not allowed to do
+
+## Architecture at a Glance
+
+This project uses **DDD + Clean Architecture + CQRS**.
+
+```
+Presentation  ←  HTTP / gRPC / Message Handlers
+    ↓
+Application   ←  Commands, Queries, Handlers (MediatR)
+    ↓
+Domain        ←  Aggregates, Value Objects, Domain Events, Repository Interfaces
+    ↓
+Infrastructure ← Persistence (EF Core), Messaging, External Clients
+```
+
+**Layer rules:**
+- Domain has zero external dependencies.
+- Application references Domain only.
+- Infrastructure references Application + Domain.
+- Presentation references Application + Infrastructure.
+- Cross-layer shortcuts are forbidden.
+
+{{#if project.archetype}}
+## Archetype: {{project.archetype}}
+
+{{#eq project.archetype "api"}}
+- This is a standard REST API with persistence.
+- Domain Aggregates + EF Core repositories are required.
+- No direct database access outside Infrastructure.
+{{/eq}}
+{{#eq project.archetype "bff-api"}}
+- This is a Backend-for-Frontend. No database, no persistence layer.
+- Infrastructure contains only HTTP clients and message broker adapters.
+- Aggregates are not permitted — use lightweight request/response models.
+{{/eq}}
+{{#eq project.archetype "microservice"}}
+- This is a message-driven microservice.
+- Primary interface is events and commands via a message broker.
+- HTTP endpoints are supplementary only.
+- Domain Aggregates and Integration Events are required.
+{{/eq}}
+{{/if}}
+
+## Shared Contracts
+
+The `{{project.workspaceNamespace}}.Contracts` project is the shared integration contract library.
+All inter-service DTOs and integration events live there.
+No service may reference another service's internal Domain or Application layers.
+
+## What Kiro Must Never Do
+
+- Rename layers or change the folder structure without an approved architecture proposal.
+- Add NuGet packages not listed in the approved tech stack.
+- Write business logic in the Presentation layer.
+- Bypass the repository pattern with direct DbContext calls in Application.
+- Delete or modify `openspec/` files outside the `openspec/changes/` flow.

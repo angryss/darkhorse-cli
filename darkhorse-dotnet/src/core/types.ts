@@ -38,6 +38,7 @@ export interface DarkhorseConfig {
   dotnet?: DotnetConfig;           // undefined until a service is added
   frontend?: FrontendConfig;
   features: FeatureFlags;
+  ai: AiConfig;
   paths: ProjectPaths;
 }
 
@@ -63,6 +64,23 @@ export interface FeatureFlags {
   frontend: boolean;
 }
 
+// ---------------------------------------------------------------------------
+// AI Tools Configuration — controls which AI tool adapters are generated
+// ---------------------------------------------------------------------------
+
+export interface AiToolsConfig {
+  copilot: boolean;
+  kiro: boolean;
+}
+
+export interface AiConfig {
+  /** The single source of truth for all AI agents in this project. */
+  sourceOfTruth: 'openspec';
+  /** Relative path to the AI entry point (always AGENTS.md inside openspec). */
+  entrypoint: 'AGENTS.md';
+  tools: AiToolsConfig;
+}
+
 export interface ProjectPaths {
   root: string;
   backend: string;
@@ -84,6 +102,8 @@ export interface InitInput {
   includeFrontend: boolean;
   frontendPlatform: FrontendPlatform;
   outputDir: string;
+  /** AI tool adapters to generate. Defaults: copilot=true, kiro=false. */
+  aiTools?: Partial<AiToolsConfig>;
 }
 
 // ---------------------------------------------------------------------------
@@ -187,6 +207,14 @@ export function buildConfig(input: InitInput): DarkhorseConfig {
       openspec: true,
       frontend: input.includeFrontend,
     },
+    ai: {
+      sourceOfTruth: 'openspec',
+      entrypoint: 'AGENTS.md',
+      tools: {
+        copilot: input.aiTools?.copilot ?? true,
+        kiro: input.aiTools?.kiro ?? false,
+      },
+    },
     paths: buildProjectPaths(root),
   };
 }
@@ -209,6 +237,7 @@ export function buildServiceConfig(input: AddInput, projectConfig: DarkhorseConf
     },
     frontend: projectConfig.frontend,
     features: projectConfig.features,
+    ai: projectConfig.ai,
     paths: buildServicePaths(input.projectRoot, input.archetype, input.name),
   };
 }

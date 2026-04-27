@@ -1,0 +1,48 @@
+# {{project.name}} — AI Workflow
+
+> **AI Steering File** — Kiro workflow adapter.
+> The workflow lives in OpenSpec. This file maps it for Kiro.
+
+## Canonical Workflow Entry Point
+
+**Read `openspec/AGENTS.md` before starting any task.**
+
+That file contains:
+- The full agent roster and their responsibilities
+- The workflow table (Discover → Plan → Implement → Troubleshoot)
+- Archetype-specific rules and constraints
+- Links to all skill playbooks
+
+## Workflow Summary
+
+| Phase | Agent | Skill Playbook | Output |
+|---|---|---|---|
+| Discover | Discover Agent | `openspec/specs/workflow/skills/discovery.md` | `openspec/changes/discoveries/DISC-###.md` |
+| Plan | Plan Agent | `openspec/specs/workflow/skills/planning.md` | `openspec/changes/<mvp>/proposal.md` |
+| Implement | Implement Agent | `openspec/specs/workflow/skills/implementation.md` | Source code + updated tracker |
+| Troubleshoot | Troubleshoot Agent | `openspec/specs/workflow/skills/troubleshooting.md` | `openspec/changes/bugs/BUG-###.md` |
+
+## How Kiro Should Execute Workflow Phases
+
+### Starting a Discovery
+Instruct Kiro: *"Run the Discover workflow for [feature]"*
+Kiro reads `openspec/specs/workflow/skills/discovery.md` and writes output to `openspec/changes/discoveries/`.
+
+### Starting a Plan
+Instruct Kiro: *"Plan [feature] based on DISC-###"*
+Kiro reads `openspec/specs/workflow/skills/planning.md` and writes a proposal to `openspec/changes/`.
+
+### Implementing a Change
+Instruct Kiro: *"Implement proposal from [mvp path]"*
+Kiro reads `openspec/specs/workflow/skills/implementation.md` and applies the approved proposal inside-out:
+Domain → Application → Infrastructure → Presentation → Frontend.
+
+### Troubleshooting
+Instruct Kiro: *"Troubleshoot [issue]"*
+Kiro reads `openspec/specs/workflow/skills/troubleshooting.md`. No source changes without a bug proposal.
+
+## Kiro-Specific Notes
+
+- Kiro does **not** have slash commands. Use natural-language instructions referencing the phase names above.
+- Copilot users use `.github/prompts/` for the same workflow. Both tools read the same OpenSpec skills.
+- If a Copilot agent exists in `.github/agents/`, the equivalent Kiro behavior is triggered via the instructions above.

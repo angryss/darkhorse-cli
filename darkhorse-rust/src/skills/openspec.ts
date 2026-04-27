@@ -77,29 +77,38 @@ export async function seedOpenSpec(config: DarkhorseConfig): Promise<SkillResult
 
     // ── GitHub agent files (copied from workflows/agents/) ─────
 
-    const ghAgentsDir = path.join(root, '.github', 'agents');
-    const workflowAgentsDir = path.join(getWorkflowsDir(), 'agents');
-    if (await pathExists(workflowAgentsDir)) {
-      await ensureDir(ghAgentsDir);
-      const agentsCopied = await copyMarkdownDir(workflowAgentsDir, ghAgentsDir);
-      filesCreated.push(...agentsCopied.map((f) => `.github/agents/${path.basename(f)}`));
+    if (config.ai.tools.copilot) {
+      const ghAgentsDir = path.join(root, '.github', 'agents');
+      const workflowAgentsDir = path.join(getWorkflowsDir(), 'agents');
+      if (await pathExists(workflowAgentsDir)) {
+        await ensureDir(ghAgentsDir);
+        const agentsCopied = await copyMarkdownDir(workflowAgentsDir, ghAgentsDir);
+        filesCreated.push(...agentsCopied.map((f) => `.github/agents/${path.basename(f)}`));
+      }
+
+      // ── Prompt commands (copied from workflows/commands/) ─────
+
+      const promptsDir = path.join(root, '.github', 'prompts');
+      const workflowCmdsDir = path.join(getWorkflowsDir(), 'commands');
+      if (await pathExists(workflowCmdsDir)) {
+        await ensureDir(promptsDir);
+        const promptsCopied = await copyMarkdownDir(workflowCmdsDir, promptsDir);
+        filesCreated.push(...promptsCopied.map((f) => `.github/prompts/${path.basename(f)}`));
+      }
+
+      // ── Copilot instructions ────────────────────────────
+
+      const copilotInstructions = path.join(root, '.github', 'copilot-instructions.md');
+      await engine.render('github/copilot-instructions.md.hbs', ctx, copilotInstructions);
+      filesCreated.push('.github/copilot-instructions.md');
     }
 
-    // ── Prompt commands (copied from workflows/commands/) ─────
+    // ── Kiro steering files ─────────────────────────────────────
 
-    const promptsDir = path.join(root, '.github', 'prompts');
-    const workflowCmdsDir = path.join(getWorkflowsDir(), 'commands');
-    if (await pathExists(workflowCmdsDir)) {
-      await ensureDir(promptsDir);
-      const promptsCopied = await copyMarkdownDir(workflowCmdsDir, promptsDir);
-      filesCreated.push(...promptsCopied.map((f) => `.github/prompts/${path.basename(f)}`));
+    if (config.ai.tools.kiro) {
+      const kiroFiles = await seedKiroSteering(config, engine, ctx);
+      filesCreated.push(...kiroFiles.map((f) => path.relative(root, f)));
     }
-
-    // ── Copilot instructions ────────────────────────────
-
-    const copilotInstructions = path.join(root, '.github', 'copilot-instructions.md');
-    await engine.render('github/copilot-instructions.md.hbs', ctx, copilotInstructions);
-    filesCreated.push('.github/copilot-instructions.md');
   } catch (err) {
     errors.push(`seedOpenSpec failed: ${err instanceof Error ? err.message : String(err)}`);
   }
@@ -128,4 +137,50 @@ async function copyMarkdownDir(srcDir: string, destDir: string): Promise<string[
     }
   }
   return copied;
+}
+
+// ---------------------------------------------------------------------------
+// Kiro adapter — generates .kiro/steering/ files
+// ---------------------------------------------------------------------------
+
+const KIRO_STEERING_TEMPLATES: Array<{ template: string; filename: string }> = [
+  { template: 'kiro/steering/00-project.md.hbs', filename: '00-project.md' },
+  { template: 'kiro/steering/01-workflow.md.hbs', filename: '01-workflow.md' },
+  { template: 'kiro/steering/02-architecture.md.hbs', filename: '02-architecture.md' },
+  { template: 'kiro/steering/03-tooling.md.hbs', filename: '03-tooling.md' },
+];
+
+/**
+ * Seed Kiro steering files into .kiro/steering/.
+ * Idempotent: skips files that already exist so customizations are preserved.
+ * Pass force=true to overwrite existing files.
+ */
+export async function seedKiroSteering(
+  config: DarkhorseConfig,
+  engine?: TemplateEngine,
+  ctx?: TemplateContext,
+  force = false,
+): Promise<string[]> {
+  const created: string[] = [];
+  const steeringDir = path.join(config.paths.root, '.kiro', 'steering');
+  await ensureDir(steeringDir);
+
+  const resolvedEngine = engine ?? new TemplateEngine(getTemplatesDir());
+  const resolvedCtx: TemplateContext = ctx ?? {
+    project: config,
+    timestamp: new Date().toISOString().split('T')[0],
+    cliVersion: '0.1.0',
+  };
+
+  for (const { template, filename } of KIRO_STEERING_TEMPLATES) {
+    const destPath = path.join(steeringDir, filename);
+    const alreadyExists = await pathExists(destPath);
+    if (alreadyExists && !force) {
+      continue; // preserve customized files
+    }
+    await resolvedEngine.render(template, resolvedCtx, destPath);
+    created.push(destPath);
+  }
+
+  return created;
 }

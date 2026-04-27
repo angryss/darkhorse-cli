@@ -74,27 +74,82 @@ export async function seedOpenSpec(config: DarkhorseConfig): Promise<SkillResult
       filesCreated.push(toolkitReadme);
     }
 
-    // 9. Seed Copilot agent definitions into .github/agents/
-    const githubAgentsDir = path.join(config.paths.root, '.github', 'agents');
-    await fsUtil.ensureDir(githubAgentsDir);
-    const agentFiles = await copyMarkdownDir(path.join(getWorkflowsDir(), 'agents'), githubAgentsDir);
-    filesCreated.push(...agentFiles);
+    // 9. Seed Copilot agent definitions into .github/agents/ (Copilot adapter)
+    if (config.ai.tools.copilot) {
+      const githubAgentsDir = path.join(config.paths.root, '.github', 'agents');
+      await fsUtil.ensureDir(githubAgentsDir);
+      const agentFiles = await copyMarkdownDir(path.join(getWorkflowsDir(), 'agents'), githubAgentsDir);
+      filesCreated.push(...agentFiles);
 
-    // 10. Seed prompt commands into .github/prompts/
-    const promptsDir = path.join(config.paths.root, '.github', 'prompts');
-    await fsUtil.ensureDir(promptsDir);
-    const promptFiles = await copyMarkdownDir(path.join(getWorkflowsDir(), 'commands'), promptsDir);
-    filesCreated.push(...promptFiles);
+      // 10. Seed prompt commands into .github/prompts/
+      const promptsDir = path.join(config.paths.root, '.github', 'prompts');
+      await fsUtil.ensureDir(promptsDir);
+      const promptFiles = await copyMarkdownDir(path.join(getWorkflowsDir(), 'commands'), promptsDir);
+      filesCreated.push(...promptFiles);
 
-    // 11. Generate .github/copilot-instructions.md
-    const copilotInstructions = path.join(config.paths.root, '.github', 'copilot-instructions.md');
-    await engine.render('github/copilot-instructions.md.hbs', ctx, copilotInstructions);
-    filesCreated.push(copilotInstructions);
+      // 11. Generate .github/copilot-instructions.md
+      const copilotInstructions = path.join(config.paths.root, '.github', 'copilot-instructions.md');
+      await engine.render('github/copilot-instructions.md.hbs', ctx, copilotInstructions);
+      filesCreated.push(copilotInstructions);
+    }
+
+    // 12. Generate .kiro/steering/*.md (Kiro adapter)
+    if (config.ai.tools.kiro) {
+      const kiroFiles = await seedKiroSteering(config, engine, ctx);
+      filesCreated.push(...kiroFiles);
+    }
   } catch (err) {
     errors.push(`OpenSpec seeding error: ${err instanceof Error ? err.message : String(err)}`);
   }
 
   return { success: errors.length === 0, filesCreated, filesModified: [], errors };
+}
+
+// ---------------------------------------------------------------------------
+// Kiro adapter — generates .kiro/steering/ files
+// ---------------------------------------------------------------------------
+
+const KIRO_STEERING_TEMPLATES: Array<{ template: string; filename: string }> = [
+  { template: 'kiro/steering/00-project.md.hbs', filename: '00-project.md' },
+  { template: 'kiro/steering/01-workflow.md.hbs', filename: '01-workflow.md' },
+  { template: 'kiro/steering/02-architecture.md.hbs', filename: '02-architecture.md' },
+  { template: 'kiro/steering/03-tooling.md.hbs', filename: '03-tooling.md' },
+];
+
+/**
+ * Seed Kiro steering files into .kiro/steering/.
+ * Idempotent: skips files that already exist so customizations are preserved.
+ * Pass force=true to overwrite existing files.
+ */
+export async function seedKiroSteering(
+  config: DarkhorseConfig,
+  engine?: TemplateEngine,
+  ctx?: TemplateContext,
+  force = false,
+): Promise<string[]> {
+  const created: string[] = [];
+  const steeringDir = path.join(config.paths.root, '.kiro', 'steering');
+  await fsUtil.ensureDir(steeringDir);
+
+  const resolvedEngine = engine ?? new TemplateEngine(getTemplatesDir());
+  const resolvedCtx: TemplateContext = ctx ?? {
+    project: config,
+    archetypeCategory: config.archetype ? ARCHETYPE_CATEGORIES[config.archetype] : undefined,
+    timestamp: new Date().toISOString().split('T')[0],
+    cliVersion: '0.1.0',
+  };
+
+  for (const { template, filename } of KIRO_STEERING_TEMPLATES) {
+    const destPath = path.join(steeringDir, filename);
+    const alreadyExists = await fsUtil.pathExists(destPath);
+    if (alreadyExists && !force) {
+      continue; // preserve customized files
+    }
+    await resolvedEngine.render(template, resolvedCtx, destPath);
+    created.push(destPath);
+  }
+
+  return created;
 }
 
 // ---------------------------------------------------------------------------

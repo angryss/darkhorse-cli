@@ -1,6 +1,6 @@
 import path from 'node:path';
 import YAML from 'yaml';
-import type { DarkhorseConfig } from './types.js';
+import type { AiConfig, DarkhorseConfig } from './types.js';
 import { buildProjectPaths } from './types.js';
 import { readText, writeFile, pathExists } from './fs.js';
 
@@ -23,6 +23,11 @@ interface SerializedConfig {
   features: {
     frontend: boolean;
   };
+  ai?: {
+    sourceOfTruth: string;
+    entrypoint: string;
+    tools: { copilot: boolean; kiro: boolean };
+  };
 }
 
 export async function writeConfig(config: DarkhorseConfig): Promise<void> {
@@ -34,6 +39,7 @@ export async function writeConfig(config: DarkhorseConfig): Promise<void> {
     rust: { ...config.rust },
     frontend: { ...config.frontend },
     features: { ...config.features },
+    ai: config.ai,
   };
 
   const content = YAML.stringify(serialized);
@@ -45,6 +51,12 @@ export async function readConfig(projectRoot: string): Promise<DarkhorseConfig> 
   const configPath = path.join(projectRoot, CONFIG_FILENAME);
   const content = await readText(configPath);
   const parsed = YAML.parse(content) as SerializedConfig;
+
+  const DEFAULT_AI_CONFIG: AiConfig = {
+    sourceOfTruth: 'openspec',
+    entrypoint: 'AGENTS.md',
+    tools: { copilot: true, kiro: false },
+  };
 
   return {
     ...parsed,
@@ -58,6 +70,16 @@ export async function readConfig(projectRoot: string): Promise<DarkhorseConfig> 
       framework: parsed.frontend.framework as 'vanilla-ts',
       bundler: parsed.frontend.bundler as 'vite',
     },
+    ai: parsed.ai
+      ? {
+          sourceOfTruth: 'openspec',
+          entrypoint: 'AGENTS.md',
+          tools: {
+            copilot: parsed.ai.tools.copilot,
+            kiro: parsed.ai.tools.kiro,
+          },
+        }
+      : DEFAULT_AI_CONFIG,
     paths: buildProjectPaths(projectRoot),
   };
 }

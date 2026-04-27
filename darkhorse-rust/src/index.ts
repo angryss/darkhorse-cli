@@ -8,6 +8,7 @@ import { registerImplementCommand } from './commands/implement.js';
 import { registerTroubleshootCommand } from './commands/troubleshoot.js';
 import { registerValidateCommand } from './commands/validate.js';
 import { registerMcpCommand } from './commands/mcp-serve.js';
+import { registerAiCommand } from './commands/ai.js';
 import { setVerbose } from './core/logger.js';
 
 const program = new Command();
@@ -29,5 +30,6 @@ registerImplementCommand(program);
 registerTroubleshootCommand(program);
 registerValidateCommand(program);
 registerMcpCommand(program);
+registerAiCommand(program);
 
 program.parse();

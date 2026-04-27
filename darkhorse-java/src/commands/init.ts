@@ -2,7 +2,7 @@
 import inquirer, { type DistinctQuestion } from 'inquirer';
 import path from 'node:path';
 import { logger } from '../core/logger.js';
-import { type InitInput, type ProjectArchetype, type FrontendPlatform, ARCHETYPE_LABELS, buildConfig } from '../core/types.js';
+import { type InitInput, type ProjectArchetype, type FrontendPlatform, type AiToolsConfig, ARCHETYPE_LABELS, buildConfig } from '../core/types.js';
 import { initAgent } from '../agents/init.agent.js';
 import { fsUtil } from '../core/index.js';
 
@@ -22,6 +22,8 @@ export function registerInitCommand(program: Command): void {
     .option('--frontend', 'Include frontend application')
     .option('--no-frontend', 'Skip frontend')
     .option('--platform <platform>', 'Frontend platform: web (React), mobile (React Native), or both')
+    .option('--kiro', 'Generate Kiro steering files (.kiro/steering/)')
+    .option('--no-kiro', 'Skip Kiro steering files')
     .option('-o, --output <dir>', 'Output directory', '.')
     .action(async (opts) => {
       logger.header('DarkHorse Java — Project Init');
@@ -50,6 +52,7 @@ export function registerInitCommand(program: Command): void {
         frontendPlatform: answers.frontendPlatform,
         includeToolkit: answers.includeFrontend, // toolkit included when frontend is
         outputDir: path.resolve(answers.output),
+        aiTools: { copilot: true, kiro: opts.kiro === true },
       };
 
       const projectDir = path.join(input.outputDir, input.name);

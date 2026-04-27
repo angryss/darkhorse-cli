@@ -1,0 +1,63 @@
+# {{project.name}} — Architecture Constraints
+
+> **AI Steering File** — Kiro architecture adapter.
+> Full architecture rules are in `openspec/specs/architecture/`. This file summarizes the non-negotiables.
+
+## Canonical Rules
+
+All architecture rules live in `openspec/specs/architecture/`. Read them before generating any code.
+
+Key rule files:
+- `openspec/specs/architecture/architecture-rules.md` — structural invariants
+- `openspec/specs/architecture/archetype-rules.md` — archetype-specific constraints
+- `openspec/specs/architecture/scaffolding-rules.md` — how new crates must be structured
+- `openspec/specs/architecture/testing-rules.md` — test organization and coverage expectations
+- `openspec/specs/architecture/agent-limits.md` — what AI agents are and are not allowed to do
+
+## Architecture at a Glance
+
+This project uses **Clean Architecture** on Tauri (Rust {{project.rust.edition}} edition).
+
+```
+Frontend (TypeScript/Vite)
+    ↕  Tauri IPC (invoke / event)
+Tauri Commands  ←  src-tauri/src/commands/
+    ↓
+Application     ←  crates/{{project.rust.cratePrefix}}-application/
+    ↓
+Domain          ←  crates/{{project.rust.cratePrefix}}-domain/
+    ↓
+Infrastructure  ←  crates/{{project.rust.cratePrefix}}-infrastructure/
+```
+
+**Layer rules:**
+- Domain (`{{project.rust.cratePrefix}}-domain`) has zero external crate dependencies.
+- Application references Domain only.
+- Infrastructure references Application + Domain.
+- Tauri commands reference Application + Infrastructure.
+- Frontend communicates only through Tauri IPC — never directly to Rust internals.
+
+## Archetype: desktop
+
+- This is a Tauri desktop application.
+- All business logic lives in Rust crates, not in the frontend TypeScript.
+- The frontend is a thin presentation layer — no domain logic.
+- State management is owned by Rust; the frontend subscribes to Tauri events.
+- File system, database, and OS interactions go through Infrastructure, not Tauri commands.
+
+## Crate Naming Convention
+
+```
+{{project.rust.cratePrefix}}-domain          — Entities, Value Objects, domain logic
+{{project.rust.cratePrefix}}-application     — Commands, Queries, Use Cases
+{{project.rust.cratePrefix}}-infrastructure  — SQLite/SQLx, file I/O, OS services
+{{project.rust.cratePrefix}}-desktop         — Tauri application entry point + commands
+```
+
+## What Kiro Must Never Do
+
+- Rename crates or change the workspace structure without an approved architecture proposal.
+- Add Cargo dependencies not listed in the approved dependency manifest.
+- Write business logic in Tauri command handlers — delegate to Application layer.
+- Write frontend domain logic — it belongs in Rust.
+- Delete or modify `openspec/` files outside the `openspec/changes/` flow.

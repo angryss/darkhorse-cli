@@ -24,6 +24,7 @@
 - [Architecture Enforced](#architecture-enforced)
 - [Frontend Stack](#frontend-stack)
 - [React Toolkit](#react-toolkit)
+- [AI Tools Support](#ai-tools-support)
 - [AI-Native Workflow](#ai-native-workflow)
 - [Skills & Workflow System](#skills--workflow-system)
 - [MCP Server Integration](#mcp-server-integration)
@@ -136,11 +137,12 @@ npx darkhorse-dotnet troubleshoot  # Investigate a bug
 |---------|--------|-------------|
 | `init` | ✅ Implemented | Initialize a new workspace (no service yet) |
 | `add <type>` | ✅ Implemented | Add a service to an existing workspace |
+| `ai sync` | ✅ Implemented | Add or refresh AI tool adapters (Kiro steering, Copilot instructions) |
 | `discover` | 🔜 v1 | Explore and shape product ideas before formal planning |
 | `plan` | 🔜 v1 | Create architecture-compliant proposals for features/bugs |
 | `implement` | 🔜 v1 | Execute an approved proposal with inside-out implementation |
 | `troubleshoot` | 🔜 v1 | Investigate and fix bugs with architecture compliance checks |
-| `validate` | 🔜 v1 | Validate project specs and architecture compliance |
+| `validate` | ✅ Implemented | Validate project structure and AI adapter completeness |
 | `nx-monorepo` | ✅ Implemented | Analyze and plan Nx monorepo strategy — plan-ahead or migration |
 | `mcp-serve` | 🔜 v1 | Start an MCP server exposing CLI tools to AI agents |
 
@@ -154,6 +156,7 @@ darkhorse-dotnet init [options]
   -ns, --namespace <namespace>    Workspace namespace (default: PascalCase of name)
   --frontend / --no-frontend      Include frontend scaffold
   --platform <platform>           web | mobile | both (default: web)
+  --kiro / --no-kiro              Generate Kiro steering files (default: --no-kiro)
   -o, --output <dir>              Parent directory (default: .)
 ```
 
@@ -166,6 +169,28 @@ darkhorse-dotnet add <type> [options]
   --name <name>                   Service name (lowercase, hyphenated)
   --namespace <namespace>         C# root namespace (e.g. MyCompany.Orders)
   --dotnet-version <version>      8 | 9 (default: 8)
+```
+
+### `ai sync` Options
+
+```bash
+darkhorse-dotnet ai sync [options]
+
+  --tools <tools>                 Comma-separated: copilot, kiro (default: kiro)
+  --force                         Overwrite existing adapter files
+  -p, --path <path>               Project root (default: .)
+```
+
+Add Kiro steering files to an existing project without touching code or OpenSpec:
+
+```bash
+npx darkhorse-dotnet ai sync --tools kiro
+```
+
+Refresh both Copilot and Kiro adapters (overwrites existing files):
+
+```bash
+npx darkhorse-dotnet ai sync --tools copilot,kiro --force
 ```
 
 ### `discover` Options
@@ -494,9 +519,73 @@ When scaffolded with `--frontend`, your project includes a reference to the **Re
 
 ---
 
+## AI Tools Support
+
+DarkHorse generated projects support multiple AI tools. All tools share the same **OpenSpec source of truth** — no duplicated rules or specs.
+
+| Tool | Adapter Location | How to Enable |
+|------|-----------------|---------------|
+| **GitHub Copilot** | `.github/copilot-instructions.md`, `.github/agents/`, `.github/prompts/` | Always generated (default) |
+| **Kiro** | `.kiro/steering/` (4 steering files) | `--kiro` flag on `init`, or `ai sync` |
+
+### Enabling Kiro at init time
+
+```bash
+npx darkhorse-dotnet init --name my-project --kiro
+```
+
+### Adding Kiro to an existing project (backfill)
+
+```bash
+npx darkhorse-dotnet ai sync --tools kiro
+```
+
+This creates `.kiro/steering/` files without touching code, OpenSpec specs, or Copilot files. Re-running the command is safe — it skips files that already exist. Use `--force` to refresh them:
+
+```bash
+npx darkhorse-dotnet ai sync --tools kiro --force
+```
+
+### How the Kiro adapter works
+
+Kiro reads `.kiro/steering/` on session start. Each steering file is a bridge that redirects Kiro to the canonical OpenSpec sources:
+
+| File | Purpose |
+|------|---------|
+| `.kiro/steering/00-project.md` | Project identity and OpenSpec navigation |
+| `.kiro/steering/01-workflow.md` | Workflow phase map (Discover → Plan → Implement → Troubleshoot) |
+| `.kiro/steering/02-architecture.md` | Architecture rules summary + pointer to `openspec/specs/architecture/` |
+| `.kiro/steering/03-tooling.md` | Tech stack, approved tools, and generation instructions |
+
+**Rules:**
+- Kiro steering files reference OpenSpec — they never duplicate it.
+- Workflow skills stay in `openspec/specs/workflow/skills/` — one source for both Copilot and Kiro.
+- Copilot slash commands (`.github/prompts/`) and Kiro natural-language instructions both execute the same skills.
+
+### Validating AI adapter completeness
+
+```bash
+npx darkhorse-dotnet validate
+```
+
+This checks that all expected AI adapter files are present for the tools configured in `.darkhorse.yaml`.
+
+### `.darkhorse.yaml` AI config shape
+
+```yaml
+ai:
+  sourceOfTruth: openspec
+  entrypoint: AGENTS.md
+  tools:
+    copilot: true
+    kiro: true
+```
+
+---
+
 ## AI-Native Workflow
 
-DarkHorse projects are designed for AI coding agents (GitHub Copilot, Claude, Codex). The development guidance system includes:
+DarkHorse projects are designed for AI coding agents (GitHub Copilot, Kiro, Claude, Codex). The development guidance system includes:
 
 ### Context Layer (`context/`)
 

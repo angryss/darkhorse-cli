@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import inquirer from 'inquirer';
-import { buildConfig, type InitInput } from '../core/types.js';
+import { buildConfig, type InitInput, type AiToolsConfig } from '../core/types.js';
 import { logger } from '../core/logger.js';
 import { pathExists } from '../core/fs.js';
 import { initAgent } from '../agents/init.agent.js';
@@ -17,6 +17,8 @@ export function registerInitCommand(program: Command): void {
     .option('--crate-prefix <prefix>', 'Crate name prefix (e.g. "vps" for visu-photo-studio)')
     .option('--edition <edition>', 'Rust edition (2021 or 2024)', '2024')
     .option('--no-frontend', 'Skip frontend scaffolding')
+    .option('--kiro', 'Generate Kiro steering files (.kiro/steering/)')
+    .option('--no-kiro', 'Skip Kiro steering files')
     .option('-o, --output <dir>', 'Output directory', '.')
     .action(async (name: string | undefined, opts: Record<string, unknown>) => {
       try {
@@ -64,6 +66,7 @@ export function registerInitCommand(program: Command): void {
           edition,
           includeFrontend: opts.frontend !== false,
           outputDir,
+          aiTools: { copilot: true, kiro: opts.kiro === true },
         };
 
         const config = buildConfig(input);

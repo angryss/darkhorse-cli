@@ -1,0 +1,60 @@
+# {{project.name}} — Tooling & Tech Stack
+
+> **AI Steering File** — Kiro tooling adapter.
+> This file tells Kiro which tools are active and how to use them in this project.
+
+## AI Tools in Use
+
+| Tool | Enabled | Role |
+|---|---|---|
+| **Kiro** | ✅ | Primary AI assistant — reads OpenSpec workflow and steering files |
+| **Copilot** | {{#if project.ai.tools.copilot}}✅{{else}}❌{{/if}} | Secondary — `.github/copilot-instructions.md` if present |
+
+Both tools read from the same canonical source: `openspec/AGENTS.md`.
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Language | Java {{project.java.javaVersion}} |
+| Framework | Quarkus (latest LTS) |
+| Build | {{project.java.buildTool}} |
+| Persistence | Hibernate ORM with Panache |
+| Testing | JUnit 5, Mockito, RestAssured, Testcontainers |
+| Containerization | Docker + Quarkus Native (optional) |
+| Message Broker | Kafka / RabbitMQ (if messaging archetype) |
+
+{{#if project.features.frontend}}
+## Frontend Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | {{#eq project.frontend.platform "web"}}React 18 (Vite){{/eq}}{{#eq project.frontend.platform "mobile"}}React Native (Expo){{/eq}}{{#eq project.frontend.platform "both"}}React 18 (web) + React Native (mobile){{/eq}} |
+| Language | TypeScript |
+| State | Zustand |
+| API Client | TanStack Query v5 |
+| Styling | Tailwind CSS / NativeWind |
+{{/if}}
+
+## MCP Integration (if active)
+
+If `mcp-server.json` is present in the project root, Kiro can read MCP tools.
+MCP tools are listed in `context/mcp-tools.md`. Do not install new MCP tools without updating that file.
+
+## Dependencies: Never Add Without Approval
+
+- No new Maven dependencies not listed in the approved BOM / dependency manifest.
+- No frontend packages not listed in the approved toolkit.
+- No testing framework changes without an architecture proposal.
+- For Quarkus extensions, propose the addition in `openspec/changes/` first.
+
+## Package Naming Convention
+
+```
+{{project.java.groupId}}.<service-name>
+  .domain          — Aggregates, Value Objects, Domain Events
+  .application     — Commands, Queries, Handlers, DTOs
+  .infrastructure  — Panache repos, messaging adapters, HTTP clients
+  .resource        — Quarkus REST resources (Presentation)
+  .contracts       — Shared integration contracts (DTOs, events)
+```

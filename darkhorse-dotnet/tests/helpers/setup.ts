@@ -9,6 +9,7 @@ import {
   type DarkhorseConfig,
   type ProjectArchetype,
   type FrontendPlatform,
+  type AiToolsConfig,
 } from '../../src/core/types.js';
 
 // ---------------------------------------------------------------------------
@@ -52,6 +53,7 @@ export interface InitOptions {
   includeFrontend?: boolean;
   frontendPlatform?: FrontendPlatform;
   outputDir: string;
+  aiTools?: Partial<AiToolsConfig>;
 }
 
 export function buildInitConfig(opts: InitOptions): DarkhorseConfig {
@@ -61,6 +63,7 @@ export function buildInitConfig(opts: InitOptions): DarkhorseConfig {
     includeFrontend: opts.includeFrontend ?? false,
     frontendPlatform: opts.frontendPlatform ?? 'web',
     outputDir: opts.outputDir,
+    aiTools: opts.aiTools,
   };
   return buildConfig(input);
 }

@@ -1,0 +1,67 @@
+# {{project.name}} — Tooling
+
+> **AI Steering File** — Kiro tooling adapter.
+> This file describes the approved tools and how Kiro fits into the AI tool landscape for this project.
+
+## AI Tools in This Project
+
+This project supports multiple AI tools. All tools share the same OpenSpec source of truth.
+
+| Tool | Entry Point | Workflow Access |
+|---|---|---|
+| **Kiro** | `.kiro/steering/` (this folder) | Natural-language instructions → OpenSpec skills |
+| **GitHub Copilot** | `.github/copilot-instructions.md` | Slash commands in `.github/prompts/` |
+| **Copilot Agents** | `.github/agents/` | Dedicated agent markdown files |
+
+**Canonical AI entry point for all tools: `openspec/AGENTS.md`**
+
+## Technology Stack
+{{#if project.dotnet}}
+### Backend (.NET {{project.dotnet.dotnetVersion}})
+
+| Layer | Key Libraries |
+|---|---|
+| Application | MediatR 12.x, FluentValidation 11.x, AutoMapper 13.x |
+| Infrastructure | Entity Framework Core, Npgsql (PostgreSQL) |
+| Presentation | ASP.NET Core, Swashbuckle (OpenAPI), Serilog |
+| Tests | xUnit, Testcontainers |
+{{/if}}
+{{#if project.frontend}}
+### Frontend ({{project.frontend.framework}})
+
+| Area | Stack |
+|---|---|
+| Framework | {{#eq project.frontend.framework "react-native"}}React Native + Expo{{else}}React + Vite{{/eq}} |
+| State | As defined in `openspec/specs/patterns/frontend-patterns.md` |
+| Toolkit | `frontend/toolkit/` — shared UI components |
+{{/if}}
+
+### Infrastructure
+
+| Tool | Purpose |
+|---|---|
+| Docker Compose | Local development environment |
+| PostgreSQL | Primary database |
+| MCP Servers | AI tool integrations (`.vscode/mcp.json`) |
+
+## MCP Integration
+
+MCP servers are configured in `.vscode/mcp.json`. They enable AI tools (including Kiro) to interact with:
+- DarkHorse CLI directly (`darkhorse-dotnet mcp-serve`)
+- GitHub, Azure DevOps, Atlassian
+
+## What Kiro Should Never Install or Use
+
+- LangChain, AutoGen, CrewAI, or other AI orchestration frameworks
+- ORMs other than Entity Framework Core
+- HTTP clients other than `HttpClient` (typed clients via `IHttpClientFactory`)
+- Message brokers not defined in the project's `openspec/specs/architecture/` rules
+
+## Generating Code with Kiro
+
+Always follow this sequence:
+1. Confirm the relevant proposal exists in `openspec/changes/`.
+2. Read `openspec/AGENTS.md` for the current archetype constraints.
+3. Follow `openspec/specs/workflow/skills/implementation.md` step by step.
+4. Write tests alongside implementation — never defer tests.
+5. Update `openspec/changes/<mvp>/progress-tracker.md` after each completed item.

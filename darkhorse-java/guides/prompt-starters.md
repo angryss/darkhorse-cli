@@ -969,3 +969,69 @@ Check the relevant specs, workspace projects, and existing proposals before we s
 ---
 
 *Guide Version: 1.0 | Works with any scaffolded project*
+
+
+---
+
+## Kiro Prompts
+
+> Use these natural-language instructions with Kiro. Kiro reads `openspec/AGENTS.md` and the `.kiro/steering/` files for context.
+
+### Onboard to the Project
+"Read openspec/AGENTS.md and all .kiro/steering/ files to understand this Java project. Summarize the architecture, active bounded contexts, and current MVP status."
+
+### Run Discovery for a Feature
+"Run the Discover workflow from openspec/specs/workflow/skills/discovery.md for [feature]. Write the output to openspec/changes/discoveries/."
+
+### Plan a Feature
+"Using the discovery at openspec/changes/discoveries/DISC-###.md, run the Plan workflow from openspec/specs/workflow/skills/planning.md and produce a proposal."
+
+### Implement a Proposal
+"Implement the approved proposal at openspec/changes/[mvp]/proposal.md. Follow the implementation order: Domain then Application then Infrastructure then Resource then Frontend. Write tests as you go."
+
+### Troubleshoot an Issue
+"Troubleshoot [issue description]. Follow openspec/specs/workflow/skills/troubleshooting.md. Do not change code until you have written a bug proposal in openspec/changes/bugs/."
+
+### Architecture Review
+"Review the current codebase against the architecture rules in openspec/specs/architecture/. List any violations and suggest corrections following the defined layer structure."
+
+---
+
+## Copilot Prompts
+
+> Use these slash-command prompts in GitHub Copilot Chat.
+
+- `@workspace /discover [feature]`
+- `@workspace /plan [feature] based on DISC-###`
+- `@workspace /implement proposal from openspec/changes/[mvp]/proposal.md`
+- `@workspace /troubleshoot [issue]`
+- `@workspace /validate` — check architecture against openspec/specs/architecture/
+
+
+---
+
+## Kiro Prompts
+
+> Use these natural-language instructions with Kiro.
+
+### Onboard to the Project
+"Read openspec/AGENTS.md and all .kiro/steering/ files to understand this Java project. Summarize the architecture, active bounded contexts, and current MVP status."
+
+### Run Discovery for a Feature
+"Run the Discover workflow from openspec/specs/workflow/skills/discovery.md for [feature]."
+
+### Plan a Feature
+"Using the discovery at openspec/changes/discoveries/DISC-###.md, run the Plan workflow and produce a proposal."
+
+### Implement a Proposal
+"Implement the approved proposal at openspec/changes/[mvp]/proposal.md. Domain then Application then Infrastructure then Resource."
+
+---
+
+## Copilot Prompts
+
+- `@workspace /discover [feature]`
+- `@workspace /plan [feature] based on DISC-###`
+- `@workspace /implement proposal from openspec/changes/[mvp]/proposal.md`
+- `@workspace /troubleshoot [issue]`
+

@@ -1,0 +1,69 @@
+# {{project.name}} — Tooling & Tech Stack
+
+> **AI Steering File** — Kiro tooling adapter.
+> This file tells Kiro which tools are active and how to use them in this project.
+
+## AI Tools in Use
+
+| Tool | Enabled | Role |
+|---|---|---|
+| **Kiro** | ✅ | Primary AI assistant — reads OpenSpec workflow and steering files |
+| **Copilot** | {{#if project.ai.tools.copilot}}✅{{else}}❌{{/if}} | Secondary — `.github/copilot-instructions.md` if present |
+
+Both tools read from the same canonical source: `openspec/AGENTS.md`.
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Language (backend) | Rust (edition {{project.rust.edition}}) |
+| Desktop framework | Tauri v2 |
+| Build tool | Cargo (workspace) |
+| Database | SQLite via SQLx |
+| Testing | Rust built-in `#[test]`, `mockall`, `rstest` |
+| Containerization | N/A (native desktop binary) |
+
+{{#if project.features.frontend}}
+## Frontend Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Vanilla TypeScript (Vite) |
+| Bundler | Vite |
+| Tauri API | `@tauri-apps/api` v2 |
+| Styling | CSS Modules / Tailwind CSS |
+
+### Frontend ↔ Rust IPC
+
+- Frontend calls Rust via `invoke('command_name', { ...args })`.
+- Rust emits events to frontend via `app.emit('event_name', payload)`.
+- Never use `window.__TAURI__` directly — always use the typed `@tauri-apps/api` wrappers.
+{{/if}}
+
+## MCP Integration (if active)
+
+If `mcp-server.json` is present in the project root, Kiro can read MCP tools.
+MCP tools are listed in `context/mcp-tools.md`. Do not install new MCP tools without updating that file.
+
+## Dependencies: Never Add Without Approval
+
+- No new Cargo dependencies not listed in the approved manifest (`Cargo.toml` workspace members).
+- No new npm packages not listed in the approved frontend toolkit.
+- For Tauri plugins, propose the addition in `openspec/changes/` first.
+- Do not upgrade Tauri major versions without an architecture proposal.
+
+## Workspace Layout
+
+```
+Cargo.toml               — Workspace root
+crates/
+  {{project.rust.cratePrefix}}-domain/        — Pure domain logic (no I/O)
+  {{project.rust.cratePrefix}}-application/   — Use cases, commands, queries
+  {{project.rust.cratePrefix}}-infrastructure/ — SQLite, file system, OS
+  {{project.rust.cratePrefix}}-desktop/       — Tauri commands, app entry point
+{{#if project.features.frontend}}
+frontend/                — Vite TypeScript frontend
+  src/                   — TypeScript source
+  index.html
+{{/if}}
+```

@@ -31,6 +31,19 @@ export interface FeatureFlags {
   frontend: boolean;
 }
 
+// ── AI tool configuration ────────────────────────────────────────
+
+export interface AiToolsConfig {
+  copilot: boolean;
+  kiro: boolean;
+}
+
+export interface AiConfig {
+  sourceOfTruth: 'openspec';
+  entrypoint: 'AGENTS.md';
+  tools: AiToolsConfig;
+}
+
 // ── Paths ────────────────────────────────────────────────────────
 
 export interface ProjectPaths {
@@ -53,6 +66,7 @@ export interface DarkhorseConfig {
   rust: RustConfig;
   frontend: FrontendConfig;
   features: FeatureFlags;
+  ai: AiConfig;
   paths: ProjectPaths;
 }
 
@@ -65,6 +79,7 @@ export interface InitInput {
   edition: '2021' | '2024';
   includeFrontend: boolean;
   outputDir: string;
+  aiTools?: Partial<AiToolsConfig>;
 }
 
 // ── Skill result ─────────────────────────────────────────────────
@@ -139,6 +154,14 @@ export function buildConfig(input: InitInput): DarkhorseConfig {
     },
     features: {
       frontend: input.includeFrontend,
+    },
+    ai: {
+      sourceOfTruth: 'openspec',
+      entrypoint: 'AGENTS.md',
+      tools: {
+        copilot: input.aiTools?.copilot ?? true,
+        kiro: input.aiTools?.kiro ?? false,
+      },
     },
     paths: buildProjectPaths(projectRoot),
   };

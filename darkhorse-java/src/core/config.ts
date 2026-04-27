@@ -1,7 +1,7 @@
 ﻿import fs from 'node:fs/promises';
 import path from 'node:path';
 import { parse, stringify } from 'yaml';
-import type { DarkhorseConfig } from './types.js';
+import type { AiConfig, DarkhorseConfig } from './types.js';
 import { buildProjectPaths } from './types.js';
 
 const CONFIG_FILENAME = '.darkhorse.yaml';
@@ -49,6 +49,7 @@ interface SerializableConfig {
   java: DarkhorseConfig['java'];
   frontend?: DarkhorseConfig['frontend'];
   features: DarkhorseConfig['features'];
+  ai?: DarkhorseConfig['ai'];
 }
 
 function configToSerializable(config: DarkhorseConfig): SerializableConfig {
@@ -60,12 +61,21 @@ function configToSerializable(config: DarkhorseConfig): SerializableConfig {
     java: config.java,
     frontend: config.frontend,
     features: config.features,
+    ai: config.ai,
   };
 }
+
+/** Default AiConfig — used when reading older .darkhorse.yaml files that predate Kiro support. */
+const DEFAULT_AI_CONFIG: AiConfig = {
+  sourceOfTruth: 'openspec',
+  entrypoint: 'AGENTS.md',
+  tools: { copilot: true, kiro: false },
+};
 
 function fromSerializable(raw: SerializableConfig, projectRoot: string): DarkhorseConfig {
   return {
     ...raw,
+    ai: raw.ai ?? DEFAULT_AI_CONFIG,
     paths: buildProjectPaths(projectRoot, raw.archetype),
   };
 }

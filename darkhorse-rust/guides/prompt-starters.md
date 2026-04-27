@@ -36,3 +36,35 @@
 - "Check that all Tauri commands are thin wrappers dispatching to the application layer."
 - "Review the port trait definitions for completeness."
 - "Ensure all bounded contexts are properly isolated."
+
+
+---
+
+## Kiro Prompts
+
+> Use these natural-language instructions with Kiro. Kiro reads `openspec/AGENTS.md` and the `.kiro/steering/` files for context.
+
+### Onboard to the Project
+`Read openspec/AGENTS.md and all .kiro/steering/ files to understand this Tauri project. Summarize the architecture, crate structure, and current MVP status.`
+
+### Run Discovery for a Feature
+`Run the Discover workflow from openspec/specs/workflow/skills/discovery.md for [feature].`
+
+### Plan a Feature
+`Using the discovery at openspec/changes/discoveries/DISC-###.md, run the Plan workflow and produce a proposal.`
+
+### Implement a Proposal
+`Implement the approved proposal at openspec/changes/[mvp]/proposal.md. Follow the implementation order: Domain crate then Application then Infrastructure then Tauri commands then Frontend.`
+
+### Troubleshoot an Issue
+`Troubleshoot [issue description]. Follow openspec/specs/workflow/skills/troubleshooting.md. Do not change code until you have written a bug proposal in openspec/changes/bugs/.`
+
+---
+
+## Copilot Prompts
+
+- `@workspace /discover [feature]`
+- `@workspace /plan [feature] based on DISC-###`
+- `@workspace /implement proposal from openspec/changes/[mvp]/proposal.md`
+- `@workspace /troubleshoot [issue]`
+
