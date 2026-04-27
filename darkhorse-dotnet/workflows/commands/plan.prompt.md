@@ -11,7 +11,17 @@ Read and follow every step in `openspec/specs/workflow/skills/planning.md`.
 
 ## Context
 
-Load all required context files listed in the skill before producing output. Pay special attention to `architecture-rules.md` and `archetype-rules.md` — these define the non-negotiable system topology.
+Load all required context files listed in the skill before producing output.
+
+### Mandatory Rules Files (load in this order)
+
+| File | What It Governs |
+|------|-----------------|
+| `openspec/specs/architecture/architecture-rules.md` | DDD, Onion, CQRS, topology |
+| `openspec/specs/architecture/archetype-rules.md` | api / bff-api / microservice archetype constraints |
+| `openspec/specs/architecture/scaffolding-rules.md` | scaffolding + file placement rules |
+| `openspec/specs/architecture/testing-rules.md` | tests required; no red tests allowed |
+| `openspec/specs/architecture/agent-limits.md` | approved tools + constraints |
 
 ## Parameters
 
@@ -32,6 +42,8 @@ Load all required context files listed in the skill before producing output. Pay
 5. **Read/write separation** — Read databases and write databases are separate. No shared locks.
 6. **DDD is mandatory** — Aggregates, value objects, ubiquitous language, domain events. No CRUD terminology.
 7. **Onion architecture** — Dependencies point inward. Domain has zero external dependencies.
+8. **No masking** — Never propose sleeps/polls/retries to hide failing tests or eventual consistency. If resilience is required, it must be explicit with bounded attempts/backoff and a clear failure outcome.
+9. **Every task must be classified** — Each task in `tasks.md` must carry: `REAL_FIX` / `ARCH_ALIGNMENT` / `RESILIENCE` / `MASKING` / `UNKNOWN`.
 
 ## Constraints
 
@@ -41,6 +53,16 @@ Load all required context files listed in the skill before producing output. Pay
 - Update `openspec/changes/mvp-{MVP}/progress-tracker.md`
 - ALL architecture compliance checks must pass before the proposal is complete
 - MVPs are core roadmap items — link every requirement to an active MVP
+- **Tests are non-negotiable:** implementation MUST fix any failing tests encountered before proceeding. A red suite is never acceptable.
+
+## Implementation Readiness Gate
+
+Before handing off to `/implement`, verify:
+
+- [ ] Acceptance criteria are explicit and testable
+- [ ] Test plan is concrete (what, where, and how it will be tested)
+- [ ] `tasks.md` is stop-safe and granular (checkboxes can be updated in real time)
+- [ ] Every task is classified (`REAL_FIX` / `ARCH_ALIGNMENT` / `RESILIENCE` / `MASKING` / `UNKNOWN`)
 
 ## Handoff
 

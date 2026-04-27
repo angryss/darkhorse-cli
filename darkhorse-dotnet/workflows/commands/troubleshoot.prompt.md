@@ -40,4 +40,4 @@ Load all required context files listed in the skill before producing output.
 After completing, do NOT suggest `/plan` or `/implement` directly.
 Suggest proceeding to `/discover` (via `@discover`) to explore the solution space first.
 
-Typical chain: **Troubleshooting → Discovery → Planning → Implementation**
+Canonical lifecycle: **Discovery → Planning → Implementation → Troubleshooting → Discovery**

@@ -181,4 +181,4 @@ After troubleshooting is complete, route to **Discovery** — not Planning:
 - All findings → proceed to **Discovery** (`/discover`) to explore the solution space and shape a fix before committing to a plan.
 - **Toolkit bug** → OUT OF SCOPE. Document workaround if critical.
 
-Typical chain: **Troubleshooting → Discovery → Planning → Implementation**
+Canonical lifecycle: **Discovery → Planning → Implementation → Troubleshooting → Discovery**

@@ -24,6 +24,9 @@ Load these files before executing the skill:
 architecture:
   - openspec/specs/architecture/architecture-rules.md
   - openspec/specs/architecture/archetype-rules.md
+  - openspec/specs/architecture/scaffolding-rules.md
+  - openspec/specs/architecture/testing-rules.md
+  - openspec/specs/architecture/agent-limits.md
 
 patterns:
   - openspec/specs/patterns/backend-patterns.md
@@ -40,12 +43,15 @@ mvp:
   - openspec/changes/mvp-[MVP]/progress-tracker.md
 
 toolkit:
-  - openspec/specs/toolkit/README.md
+  - openspec/specs/toolkit/README.md  # if frontend is enabled
 ```
 
 ## Steps
 
-1. **Load Architecture Rules** — Read `architecture-rules.md` and `archetype-rules.md`. These define DDD, onion architecture, CQRS, system topology, read/write separation, and archetype constraints. Every decision must comply.
+1. **Load Architecture + Testing Rules** — Read:
+   - `architecture-rules.md`, `archetype-rules.md`, `scaffolding-rules.md`
+   - `testing-rules.md` (tests are non-negotiable; no red tests allowed)
+   - `agent-limits.md` (approved tools + constraints)
 2. **Read Context Maps** — Identify existing bounded contexts, their relationships, and integration patterns.
 3. **Read MVP State** — Load `openspec/specs/project/roadmap.md` and `openspec/changes/mvp-[MVP]/progress-tracker.md` to understand current scope and progress. MVPs are the core roadmap items for development.
 4. **Identify Bounded Context** — Determine if the request targets a new or existing context. If cross-context, identify the integration pattern (ACL, Events, Shared Kernel).
@@ -57,8 +63,13 @@ toolkit:
 7. **Validate System Topology** — Confirm the data flow follows: Frontend → BFF → (queries to API / commands to broker → microservice). Verify read/write database separation.
 8. **Check Toolkit** — If UI is needed, check available toolkit components before proposing custom ones.
 9. **Validate Against All Rules** — Run the full compliance checklist (see Architecture Compliance section below). ALL checks must pass.
-10. **Create Proposal** — Generate `openspec/changes/mvp-[MVP]/REQ-[MVP]-[###]/proposal.md` and `openspec/changes/mvp-[MVP]/REQ-[MVP]-[###]/tasks.md`.
-11. **Update Progress Tracker** — Add the new requirement row to `openspec/changes/mvp-[MVP]/progress-tracker.md` with status `Not Started`.
+10. **Implementation Readiness Gate (MANDATORY)** — Before writing the proposal, ensure:
+   - The proposal includes clear acceptance criteria and a concrete test plan
+   - No “masking” tasks are proposed (sleep/poll/retry to hide failures). If resilience is required, it must be explicit with bounded attempts/backoff and a clear failure outcome
+   - `tasks.md` is stop-safe: tasks are granular and can be truthfully checked off as work is completed
+   - Every task in `tasks.md` carries a classification label: `REAL_FIX` / `ARCH_ALIGNMENT` / `RESILIENCE` / `MASKING` / `UNKNOWN`
+11. **Create Proposal** — Generate `openspec/changes/mvp-[MVP]/REQ-[MVP]-[###]/proposal.md` and `openspec/changes/mvp-[MVP]/REQ-[MVP]-[###]/tasks.md`.
+12. **Update Progress Tracker** — Add the new requirement row to `openspec/changes/mvp-[MVP]/progress-tracker.md` with status `Not Started`.
 
 ## Output Format
 
@@ -155,6 +166,8 @@ toolkit:
 - **HARD STOP — DDD Compliance:** Every requirement MUST define aggregates, value objects, and ubiquitous language. Requirements that use generic CRUD terms (Create/Update/Delete) instead of domain language are non-compliant and must be rewritten.
 - **HARD STOP — Read/Write Separation:** Requirements involving data persistence MUST specify whether data targets the read path (API + read DB) or write path (microservice + write DB). Mixed read/write in a single service violates the architecture.
 - Never propose new toolkit components (toolkit is frozen).
+- **Tests are non-negotiable:** Implementation MUST fix any failing tests encountered before proceeding. A red suite is never acceptable.
+- **No masking:** Never propose sleeps/polls/retries to hide failing tests or eventual consistency. If proposing resilience, classify it as `RESILIENCE` with explicit attempt limits and backoff; otherwise reject as `MASKING`.
 - Project code targets `backend/`, `frontend/`, `deployment/` only.
 - Every proposal MUST identify a bounded context and define ubiquitous language.
 - Proposals MUST pass ALL architecture compliance checks before implementation begins.

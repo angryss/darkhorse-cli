@@ -7,7 +7,7 @@ id: implementation
 version: 1.1.0
 category: workflow
 status: active
-next_skill: validation
+next_skill: troubleshooting
 ```
 
 ## Purpose
@@ -38,27 +38,38 @@ context:
   - context/30-BOUNDED-CONTEXTS.md
 
 toolkit:
-  - openspec/specs/toolkit/README.md
+  - openspec/specs/toolkit/README.md  # if frontend is enabled
 ```
 
 ## Steps
 
 1. **Verify Proposal Exists** — Check that `openspec/changes/mvp-<MVP>/<id>/proposal.md` exists AND the requirement row is present in `openspec/changes/mvp-<MVP>/progress-tracker.md`. If either is missing, **STOP** — do not write any code. Direct the user to the Planning skill first.
-2. **Validate Proposal** — Confirm architecture checklist passes (DDD, Onion Architecture, CQRS, scaffolding rules). If any check fails, return to Planning skill.
-3. **Determine Mode** — Check if `backend/contexts/<context>/` exists:
+2. **Initialize Progress Tracking (MANDATORY)** — Before writing any code:
+   - Set the active requirement row in `openspec/changes/mvp-<MVP>/progress-tracker.md` to `In Progress`
+   - Set the `**Status:**` header in `openspec/changes/mvp-<MVP>/<id>/tasks.md` to `In Progress`
+   - If a session ends at any point, these files must reflect the true current state (see constraints)
+3. **Validate Proposal** — Confirm architecture checklist passes (DDD, Onion Architecture, CQRS, scaffolding rules). If any check fails, return to Planning skill.
+4. **Determine Mode** — Check if `backend/contexts/<context>/` exists:
    - Exists → **EXTEND EXISTING**
    - Missing → **SCAFFOLD NEW**
-4. **Implement Domain Layer** — Entities, Value Objects, Domain Events, Domain Services, Repository Interfaces. Zero external dependencies.
-5. **Implement Application Layer** — Commands, Queries, Handlers, DTOs. Depends only on Domain.
-6. **Implement Infrastructure Layer** — Repository implementations, Messaging, Persistence. Implements interfaces from Application.
-7. **Implement Presentation Layer** — Controllers, Routes. HTTP adapters only.
-8. **Implement Frontend** (if applicable) — Check toolkit first; build pages, components, state, API calls.
-9. **Implement Deployment** (if applicable) — Docker configs, scripts, environment setup.
-10. **Write Tests** — Unit tests for domain and application, integration tests for infrastructure.
-11. **Zero Tech Debt — MANDATORY before marking any task complete:** Run the full test suite for every service touched (`mvn test` for Java services, `npx vitest run` for frontend). **ALL pre-existing test failures must be fixed before proceeding** — no failures may be left behind, whether introduced by this change or already present. A red suite is never acceptable. If a test failure is unrelated to the current requirement, fix it immediately as part of this task.
-12. **Update Context Maps** — Update `context/30-BOUNDED-CONTEXTS.md` and `openspec/specs/domain/` if new context or domain concepts added.
-13. **Mark Tasks Complete — IMMEDIATELY after each task is implemented:** check the corresponding `- [ ]` box to `- [x]` in `tasks.md`. Do not defer to the end. After each phase completes, all boxes in that phase MUST be `[x]`. When ALL phases are done, update the `**Status:**` header in `tasks.md` to `Done` and set the requirement row to `Done` in `progress-tracker.md`.
-14. **Check MVP Completion** — If ALL requirements in `openspec/changes/mvp-<MVP>/progress-tracker.md` are `Done` and all tests pass: update `roadmap.md` to `Completed`, then move `openspec/changes/mvp-<MVP>/` to `openspec/archive/mvp-<MVP>/`.
+5. **Implement Domain Layer** — Entities, Value Objects, Domain Events, Domain Services, Repository Interfaces. Zero external dependencies.
+6. **Implement Application Layer** — Commands, Queries, Handlers, DTOs. Depends only on Domain.
+7. **Implement Infrastructure Layer** — Repository implementations, Messaging, Persistence. Implements interfaces from Application.
+8. **Implement Presentation Layer** — Controllers, Routes. HTTP adapters only.
+9. **Implement Frontend** (if applicable) — Check toolkit first; build pages, components, state, API calls.
+10. **Implement Deployment** (if applicable) — Docker configs, scripts, environment setup.
+11. **Write Tests** — Unit tests for domain and application, integration tests for infrastructure.
+12. **Zero Tech Debt — MANDATORY before marking any task complete:** Run the full test suite for every service touched (`mvn test` for Java services, `npx vitest run` for frontend). **ALL pre-existing test failures must be fixed before proceeding** — no failures may be left behind, whether introduced by this change or already present. A red suite is never acceptable. If a test failure is unrelated to the current requirement, fix it immediately as part of this task.
+13. **Update Context Maps** — Update `context/30-BOUNDED-CONTEXTS.md` and `openspec/specs/domain/` if new context or domain concepts added.
+14. **Synchronize Tracking State (MANDATORY, STOP-SAFE)** — Continuously keep `tasks.md` and `progress-tracker.md` accurate:
+   - Tick `tasks.md` checkboxes as each task is completed (never batch at the end)
+   - Keep `tasks.md` `**Status:**` and the requirement row `Status` aligned at all times
+   - On any session stop, interruption, handoff, or incomplete implementation: set statuses to the most accurate value (`In Progress` / `Blocked` / `In Review`) and ensure unchecked tasks reflect remaining work
+15. **Only Mark Done When Complete** — Set the requirement row to `Done` ONLY when:
+   - All proposal acceptance criteria are met
+   - All tasks are complete
+   - All tests are green (no red tests anywhere for touched services)
+16. **Check MVP Completion** — If ALL requirements in `openspec/changes/mvp-<MVP>/progress-tracker.md` are `Done` and all tests pass: update `roadmap.md` to `Completed`, then move `openspec/changes/mvp-<MVP>/` to `openspec/archive/mvp-<MVP>/`.
 
 ## Output Format
 
@@ -135,7 +146,4 @@ scaffold-new / extend-existing
 
 ## Next Skill
 
-After implementation is complete, the workflow is typically done. If issues are found during validation:
-
-- **Issues found** → proceed to **Troubleshooting** (`workflows/skills/troubleshooting.md`)
-- **All clear** → archive the proposal
+If anything is failing, unclear, or you need to stop mid-stream, proceed to **Troubleshooting** (`workflows/skills/troubleshooting.md`) to reset the environment, capture evidence, and converge on the next Discovery/Planning cycle. Canonical lifecycle: **Discovery → Planning → Implementation → Troubleshooting → Discovery**.
