@@ -108,6 +108,8 @@ export async function seedOpenSpec(config: DarkhorseConfig): Promise<SkillResult
     if (config.ai.tools.kiro) {
       const kiroFiles = await seedKiroSteering(config, engine, ctx);
       filesCreated.push(...kiroFiles.map((f) => path.relative(root, f)));
+      const kiroPrompts = await seedKiroPrompts(config, engine, ctx);
+      filesCreated.push(...kiroPrompts.map((f) => path.relative(root, f)));
     }
   } catch (err) {
     errors.push(`seedOpenSpec failed: ${err instanceof Error ? err.message : String(err)}`);
@@ -174,6 +176,50 @@ export async function seedKiroSteering(
 
   for (const { template, filename } of KIRO_STEERING_TEMPLATES) {
     const destPath = path.join(steeringDir, filename);
+    const alreadyExists = await pathExists(destPath);
+    if (alreadyExists && !force) {
+      continue; // preserve customized files
+    }
+    await resolvedEngine.render(template, resolvedCtx, destPath);
+    created.push(destPath);
+  }
+
+  return created;
+}
+
+// ── Kiro prompts — generates .kiro/prompts/ files ──────────────────
+
+const KIRO_PROMPTS_TEMPLATES: Array<{ template: string; filename: string }> = [
+  { template: 'kiro/prompts/discover-next.md.hbs', filename: 'discover-next.md' },
+  { template: 'kiro/prompts/plan-next.md.hbs', filename: 'plan-next.md' },
+  { template: 'kiro/prompts/implement-next.md.hbs', filename: 'implement-next.md' },
+  { template: 'kiro/prompts/troubleshoot-next.md.hbs', filename: 'troubleshoot-next.md' },
+];
+
+/**
+ * Seed Kiro prompt files into .kiro/prompts/.
+ * Idempotent: skips files that already exist so customizations are preserved.
+ * Pass force=true to overwrite existing files.
+ */
+export async function seedKiroPrompts(
+  config: DarkhorseConfig,
+  engine?: TemplateEngine,
+  ctx?: TemplateContext,
+  force = false,
+): Promise<string[]> {
+  const created: string[] = [];
+  const promptsDir = path.join(config.paths.root, '.kiro', 'prompts');
+  await ensureDir(promptsDir);
+
+  const resolvedEngine = engine ?? new TemplateEngine(getTemplatesDir());
+  const resolvedCtx: TemplateContext = ctx ?? {
+    project: config,
+    timestamp: new Date().toISOString().split('T')[0],
+    cliVersion: '0.1.0',
+  };
+
+  for (const { template, filename } of KIRO_PROMPTS_TEMPLATES) {
+    const destPath = path.join(promptsDir, filename);
     const alreadyExists = await pathExists(destPath);
     if (alreadyExists && !force) {
       continue; // preserve customized files

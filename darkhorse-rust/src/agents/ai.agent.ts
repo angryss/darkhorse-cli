@@ -1,7 +1,7 @@
 import path from 'node:path';
 import { logger } from '../core/logger.js';
 import type { DarkhorseConfig, SkillResult, TemplateContext } from '../core/types.js';
-import { seedKiroSteering } from '../skills/openspec.js';
+import { seedKiroSteering, seedKiroPrompts } from '../skills/openspec.js';
 import { TemplateEngine } from '../core/template-engine.js';
 import { getTemplatesDir, getWorkflowsDir } from '../skills/registry.js';
 import { ensureDir, pathExists, copyFile } from '../core/fs.js';
@@ -30,10 +30,12 @@ export async function aiSyncAgent(
       logger.step('Syncing Kiro steering files...');
       const kiroFiles = await seedKiroSteering(config, engine, ctx, force);
       filesCreated.push(...kiroFiles);
-      if (kiroFiles.length === 0) {
-        logger.info('  Kiro: all steering files already present.');
+      const kiroPrompts = await seedKiroPrompts(config, engine, ctx, force);
+      filesCreated.push(...kiroPrompts);
+      if (kiroFiles.length === 0 && kiroPrompts.length === 0) {
+        logger.info('  Kiro: all steering and prompt files already present.');
       } else {
-        logger.success(`  Kiro: created ${kiroFiles.length} file(s) in .kiro/steering/`);
+        logger.success(`  Kiro: created ${kiroFiles.length + kiroPrompts.length} file(s) in .kiro/`);
       }
     }
 
