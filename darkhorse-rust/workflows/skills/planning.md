@@ -17,6 +17,9 @@
 4. **Plan database** — Design SQLite schema changes if needed
 5. **Define test strategy** — Specify tests per layer
 6. **Write proposal** — Create `openspec/changes/mvp-{mvp}/{requirement_id}/proposal.md`
+7. **Update Bounded Context Registry** — Update `context/30-BOUNDED-CONTEXTS.md` for any new or expanded bounded context. Create `openspec/specs/domain/<context-name>.md` if this is a new context. Mark N/A if purely infrastructure/cross-cutting.
+8. **Update Roadmap** — Add the REQ row to the Requirements table in `openspec/specs/project/roadmap.md` under the active MVP section. Add source DISC to Discovery Sources if not already present.
+9. **Update Progress Tracker** — Add the new requirement row to `openspec/changes/mvp-{mvp}/progress-tracker.md` with status `Not Started`. Update the Total Requirements count.
 
 ## Output
 

@@ -40,6 +40,8 @@ Produce:
 - Bounded context identification
 - Ubiquitous language definitions
 - Task breakdown
+- Updated context/30-BOUNDED-CONTEXTS.md (or N/A if no bounded context change)
+- Updated openspec/specs/project/roadmap.md (REQ added to active MVP Requirements table)
 - Updated openspec/changes/mvp-[MVP]/progress-tracker.md
 - Proposal ID for implementation
 ```

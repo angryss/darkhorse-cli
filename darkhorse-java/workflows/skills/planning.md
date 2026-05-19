@@ -4,7 +4,7 @@
 
 ```yaml
 id: planning
-version: 2.1.0
+version: 2.2.0
 category: workflow
 status: active
 next_skill: implementation
@@ -103,7 +103,18 @@ toolkit:
 
 12. **Create Proposal** — Generate `openspec/changes/mvp-[MVP]/REQ-[MVP]-[###]/proposal.md` and `openspec/changes/mvp-[MVP]/REQ-[MVP]-[###]/tasks.md`. Each task in `tasks.md` must carry a change classification label (Rule 21).
 
-13. **Update Progress Tracker** — Add the new requirement row to `openspec/changes/mvp-[MVP]/progress-tracker.md` with status `Not Started`.
+13. **Update Bounded Context Registry** — Update `context/30-BOUNDED-CONTEXTS.md` and `openspec/specs/domain/README.md` as follows:
+    - **New bounded context:** Add a full entry to `context/30-BOUNDED-CONTEXTS.md` (purpose, key aggregates, entities, domain events, integration events, location). Create `openspec/specs/domain/<context-name>.md` using the template in `openspec/specs/domain/README.md`. Add the context to the Context Map table with its upstream/downstream relationships and integration pattern.
+    - **Expanded bounded context:** Update the existing entry in `context/30-BOUNDED-CONTEXTS.md` to reflect any new aggregates, entities, events, or integration relationships introduced by the proposal.
+    - **Client-experience / infrastructure / cross-cutting proposals with no new bounded context:** Skip this step and note "N/A — no bounded context change" in the proposal's Next Actions.
+
+14. **Update Roadmap** — Update `openspec/specs/project/roadmap.md` to keep it in sync with the new requirement:
+    - Add the new REQ row to the Requirements table inside the active MVP section. Use the exact same description from the proposal summary. Columns: ID, Type, Scope, Priority, Description, Status (Not Started).
+    - If the proposal is sourced from a discovery document (DISC-NNN), add that DISC to the Discovery Sources table in the active MVP section if it is not already present.
+    - If the addition changes the MVP's stated goals materially (e.g., a new product bounded context or a new client surface), add or update the relevant bullet in the Goals section.
+    - Do not change Exit Criteria counts manually — they are updated when the progress tracker total changes.
+
+15. **Update Progress Tracker** — Add the new requirement row to `openspec/changes/mvp-[MVP]/progress-tracker.md` with status `Not Started`. Update the Total Requirements count.
 
 ## Output Format
 
@@ -189,7 +200,10 @@ toolkit:
 - [ ] Integration tests for repositories
 
 ## Next Actions
-- [ ] Add to `openspec/changes/mvp-[MVP]/progress-tracker.md` (status: Not Started)
+- [ ] Update `context/30-BOUNDED-CONTEXTS.md` — add/expand bounded context entry (or mark N/A if no context change)
+- [ ] Create `openspec/specs/domain/<context-name>.md` stub — if new bounded context (or mark N/A)
+- [ ] Update `openspec/specs/project/roadmap.md` — add REQ to active MVP Requirements table; add DISC to Discovery Sources if applicable; update Goals if materially changed
+- [ ] Add to `openspec/changes/mvp-[MVP]/progress-tracker.md` (status: Not Started) and update Total Requirements count
 - [ ] Proceed to **Implementation** skill with this proposal ID
 ```
 
@@ -204,6 +218,8 @@ toolkit:
 - Every proposal MUST identify a bounded context and define ubiquitous language.
 - Proposals MUST pass ALL architecture compliance checks before implementation begins.
 - MVPs are core roadmap items — every requirement MUST link to an active MVP.
+- `context/30-BOUNDED-CONTEXTS.md` MUST be updated whenever a new bounded context is introduced or an existing one is materially expanded.
+- `openspec/specs/project/roadmap.md` MUST be updated for every new REQ — the Requirements table in the active MVP section and Discovery Sources if applicable.
 - Only allowed top-level folders: `context/`, `openspec/`, `backend/`, `frontend/`, `deployment/`.
 
 ## Next Skill

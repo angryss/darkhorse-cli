@@ -48,9 +48,12 @@ Load all required context files listed in the skill before producing output.
 ## Constraints
 
 - NO code generation — proposals only
-- NO modifications outside `openspec/changes/`
+- NO modifications outside `openspec/changes/`, `context/`, `openspec/specs/project/roadmap.md`
 - Output goes to `openspec/changes/mvp-{MVP}/REQ-{MVP}-{###}/`
-- Update `openspec/changes/mvp-{MVP}/progress-tracker.md`
+- Update `openspec/changes/mvp-{MVP}/progress-tracker.md` (add row + update Total Requirements count)
+- Update `context/30-BOUNDED-CONTEXTS.md` — add or expand bounded context entry for every proposal that introduces or materially changes a bounded context; mark N/A if purely cross-cutting/infrastructure
+- Create `openspec/specs/domain/<context-name>.md` stub if a new bounded context is introduced and no spec file exists yet
+- Update `openspec/specs/project/roadmap.md` — add the REQ to the active MVP's Requirements table; add the source DISC to Discovery Sources if not already present; update MVP Goals if materially changed
 - ALL architecture compliance checks must pass before the proposal is complete
 - MVPs are core roadmap items — link every requirement to an active MVP
 - **Tests are non-negotiable:** implementation MUST fix any failing tests encountered before proceeding. A red suite is never acceptable.
@@ -66,4 +69,12 @@ Before handing off to `/implement`, verify:
 
 ## Handoff
 
-After completing, suggest proceeding to `/implement` with the proposal ID.
+After completing, confirm the following closing steps are done:
+1. `openspec/changes/mvp-{MVP}/REQ-{MVP}-{###}/proposal.md` — created
+2. `openspec/changes/mvp-{MVP}/REQ-{MVP}-{###}/tasks.md` — created
+3. `context/30-BOUNDED-CONTEXTS.md` — updated (or marked N/A)
+4. `openspec/specs/domain/<context-name>.md` — created if new context (or marked N/A)
+5. `openspec/specs/project/roadmap.md` — REQ added to MVP Requirements table
+6. `openspec/changes/mvp-{MVP}/progress-tracker.md` — row added, total updated
+
+Then suggest proceeding to `/implement` with the generated proposal ID.
