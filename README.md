@@ -289,3 +289,9 @@ All four sub-projects are at `v0.1.0`.
 ## License
 
 MIT. See [LICENSE](LICENSE).
+
+## Public Alpha Positioning
+
+DarkHorse CLI is a public-alpha AI-native engineering framework for structured software delivery. It helps teams organize AI-assisted development around open specification workflows, software scaffolding, developer workflow automation, and reusable engineering context.
+
+The framework includes early scaffolder workflows for .NET, Java, and Rust/Tauri projects. These scaffolders are intended to make repeatable project setup and specification-driven delivery easier to evaluate while DarkHorse continues to mature.
