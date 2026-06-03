@@ -1,6 +1,6 @@
 # Architecture Rules — Rust/Tauri Desktop
 
-> Mandatory architecture rules for all Dark Horse Rust/Tauri projects.
+> Mandatory architecture rules for all DarkHorse Rust/Tauri projects.
 
 ## Rule 1: Clean Architecture — 4-Layer Crate Model
 

@@ -1,6 +1,6 @@
 # Backend Patterns — Rust/Tauri Desktop
 
-> Rust-idiomatic patterns for Dark Horse desktop projects.
+> Rust-idiomatic patterns for DarkHorse desktop projects.
 
 ## Layer Architecture
 

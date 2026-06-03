@@ -20,9 +20,11 @@
     "crop",
     "filter",
     "annotation",
-    "component"
+    "component",
+    "darkhorse",
+    "components"
   ],
-  "author": "React Toolkit",
+  "author": "Angry Software Solutions",
   "license": "MIT",
   "peerDependencies": {
     "react": "^18.0.0",
@@ -36,6 +38,14 @@
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
     "typescript": "^5.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angryss/darkhorse-cli.git",
+    "directory": "darkhorse-java/toolkit/packages/image-editor"
+  },
+  "bugs": {
+    "url": "https://github.com/angryss/darkhorse-cli/issues"
+  },
+  "homepage": "https://angryss.com"
 }
-

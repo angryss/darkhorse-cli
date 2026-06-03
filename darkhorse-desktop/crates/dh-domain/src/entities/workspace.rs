@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use uuid::Uuid;
 
-/// The root context for all Dark Horse work. A workspace organizes
+/// The root context for all DarkHorse work. A workspace organizes
 /// initiatives, discovery sessions, planning outputs, requirements,
 /// roadmap data, progress history, generated artifacts, and local settings.
 ///

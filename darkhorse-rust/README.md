@@ -1,10 +1,10 @@
 # DarkHorse Rust
 
-> **Scaffolder** — Generates Rust/Tauri desktop products with the full Dark Horse development guidance system
+> **Scaffolder** — Generates Rust/Tauri desktop products with the full DarkHorse development guidance system
 
 **DarkHorse Rust** is a scaffolder CLI. It generates a complete Tauri desktop application — Cargo workspace with Clean Architecture crates, Vite + TypeScript frontend, Tauri configuration, **and** the development guidance system (OpenSpec, context, rules, guides, workflows, roadmap) — from a single `init` command. Each generated project enforces DDD, Clean Architecture, and command-oriented flow. Generated projects are fully self-contained — no runtime dependency on the CLI.
 
-### Role in the Dark Horse Ecosystem
+### Role in the DarkHorse Ecosystem
 
 | Concern | DarkHorse Rust |
 |---------|---------------|
@@ -166,7 +166,7 @@ darkhorse-rust init [options]
 │   ├── package.json
 │   ├── tsconfig.json
 │   └── vite.config.ts
-└── .darkhorse.yaml                # Dark Horse project config
+└── .darkhorse.yaml                # DarkHorse project config
 ```
 
 ### Process (Development Guidance System)

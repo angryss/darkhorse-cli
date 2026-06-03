@@ -46,7 +46,7 @@ function pngChunk(type: string, data: Uint8Array): Uint8Array {
 
 /**
  * Generate a minimal valid PNG file with a solid dark grey fill.
- * RGBA format, color #333333FF — a neutral Dark Horse placeholder.
+ * RGBA format, color #333333FF - a neutral DarkHorse placeholder.
  */
 function generatePng(width: number, height: number): Buffer {
   const signature = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);

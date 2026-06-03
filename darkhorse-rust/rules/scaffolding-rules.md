@@ -4,7 +4,7 @@
 
 ## Generated Project Completeness
 
-A Dark Horse scaffolder is only complete if it generates **both**:
+A DarkHorse scaffolder is only complete if it generates **both**:
 
 1. **The runtime product** — Cargo workspace, crates, frontend, deployment config
 2. **The development guidance system** — openspec/, context/, AGENTS.md, rules, guides, workflows, roadmap

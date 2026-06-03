@@ -1,6 +1,6 @@
 [package]
 name = "dh-application"
-description = "Dark Horse Desktop — application layer: commands, use-case handlers, and workflow orchestration"
+description = "DarkHorse Desktop — application layer: commands, use-case handlers, and workflow orchestration"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true

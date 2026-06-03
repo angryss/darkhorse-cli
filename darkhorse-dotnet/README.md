@@ -1,10 +1,10 @@
 ﻿# DarkHorse .NET
 
-> **Scaffolder** — Generates .NET products with the full Dark Horse development guidance system
+> **Scaffolder** — Generates .NET products with the full DarkHorse development guidance system
 
 **DarkHorse .NET** is a scaffolder CLI. It generates a complete project — ASP.NET Core backend, React frontend, Docker Compose deployment, **and** the development guidance system (OpenSpec, context, rules, guides, workflows, roadmap) — from a single `init` command. Backend services are added with `add`. Each service enforces DDD, Onion Architecture, and CQRS. Generated projects are fully self-contained — no runtime dependency on the CLI.
 
-### Role in the Dark Horse Ecosystem
+### Role in the DarkHorse Ecosystem
 
 | Concern | DarkHorse .NET |
 |---------|---------------|

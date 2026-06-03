@@ -34,7 +34,7 @@ export function renderDashboard(): string {
         </div>
         <div class="card">
           <h3>Status</h3>
-          <p>Dark Horse Desktop v0.1.0</p>
+          <p>DarkHorse Desktop v0.1.0</p>
           <p id="update-status">Update check pending...</p>
         </div>
       </div>

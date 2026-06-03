@@ -1,6 +1,6 @@
 [package]
 name = "dh-domain"
-description = "Dark Horse Desktop — domain core: entities, value objects, policies, and domain services"
+description = "DarkHorse Desktop — domain core: entities, value objects, policies, and domain services"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true

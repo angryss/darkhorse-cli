@@ -3,7 +3,7 @@ use uuid::Uuid;
 
 use crate::errors::AppResult;
 
-/// Port for persisting and retrieving Dark Horse workspaces.
+/// Port for persisting and retrieving DarkHorse workspaces.
 pub trait WorkspaceRepository: Send + Sync {
     fn save(&self, workspace: &Workspace) -> AppResult<()>;
     fn find_by_id(&self, id: Uuid) -> AppResult<Option<Workspace>>;

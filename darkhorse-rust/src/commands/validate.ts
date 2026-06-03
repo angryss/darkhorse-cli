@@ -21,7 +21,7 @@ export function registerValidateCommand(program: Command): void {
       const projectRoot = dir === '.' ? process.cwd() : dir;
 
       if (!(await configExists(projectRoot))) {
-        logger.error('No .darkhorse.yaml found — is this a Dark Horse project?');
+        logger.error('No .darkhorse.yaml found - is this a DarkHorse project?');
         process.exitCode = 1;
         return;
       }

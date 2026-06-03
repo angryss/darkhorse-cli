@@ -1,6 +1,6 @@
 {
   "$schema": "https://raw.githubusercontent.com/nicedoc/tauri/dev/core/tauri-config-schema/schema.json",
-  "productName": "Dark Horse Desktop",
+  "productName": "DarkHorse Desktop",
   "version": "0.1.0",
   "identifier": "com.darkhorse.desktop",
   "build": {

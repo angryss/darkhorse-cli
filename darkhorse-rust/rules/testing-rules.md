@@ -1,6 +1,6 @@
 # Testing Rules — Rust/Tauri Desktop
 
-> Testing strategy and requirements for Dark Horse Rust/Tauri projects.
+> Testing strategy and requirements for DarkHorse Rust/Tauri projects.
 
 ## Test Organization
 

@@ -1,0 +1,50 @@
+name: Validation
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  scaffolders:
+    name: ${{ matrix.package }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - darkhorse-dotnet
+          - darkhorse-java
+          - darkhorse-rust
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: ${{ matrix.package }}/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ${{ matrix.package }}
+        run: npm ci
+
+      - name: Type-check
+        working-directory: ${{ matrix.package }}
+        run: npm run type-check
+
+      - name: Test
+        working-directory: ${{ matrix.package }}
+        run: npm test
+
+      - name: Build
+        working-directory: ${{ matrix.package }}
+        run: npm run build
+
+      - name: CLI help
+        working-directory: ${{ matrix.package }}
+        run: node dist/index.js --help

@@ -2,7 +2,7 @@
 
 **Mandatory structure rules for Rust/Tauri desktop projects.**
 
-> **Dark Horse Desktop is a product, not a scaffolder.** These rules define the canonical project structure for Tauri desktop applications that follow Dark Horse principles. They describe the expected layout of a generated or hand-structured desktop project — not the generation process itself.
+> **DarkHorse Desktop is a product, not a scaffolder.** These rules define the canonical project structure for Tauri desktop applications that follow DarkHorse principles. They describe the expected layout of a generated or hand-structured desktop project — not the generation process itself.
 >
 > Future Rust/Tauri project scaffolding will be handled by a dedicated scaffolder CLI (`darkhorse-rust`), which will use these rules as its structural blueprint.
 
@@ -10,7 +10,7 @@
 
 ## Rule 0: Single Repository Per Project
 
-Every project lives in its **own repository**. The project is **fully self-contained** with no runtime dependencies on any Dark Horse CLI tool.
+Every project lives in its **own repository**. The project is **fully self-contained** with no runtime dependencies on any DarkHorse CLI tool.
 
 ```
 <project-name>/                    ← One repo = one project

@@ -48,9 +48,19 @@
     "design-tokens",
     "design-system",
     "react",
-    "typescript"
+    "typescript",
+    "darkhorse",
+    "components"
   ],
-  "author": "React Toolkit Team",
-  "license": "MIT"
+  "author": "Angry Software Solutions",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angryss/darkhorse-cli.git",
+    "directory": "darkhorse-java/toolkit/packages/design-tokens"
+  },
+  "bugs": {
+    "url": "https://github.com/angryss/darkhorse-cli/issues"
+  },
+  "homepage": "https://angryss.com"
 }
-

@@ -15,7 +15,7 @@ const program = new Command();
 
 program
   .name('darkhorse-rust')
-  .description('Scaffold Rust/Tauri desktop projects with the full Dark Horse development guidance system')
+  .description('Scaffold Rust/Tauri desktop projects with the full DarkHorse development guidance system')
   .version('0.1.0')
   .option('--verbose', 'Enable verbose logging')
   .hook('preAction', (thisCommand) => {

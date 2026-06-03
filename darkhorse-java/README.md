@@ -1,10 +1,10 @@
 # DarkHorse Java
 
-> **Scaffolder** — Generates Java products with the full Dark Horse development guidance system
+> **Scaffolder** — Generates Java products with the full DarkHorse development guidance system
 
 **DarkHorse Java** is a scaffolder CLI. It generates a complete project — Quarkus backend, React frontend, Docker Compose deployment, **and** the development guidance system (OpenSpec, context, rules, guides, workflows, roadmap) — from a single `init` command. Each project enforces DDD, Onion Architecture, and CQRS at every layer. Generated projects are fully self-contained — no runtime dependency on the CLI.
 
-### Role in the Dark Horse Ecosystem
+### Role in the DarkHorse Ecosystem
 
 | Concern | DarkHorse Java |
 |---------|---------------|

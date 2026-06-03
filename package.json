@@ -1,0 +1,30 @@
+{
+  "name": "darkhorse",
+  "version": "0.1.0",
+  "private": true,
+  "description": "DarkHorse public-alpha monorepo for AI-native engineering scaffolders and companion products.",
+  "license": "MIT",
+  "scripts": {
+    "build": "npm --prefix darkhorse-dotnet run build && npm --prefix darkhorse-java run build && npm --prefix darkhorse-rust run build",
+    "type-check": "npm --prefix darkhorse-dotnet run type-check && npm --prefix darkhorse-java run type-check && npm --prefix darkhorse-rust run type-check",
+    "test": "npm --prefix darkhorse-dotnet test && npm --prefix darkhorse-java test && npm --prefix darkhorse-rust test",
+    "clean": "git clean -fdX"
+  },
+  "author": "Angry Software Solutions",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angryss/darkhorse-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/angryss/darkhorse-cli/issues"
+  },
+  "homepage": "https://angryss.com",
+  "keywords": [
+    "darkhorse",
+    "ai-native",
+    "openspec",
+    "scaffolding",
+    "developer-tools",
+    "workflow-automation"
+  ]
+}

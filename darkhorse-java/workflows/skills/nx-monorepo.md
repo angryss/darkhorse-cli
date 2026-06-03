@@ -11,7 +11,7 @@ status: active
 
 ## Purpose
 
-Analyze, plan, and guide Nx monorepo adoption as an optional architectural strategy for Dark Horse products. This skill evaluates whether Nx is a good fit, designs target workspace structure, and produces structured setup or migration plans.
+Analyze, plan, and guide Nx monorepo adoption as an optional architectural strategy for DarkHorse products. This skill evaluates whether Nx is a good fit, designs target workspace structure, and produces structured setup or migration plans.
 
 Nx is treated as a **workspace orchestration and platform layer** — not a replacement for native language toolchains.
 

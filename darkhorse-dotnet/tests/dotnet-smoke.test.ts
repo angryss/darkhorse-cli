@@ -1,6 +1,7 @@
 ﻿import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { exec } from 'node:child_process';
 import { promisify } from 'node:util';
+import https from 'node:https';
 import path from 'node:path';
 import {
   createTempDir,
@@ -23,15 +24,36 @@ const execAsync = promisify(exec);
  */
 
 let hasDotnet = false;
+let hasNugetAccess = false;
 
 beforeAll(async () => {
   try {
     await execAsync('dotnet --version');
     hasDotnet = true;
+    hasNugetAccess = await canReachNuget();
   } catch {
     hasDotnet = false;
+    hasNugetAccess = false;
   }
 });
+
+function canReachNuget(): Promise<boolean> {
+  return new Promise((resolve) => {
+    const req = https.get('https://api.nuget.org/v3/index.json', { timeout: 5_000 }, (res) => {
+      res.resume();
+      resolve((res.statusCode ?? 500) < 500);
+    });
+    req.on('timeout', () => {
+      req.destroy();
+      resolve(false);
+    });
+    req.on('error', () => resolve(false));
+  });
+}
+
+function canRunDotnetRestore(): boolean {
+  return hasDotnet && hasNugetAccess;
+}
 
 // ---------------------------------------------------------------------------
 // Helper: scaffold a full workspace + service
@@ -85,7 +107,7 @@ describe('dotnet smoke: api', () => {
   });
 
   it('dotnet restore succeeds', async () => {
-    if (!hasDotnet) return; // skip silently if no dotnet
+    if (!canRunDotnetRestore()) return;
     const slnPath = path.join(serviceRoot, `${ns}.sln`);
     const { stderr } = await execAsync(`dotnet restore "${slnPath}"`, { timeout: 120_000 });
     // Some warnings are OK, but no fatal errors
@@ -93,14 +115,14 @@ describe('dotnet smoke: api', () => {
   }, 120_000);
 
   it('dotnet build succeeds', async () => {
-    if (!hasDotnet) return;
+    if (!canRunDotnetRestore()) return;
     const slnPath = path.join(serviceRoot, `${ns}.sln`);
     const { stderr } = await execAsync(`dotnet build "${slnPath}" --no-restore`, { timeout: 120_000 });
     expect(stderr).not.toContain('Build FAILED');
   }, 120_000);
 
   it('no broken project references', async () => {
-    if (!hasDotnet) return;
+    if (!canRunDotnetRestore()) return;
     const slnPath = path.join(serviceRoot, `${ns}.sln`);
     try {
       await execAsync(`dotnet build "${slnPath}" --no-restore`, { timeout: 120_000 });
@@ -133,21 +155,21 @@ describe('dotnet smoke: bff-api', () => {
   });
 
   it('dotnet restore succeeds', async () => {
-    if (!hasDotnet) return;
+    if (!canRunDotnetRestore()) return;
     const slnPath = path.join(serviceRoot, `${ns}.sln`);
     const { stderr } = await execAsync(`dotnet restore "${slnPath}"`, { timeout: 120_000 });
     expect(stderr).not.toContain('error NU');
   }, 120_000);
 
   it('dotnet build succeeds', async () => {
-    if (!hasDotnet) return;
+    if (!canRunDotnetRestore()) return;
     const slnPath = path.join(serviceRoot, `${ns}.sln`);
     const { stderr } = await execAsync(`dotnet build "${slnPath}" --no-restore`, { timeout: 120_000 });
     expect(stderr).not.toContain('Build FAILED');
   }, 120_000);
 
   it('no invalid namespace references', async () => {
-    if (!hasDotnet) return;
+    if (!canRunDotnetRestore()) return;
     const slnPath = path.join(serviceRoot, `${ns}.sln`);
     try {
       await execAsync(`dotnet build "${slnPath}" --no-restore`, { timeout: 120_000 });
@@ -179,21 +201,21 @@ describe('dotnet smoke: microservice', () => {
   });
 
   it('dotnet restore succeeds', async () => {
-    if (!hasDotnet) return;
+    if (!canRunDotnetRestore()) return;
     const slnPath = path.join(serviceRoot, `${ns}.sln`);
     const { stderr } = await execAsync(`dotnet restore "${slnPath}"`, { timeout: 120_000 });
     expect(stderr).not.toContain('error NU');
   }, 120_000);
 
   it('dotnet build succeeds', async () => {
-    if (!hasDotnet) return;
+    if (!canRunDotnetRestore()) return;
     const slnPath = path.join(serviceRoot, `${ns}.sln`);
     const { stderr } = await execAsync(`dotnet build "${slnPath}" --no-restore`, { timeout: 120_000 });
     expect(stderr).not.toContain('Build FAILED');
   }, 120_000);
 
   it('no broken project references', async () => {
-    if (!hasDotnet) return;
+    if (!canRunDotnetRestore()) return;
     const slnPath = path.join(serviceRoot, `${ns}.sln`);
     try {
       await execAsync(`dotnet build "${slnPath}" --no-restore`, { timeout: 120_000 });

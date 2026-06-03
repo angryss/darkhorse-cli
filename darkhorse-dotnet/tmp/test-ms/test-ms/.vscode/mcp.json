@@ -1,9 +1,0 @@
-{
-  "servers": {
-    "darkhorse": {
-      "command": "npx",
-      "args": ["darkhorse-dotnet", "mcp-serve"],
-      "env": {}
-    }
-  }
-}

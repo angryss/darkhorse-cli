@@ -11,7 +11,7 @@ const NAME_RE = /^[a-z][a-z0-9-]*$/;
 export function registerInitCommand(program: Command): void {
   program
     .command('init')
-    .description('Scaffold a new Rust/Tauri desktop project with full Dark Horse guidance system')
+    .description('Scaffold a new Rust/Tauri desktop project with full DarkHorse guidance system')
     .argument('[name]', 'Project name (kebab-case)')
     .option('-d, --description <desc>', 'Project description')
     .option('--crate-prefix <prefix>', 'Crate name prefix (e.g. "vps" for visu-photo-studio)')

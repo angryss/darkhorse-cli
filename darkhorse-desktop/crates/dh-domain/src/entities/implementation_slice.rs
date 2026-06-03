@@ -6,7 +6,7 @@ use crate::values::{Priority, SliceType};
 use crate::entities::ProgressStatus;
 
 /// An implementation slice is a delivery-ready unit of work derived
-/// from one or more requirements. Slices represent the Dark Horse model
+/// from one or more requirements. Slices represent the DarkHorse model
 /// of turning requirements into concrete implementation chunks.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ImplementationSlice {

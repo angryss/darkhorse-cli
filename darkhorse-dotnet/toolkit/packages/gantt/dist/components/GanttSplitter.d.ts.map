@@ -1,1 +1,0 @@
-{"version":3,"file":"GanttSplitter.d.ts","sourceRoot":"","sources":["../../src/components/GanttSplitter.tsx"],"names":[],"mappings":"AAAA;;GAEG;AAEH,OAAO,KAAwC,MAAM,OAAO,CAAC;AAG7D,MAAM,WAAW,kBAAkB;IACjC,QAAQ,EAAE,MAAM,CAAC;IACjB,QAAQ,EAAE,CAAC,QAAQ,EAAE,MAAM,KAAK,IAAI,CAAC;CACtC;AAED,eAAO,MAAM,aAAa,EAAE,KAAK,CAAC,EAAE,CAAC,kBAAkB,CA0CtD,CAAC"}

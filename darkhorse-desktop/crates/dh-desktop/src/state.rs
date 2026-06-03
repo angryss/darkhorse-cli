@@ -51,7 +51,7 @@ impl AppState {
         })
     }
 
-    /// Returns the platform-appropriate data directory for Dark Horse Desktop.
+    /// Returns the platform-appropriate data directory for DarkHorse Desktop.
     fn data_dir() -> anyhow::Result<PathBuf> {
         let base = dirs_next().unwrap_or_else(|| PathBuf::from("."));
         Ok(base.join("darkhorse-desktop"))

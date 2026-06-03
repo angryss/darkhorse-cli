@@ -147,11 +147,11 @@ describe('OpenSpec output — init workspace', () => {
     let content: string;
 
     beforeAll(async () => {
-      content = await readText(path.join(projectRoot, 'openspec', 'specs', 'project', 'progress-tracker.md'));
+      content = await readText(path.join(projectRoot, 'openspec', 'changes', 'mvp-1.0', 'progress-tracker.md'));
     });
 
     it('exists', () => {
-      expect(files).toContain('openspec/specs/project/progress-tracker.md');
+      expect(files).toContain('openspec/changes/mvp-1.0/progress-tracker.md');
     });
 
     it('contains current status table', () => {

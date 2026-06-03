@@ -1,6 +1,6 @@
 # Frontend Patterns — Rust/Tauri Desktop
 
-> Frontend patterns for TypeScript UI in Dark Horse Tauri desktop projects.
+> Frontend patterns for TypeScript UI in DarkHorse Tauri desktop projects.
 
 ## Tech Stack
 

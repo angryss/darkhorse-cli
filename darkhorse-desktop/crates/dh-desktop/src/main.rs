@@ -7,7 +7,7 @@ use tracing::info;
 #[cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 fn main() {
     logging::init_logging();
-    info!("Dark Horse Desktop starting");
+    info!("DarkHorse Desktop starting");
 
     let app_state = state::AppState::initialize().expect("Failed to initialize app state");
 
@@ -42,5 +42,5 @@ fn main() {
             bridge::check_updates,
         ])
         .run(tauri::generate_context!())
-        .expect("Error running Dark Horse Desktop");
+        .expect("Error running DarkHorse Desktop");
 }

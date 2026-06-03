@@ -27,15 +27,25 @@
     "react",
     "typescript",
     "utilities",
-    "core"
+    "core",
+    "darkhorse",
+    "components"
   ],
-  "author": "React Toolkit Team",
+  "author": "Angry Software Solutions",
   "license": "MIT",
   "peerDependencies": {
     "react": "^18.2.0"
   },
   "dependencies": {
     "@react-toolkit/design-tokens": "workspace:*"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angryss/darkhorse-cli.git",
+    "directory": "darkhorse-java/toolkit/packages/core"
+  },
+  "bugs": {
+    "url": "https://github.com/angryss/darkhorse-cli/issues"
+  },
+  "homepage": "https://angryss.com"
 }
-

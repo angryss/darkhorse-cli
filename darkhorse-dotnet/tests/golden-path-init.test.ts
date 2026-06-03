@@ -68,7 +68,7 @@ describe('init — no frontend', () => {
 
   it('creates openspec/specs/project/ with roadmap and progress tracker', () => {
     expect(files).toContain('openspec/specs/project/roadmap.md');
-    expect(files).toContain('openspec/specs/project/progress-tracker.md');
+    expect(files).toContain('openspec/changes/mvp-1.0/progress-tracker.md');
   });
 
   it('creates backend/ directory with archetype category folders', async () => {

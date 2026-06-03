@@ -1,6 +1,6 @@
 # Requirements Guide — Rust/Tauri Desktop
 
-> How to write and manage requirements for Dark Horse Rust/Tauri projects.
+> How to write and manage requirements for DarkHorse Rust/Tauri projects.
 
 ## Requirement Structure
 

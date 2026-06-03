@@ -1,6 +1,6 @@
 [package]
 name = "dh-desktop"
-description = "Dark Horse Desktop — Tauri application shell and command bridge"
+description = "DarkHorse Desktop — Tauri application shell and command bridge"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true

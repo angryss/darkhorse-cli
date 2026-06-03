@@ -1,6 +1,6 @@
 # Prompt Starters Guide
 
-**Ready-to-use prompts for Copilot, Claude, and Codex on Tauri desktop projects following Dark Horse principles.**
+**Ready-to-use prompts for Copilot, Claude, and Codex on Tauri desktop projects following DarkHorse principles.**
 
 > Copy, paste, and customize. Each prompt is designed to work with the self-contained
 > project structure. No external reference needed.

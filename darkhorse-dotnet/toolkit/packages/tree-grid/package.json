@@ -19,9 +19,11 @@
     "hierarchical",
     "data-grid",
     "table",
-    "tree"
+    "tree",
+    "darkhorse",
+    "components"
   ],
-  "author": "Frontend Toolkit Team",
+  "author": "Angry Software Solutions",
   "license": "MIT",
   "peerDependencies": {
     "react": "^18.0.0",
@@ -35,6 +37,14 @@
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "typescript": "^5.3.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angryss/darkhorse-cli.git",
+    "directory": "darkhorse-dotnet/toolkit/packages/tree-grid"
+  },
+  "bugs": {
+    "url": "https://github.com/angryss/darkhorse-cli/issues"
+  },
+  "homepage": "https://angryss.com"
 }
-

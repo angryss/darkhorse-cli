@@ -1,4 +1,4 @@
-# Dark Horse — Ecosystem Architecture
+# DarkHorse — Ecosystem Architecture
 
 > Scaffold the product. Scaffold the process.
 
@@ -6,7 +6,7 @@
 
 ## Core Principle
 
-**A Dark Horse scaffolder is only complete if it generates both the runtime product and the development guidance system.**
+**A DarkHorse scaffolder is only complete if it generates both the runtime product and the development guidance system.**
 
 Every scaffolder must produce:
 
@@ -25,7 +25,7 @@ Every scaffolder must produce:
 - Guides/patterns (copied from scaffolder's `guides/`)
 - Workflows (copied from scaffolder's `workflows/`)
 - Roadmap and progress starter docs
-- Dark Horse config (`.darkhorse.yaml`)
+- DarkHorse config (`.darkhorse.yaml`)
 
 A generated project is self-contained. It carries both the runtime product and the guidance system. No runtime dependency on the CLI.
 
@@ -33,7 +33,7 @@ A generated project is self-contained. It carries both the runtime product and t
 
 ## Project Types
 
-The Dark Horse ecosystem has exactly two types of projects: **scaffolders** and **products**. The distinction must remain explicit and must not be blurred.
+The DarkHorse ecosystem has exactly two types of projects: **scaffolders** and **products**. The distinction must remain explicit and must not be blurred.
 
 ### Scaffolders (Tools)
 
@@ -53,7 +53,7 @@ A scaffolder does NOT contain runtime application code. It is a tool that produc
 
 ### Products (Applications)
 
-A product is a runtime application. It may follow Dark Horse architectural principles, but it does not own generation logic, templates, or scaffold pipelines.
+A product is a runtime application. It may follow DarkHorse architectural principles, but it does not own generation logic, templates, or scaffold pipelines.
 
 When documentation folders (`openspec/`, `context/`, `rules/`, `guides/`, `workflows/`) exist in a product repo, they are:
 - **Authored project documentation** — guidance for building that specific product
@@ -189,7 +189,7 @@ This distinction prevents confusion between tool-owned generation assets and pro
 Desktop/Tauri is represented by two projects:
 
 - **`darkhorse-desktop`** — A **product application** (Tauri 2 desktop app for product-development management). Its `openspec/`, `context/`, `rules/`, `guides/`, and `workflows/` are hand-authored project documentation.
-- **`darkhorse-rust`** — A **scaffolder** that generates new Rust/Tauri desktop projects with the full Dark Horse guidance system from a single `darkhorse-rust init` command.
+- **`darkhorse-rust`** — A **scaffolder** that generates new Rust/Tauri desktop projects with the full DarkHorse guidance system from a single `darkhorse-rust init` command.
 
 ### Why This Gap Exists
 
@@ -283,7 +283,7 @@ The `init` command must also generate:
 
 | Principle | Enforcement |
 |-----------|-------------|
-| Dark Horse scaffolds both the product and the process | Every scaffolder `init` generates app structure + full guidance system |
+| DarkHorse scaffolds both the product and the process | Every scaffolder `init` generates app structure + full guidance system |
 | Scaffolders and products are distinct project types | Scaffolders own templates + generation logic; products are runtime apps |
 | Generated projects are self-contained | Zero runtime dependency on the CLI after scaffolding |
 | OpenSpec/context in a product repo is authored documentation | Not scaffold source material — explicitly different from scaffolder-owned assets |

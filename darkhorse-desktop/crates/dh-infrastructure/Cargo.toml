@@ -1,6 +1,6 @@
 [package]
 name = "dh-infrastructure"
-description = "Dark Horse Desktop — infrastructure: SQLite persistence, filesystem access, settings, logging, and update support"
+description = "DarkHorse Desktop — infrastructure: SQLite persistence, filesystem access, settings, logging, and update support"
 version.workspace = true
 edition.workspace = true
 authors.workspace = true

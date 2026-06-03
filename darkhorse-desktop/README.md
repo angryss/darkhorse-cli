@@ -1,21 +1,21 @@
-# Dark Horse Desktop
+# DarkHorse Desktop
 
-> **Product** — Local-first desktop application for the Dark Horse product-development platform
+> **Product** — Local-first desktop application for the DarkHorse product-development platform
 
-Dark Horse Desktop is a **product application**, not a scaffolder. It is the local workspace companion for shaping, planning, and tracking product initiatives. Built with **Tauri 2 + Rust** and a lightweight TypeScript frontend, it supports the full Dark Horse lifecycle — from discovery sessions through MVP scoping, planning outputs, implementation slices, and delivery progress — all local-first, all offline-capable.
+DarkHorse Desktop is a **product application**, not a scaffolder. It is the local workspace companion for shaping, planning, and tracking product initiatives. Built with **Tauri 2 + Rust** and a lightweight TypeScript frontend, it supports the full DarkHorse lifecycle — from discovery sessions through MVP scoping, planning outputs, implementation slices, and delivery progress — all local-first, all offline-capable.
 
-### Role in the Dark Horse Ecosystem
+### Role in the DarkHorse Ecosystem
 
-| Concern | Dark Horse Desktop |
+| Concern | DarkHorse Desktop |
 |---------|-------------------|
 | **Is** | A runtime desktop application — a product |
-| **Does** | Models the Dark Horse lifecycle: discovery → planning → implementation → delivery |
-| **Consumes** | Dark Horse architectural principles (Clean Architecture, DDD, CQRS) |
+| **Does** | Models the DarkHorse lifecycle: discovery → planning → implementation → delivery |
+| **Consumes** | DarkHorse architectural principles (Clean Architecture, DDD, CQRS) |
 | **Does not** | Own templates, init commands, generation workflows, or scaffold logic |
 
-Dark Horse Desktop does not scaffold projects. It does not generate code, copy rules, or render templates. Future Rust/Tauri project scaffolding will be handled by a dedicated scaffolder (`darkhorse-rust`), following the same pattern as `darkhorse-dotnet` and `darkhorse-java`.
+DarkHorse Desktop does not scaffold projects. It does not generate code, copy rules, or render templates. Future Rust/Tauri project scaffolding will be handled by a dedicated scaffolder (`darkhorse-rust`), following the same pattern as `darkhorse-dotnet` and `darkhorse-java`.
 
-When `openspec/`, `context/`, `rules/`, `guides/`, or `workflows/` folders exist in this repo, they are **authored project documentation** — development guidance for building Dark Horse Desktop itself, not scaffold source material.
+When `openspec/`, `context/`, `rules/`, `guides/`, or `workflows/` folders exist in this repo, they are **authored project documentation** — development guidance for building DarkHorse Desktop itself, not scaffold source material.
 
 ## Architecture
 
@@ -55,7 +55,7 @@ darkhorse-desktop/
 - **Strong modularity** — each crate has distinct, explicit responsibilities
 - **Local-first** — SQLite for structured data, filesystem for artifacts, settings store for preferences
 - **Workspace-centered** — every entity belongs to a workspace; workspaces are the root context
-- **Dark Horse lifecycle** — the domain models the full journey from discovery through delivery
+- **DarkHorse lifecycle** — the domain models the full journey from discovery through delivery
 
 ## Domain Model
 
@@ -156,7 +156,7 @@ Workspace
 |-----------------------------------|----------------------------------------------------|
 | `export_artifact`                 | Export a named artifact to the workspace filesystem |
 | `list_workspace_artifacts`        | List all generated artifacts                        |
-| `create_workspace`                | Create a new Dark Horse workspace                  |
+| `create_workspace`                | Create a new DarkHorse workspace                  |
 | `list_workspaces`                 | List all workspaces                                |
 | `load_workspace_summary`          | Load summary data for a workspace                  |
 
@@ -250,4 +250,4 @@ This is **not** a distributed system. There are no:
 - Microservice communication patterns
 - Heavyweight runtime dependencies
 
-This is a local-first, cross-platform desktop product designed for quality, responsiveness, and real product growth. It models the Dark Horse lifecycle specifically — not a generic planning framework.
+This is a local-first, cross-platform desktop product designed for quality, responsiveness, and real product growth. It models the DarkHorse lifecycle specifically — not a generic planning framework.

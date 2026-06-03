@@ -1,6 +1,6 @@
 # Prompt Starters — Rust/Tauri Desktop
 
-> Example prompts for AI agents working on Dark Horse Rust/Tauri projects.
+> Example prompts for AI agents working on DarkHorse Rust/Tauri projects.
 
 ## Discovery
 
