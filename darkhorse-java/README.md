@@ -64,7 +64,7 @@ npx darkhorse-java init \
   --type api \
   --name order-management \
   --description "Order management platform" \
-  --group-id com.mycompany \
+  --group-id com.example \
   --java-version 21 \
   --frontend \
   --platform web \
@@ -84,7 +84,7 @@ Skip the frontend and scaffold the backend only:
 npx darkhorse-java init \
   --type api \
   --name order-management \
-  --group-id com.mycompany \
+  --group-id com.example \
   --no-frontend
 ```
 
@@ -102,7 +102,7 @@ You'll be prompted for:
 |--------|---------|-------|
 | Project archetype | `api` | `api`, `bff-api`, or `microservice` |
 | Project name | `order-management` | Lowercase, hyphenated |
-| Maven group ID | `com.mycompany` | Java package format |
+| Maven group ID | `com.example` | Java package format |
 | Include frontend? | `yes` / `no` | Adds React or React Native scaffold |
 | Frontend platform | `web` / `mobile` / `both` | React + Vite, React Native + Expo, or both |
 | Java version | `21` | 17 or 21 |

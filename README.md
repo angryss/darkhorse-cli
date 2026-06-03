@@ -31,7 +31,7 @@ DarkHorse is currently **public-alpha/pre-alpha quality**. The repository is bei
 
 - **Scaffolders:** `darkhorse-dotnet/`, `darkhorse-java/`, and `darkhorse-rust/` are TypeScript CLI packages. They own templates, generation logic, rules, guides, workflow prompts, and generated-project source assets.
 - **Desktop app:** `darkhorse-desktop/` is a Rust/Tauri companion product that demonstrates DarkHorse workflow concepts in a local-first application.
-- **Docs:** root documentation describes the ecosystem, architecture, open-source readiness, cleanup plan, and public positioning. Package READMEs describe package-specific usage.
+- **Docs:** root documentation covers the ecosystem overview, architecture, repository status, release checklist, and validation status. Package READMEs describe package-specific usage.
 - **Examples:** no dedicated root `examples/` directory is present yet. Generated test projects and temporary outputs should not be treated as public examples.
 - **Generated workflow assets:** each scaffolder contains `rules/`, `guides/`, `workflows/`, and `templates/`. These are copied or rendered into scaffolded projects to provide OpenSpec, context, prompts, skills, agents, and architecture guidance.
 

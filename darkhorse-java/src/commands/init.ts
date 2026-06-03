@@ -115,7 +115,7 @@ async function promptMissing(opts: Record<string, unknown>): Promise<PromptAnswe
     questions.push({
       type: 'input',
       name: 'groupId',
-      message: 'Maven group ID (e.g. com.mycompany):',
+      message: 'Maven group ID (e.g. com.example):',
       default: 'com.darkhorse',
       validate: (v: string) =>
         /^[a-z][a-z0-9]*(\.[a-z][a-z0-9]*)*$/.test(v) || 'Valid Java package name required',
