@@ -95,16 +95,22 @@ All AI tools share the same OpenSpec source of truth.
 {{#if project.ai.tools.kiro}}
 ### Kiro
 
-Use natural-language instructions referencing the workflow phases:
+Use the prompt files in `.kiro/prompts/` or natural-language instructions referencing the workflow phases:
 
-| Phase | Instruction | Output |
+| Phase | Prompt file | Natural-language instruction |
 |---|---|---|
-| Discover | *"Run the Discover workflow for [feature]"* | `openspec/changes/discoveries/DISC-###.md` |
-| Plan | *"Plan [feature] based on DISC-###"* | `openspec/changes/<mvp>/proposal.md` |
-| Implement | *"Implement proposal from [mvp path]"* | Source code + updated tracker |
-| Troubleshoot | *"Troubleshoot [issue]"* | `openspec/changes/bugs/BUG-###.md` |
+| Discover | `.kiro/prompts/discover-next.md` | *"Run the Discover workflow for [feature]"* |
+| Plan | `.kiro/prompts/plan-next.md` | *"Plan [feature] based on DISC-###"* |
+| Implement | `.kiro/prompts/implement-next.md` | *"Implement the next task in mvp-1.0"* |
+| Troubleshoot | `.kiro/prompts/troubleshoot-next.md` | *"Troubleshoot [issue]"* |
 
-Kiro reads steering context from `.kiro/steering/` and uses prompts in `.kiro/prompts/`.
+Outputs always go to `openspec/changes/` — never to `.kiro/specs/`.
+
+Kiro reads project context from `.kiro/steering/`:
+- `00-project.md` — project identity and OpenSpec map
+- `01-workflow.md` — Discover → Plan → Implement → Troubleshoot phases
+- `02-architecture.md` — architecture constraints
+- `03-tooling.md` — approved tech stack and dependencies
 {{/if}}
 {{#if project.ai.tools.copilot}}
 ### GitHub Copilot
