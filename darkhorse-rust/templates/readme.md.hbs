@@ -89,3 +89,29 @@ This project was generated with the full DarkHorse development guidance system:
 - **Architecture rules:** `openspec/specs/architecture/`
 - **Development patterns:** `openspec/specs/patterns/`
 - **Roadmap:** `openspec/specs/project/roadmap.md`
+
+All AI tools share the same OpenSpec source of truth.
+{{#if project.ai.tools.kiro}}
+### Kiro
+
+Use natural-language instructions referencing the workflow phases:
+
+| Phase | Instruction | Output |
+|---|---|---|
+| Discover | *"Run the Discover workflow for [feature]"* | `openspec/changes/discoveries/DISC-###.md` |
+| Plan | *"Plan [feature] based on DISC-###"* | `openspec/changes/<mvp>/proposal.md` |
+| Implement | *"Implement proposal from [mvp path]"* | Source code + updated tracker |
+| Troubleshoot | *"Troubleshoot [issue]"* | `openspec/changes/bugs/BUG-###.md` |
+
+Kiro reads steering context from `.kiro/steering/` and uses prompts in `.kiro/prompts/`.
+{{/if}}
+{{#if project.ai.tools.copilot}}
+### GitHub Copilot
+
+Slash commands in `.github/prompts/`:
+
+- `/discover` — explore and shape ideas
+- `/plan` — create proposals
+- `/implement` — execute proposals inside-out
+- `/troubleshoot` — diagnose issues
+{{/if}}

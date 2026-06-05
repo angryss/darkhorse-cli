@@ -1,0 +1,36 @@
+# Troubleshoot Issue
+
+Run the Troubleshoot workflow.
+
+Before starting:
+
+1. Read `openspec/AGENTS.md`
+2. Read `.kiro/steering/01-workflow.md`
+3. Read `openspec/specs/workflow/skills/troubleshooting.md`
+
+Then:
+
+- Identify the issue from user input or failing behavior
+- Gather evidence:
+  - logs
+  - error messages
+  - failing tests
+
+Follow sequence:
+1. Reproduce issue
+2. Capture evidence
+3. Identify root cause
+4. Validate fix approach
+
+If code changes are required:
+
+- Create a bug document:
+  `openspec/changes/bugs/BUG-###.md`
+
+Rules:
+- Do not modify code without a bug proposal
+- Do not guess fixes
+- Do not skip investigation steps
+- Do not use `.kiro/specs`
+
+OpenSpec is the single source of truth.

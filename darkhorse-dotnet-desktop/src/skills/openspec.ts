@@ -85,20 +85,10 @@ export async function seedOpenSpec(config: DarkhorseConfig): Promise<SkillResult
 
     // 10. Kiro adapter: .kiro/steering/ + .kiro/prompts/
     if (config.ai.tools.kiro) {
-      const kiroSteeringDir = path.join(config.paths.root, '.kiro', 'steering');
-      await fsUtil.ensureDir(kiroSteeringDir);
-      const kiroStructurePath = path.join(kiroSteeringDir, 'structure.md');
-      await engine.render('kiro/steering/structure.md.hbs', ctx, kiroStructurePath);
-      filesCreated.push(kiroStructurePath);
-
-      const kiroArchPath = path.join(kiroSteeringDir, 'architecture.md');
-      await engine.render('kiro/steering/architecture.md.hbs', ctx, kiroArchPath);
-      filesCreated.push(kiroArchPath);
-
-      const kiroPromptsDir = path.join(config.paths.root, '.kiro', 'prompts');
-      await fsUtil.ensureDir(kiroPromptsDir);
-      const kiroPromptFiles = await copyMarkdownDir(path.join(getWorkflowsDir(), 'commands'), kiroPromptsDir);
-      filesCreated.push(...kiroPromptFiles);
+      const kiroFiles = await seedKiroSteering(config, engine, ctx);
+      filesCreated.push(...kiroFiles);
+      const kiroPrompts = await seedKiroPrompts(config, engine, ctx);
+      filesCreated.push(...kiroPrompts);
     }
 
   } catch (err) {
@@ -106,6 +96,98 @@ export async function seedOpenSpec(config: DarkhorseConfig): Promise<SkillResult
   }
 
   return { success: errors.length === 0, filesCreated, filesModified: [], errors };
+}
+
+// ---------------------------------------------------------------------------
+// Kiro adapter — generates .kiro/steering/ files
+// ---------------------------------------------------------------------------
+
+const KIRO_STEERING_TEMPLATES: Array<{ template: string; filename: string }> = [
+  { template: 'kiro/steering/00-project.md.hbs', filename: '00-project.md' },
+  { template: 'kiro/steering/01-workflow.md.hbs', filename: '01-workflow.md' },
+  { template: 'kiro/steering/02-architecture.md.hbs', filename: '02-architecture.md' },
+  { template: 'kiro/steering/03-tooling.md.hbs', filename: '03-tooling.md' },
+];
+
+/**
+ * Seed Kiro steering files into .kiro/steering/.
+ * Idempotent: skips files that already exist so customizations are preserved.
+ * Pass force=true to overwrite existing files.
+ */
+export async function seedKiroSteering(
+  config: DarkhorseConfig,
+  engine?: TemplateEngine,
+  ctx?: TemplateContext,
+  force = false,
+): Promise<string[]> {
+  const created: string[] = [];
+  const steeringDir = path.join(config.paths.root, '.kiro', 'steering');
+  await fsUtil.ensureDir(steeringDir);
+
+  const resolvedEngine = engine ?? new TemplateEngine(getTemplatesDir());
+  const resolvedCtx: TemplateContext = ctx ?? {
+    project: config,
+    timestamp: new Date().toISOString().split('T')[0],
+    cliVersion: '0.1.0',
+  };
+
+  for (const { template, filename } of KIRO_STEERING_TEMPLATES) {
+    const destPath = path.join(steeringDir, filename);
+    const alreadyExists = await fsUtil.pathExists(destPath);
+    if (alreadyExists && !force) {
+      continue;
+    }
+    await resolvedEngine.render(template, resolvedCtx, destPath);
+    created.push(destPath);
+  }
+
+  return created;
+}
+
+// ---------------------------------------------------------------------------
+// Kiro adapter — generates .kiro/prompts/ files
+// ---------------------------------------------------------------------------
+
+const KIRO_PROMPTS_TEMPLATES: Array<{ template: string; filename: string }> = [
+  { template: 'kiro/prompts/discover-next.md.hbs', filename: 'discover-next.md' },
+  { template: 'kiro/prompts/plan-next.md.hbs', filename: 'plan-next.md' },
+  { template: 'kiro/prompts/implement-next.md.hbs', filename: 'implement-next.md' },
+  { template: 'kiro/prompts/troubleshoot-next.md.hbs', filename: 'troubleshoot-next.md' },
+];
+
+/**
+ * Seed Kiro prompt files into .kiro/prompts/.
+ * Idempotent: skips files that already exist so customizations are preserved.
+ * Pass force=true to overwrite existing files.
+ */
+export async function seedKiroPrompts(
+  config: DarkhorseConfig,
+  engine?: TemplateEngine,
+  ctx?: TemplateContext,
+  force = false,
+): Promise<string[]> {
+  const created: string[] = [];
+  const promptsDir = path.join(config.paths.root, '.kiro', 'prompts');
+  await fsUtil.ensureDir(promptsDir);
+
+  const resolvedEngine = engine ?? new TemplateEngine(getTemplatesDir());
+  const resolvedCtx: TemplateContext = ctx ?? {
+    project: config,
+    timestamp: new Date().toISOString().split('T')[0],
+    cliVersion: '0.1.0',
+  };
+
+  for (const { template, filename } of KIRO_PROMPTS_TEMPLATES) {
+    const destPath = path.join(promptsDir, filename);
+    const alreadyExists = await fsUtil.pathExists(destPath);
+    if (alreadyExists && !force) {
+      continue;
+    }
+    await resolvedEngine.render(template, resolvedCtx, destPath);
+    created.push(destPath);
+  }
+
+  return created;
 }
 
 // ---------------------------------------------------------------------------

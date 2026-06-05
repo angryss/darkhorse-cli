@@ -32,8 +32,8 @@ export function registerInitCommand(program: Command): void {
     .option('--no-persistence', 'Skip persistence layer')
     .option('--cicd <provider>', 'CI/CD pipeline: github-actions | ado | none', 'none')
     .option('--ado-url <url>', 'Azure DevOps organization URL (required when --cicd=ado)')
-    .option('--kiro', 'Generate Kiro steering files (.kiro/steering/)')
-    .option('--no-kiro', 'Skip Kiro steering files')
+    .option('--kiro', 'Generate Kiro steering + prompt files (.kiro/steering/ + .kiro/prompts/)')
+    .option('--no-kiro', 'Skip Kiro files')
     .option('-o, --output <dir>', 'Output directory', '.')
     .action(async (opts) => {
       logger.header('DarkHorse .NET Desktop — Initialize WPF Project');

@@ -89,23 +89,41 @@ cd frontend/web-app && npm install && npm run dev
 
 Start with `context/00-START-HERE.md`, then read `openspec/AGENTS.md`.
 
+All AI tools share the same OpenSpec source of truth.
+
 ## Development Workflow
+{{#if project.ai.tools.kiro}}
+### Kiro
 
-```bash
-# Plan a feature or bug fix
-npx darkhorse-dotnet plan
+Use natural-language instructions referencing the workflow phases:
 
-# Implement an approved proposal
-npx darkhorse-dotnet implement
+| Phase | Instruction | Output |
+|---|---|---|
+| Discover | *"Run the Discover workflow for [feature]"* | `openspec/changes/discoveries/DISC-###.md` |
+| Plan | *"Plan [feature] based on DISC-###"* | `openspec/changes/<mvp>/proposal.md` |
+| Implement | *"Implement proposal from [mvp path]"* | Source code + updated tracker |
+| Troubleshoot | *"Troubleshoot [issue]"* | `openspec/changes/bugs/BUG-###.md` |
 
-# Troubleshoot a bug
-npx darkhorse-dotnet troubleshoot
-```
+Kiro reads steering context from `.kiro/steering/` and uses prompts in `.kiro/prompts/`.
+{{/if}}
+{{#if project.ai.tools.copilot}}
+### GitHub Copilot
 
-1. **Plan** — Generates a proposal in `openspec/changes/`
-2. **Implement** — Executes the approved proposal inside-out (Domain → Application → Infrastructure → Presentation)
-3. **Test** — Run tests, file bugs as BUG proposals
-4. **Archive** — Move completed proposals to `openspec/archive/`
+Slash commands in `.github/prompts/`:
 
-See `openspec/specs/workflow/` for detailed workflow guides.
+- `/discover` — explore and shape ideas
+- `/plan` — create proposals
+- `/implement` — execute proposals inside-out
+- `/troubleshoot` — diagnose issues
+{{/if}}
+
+### Workflow Phases
+
+1. **Discover** — shape the idea, write `DISC-###.md` in `openspec/changes/discoveries/`
+2. **Plan** — design the solution, write `proposal.md` + `tasks.md` in `openspec/changes/<mvp>/`
+3. **Implement** — execute inside-out: Domain → Application → Infrastructure → Presentation
+4. **Test** — run tests, file bugs as `BUG-###.md` in `openspec/changes/bugs/`
+5. **Archive** — move completed MVPs to `openspec/archive/`
+
+See `openspec/specs/workflow/` for detailed playbooks.
 

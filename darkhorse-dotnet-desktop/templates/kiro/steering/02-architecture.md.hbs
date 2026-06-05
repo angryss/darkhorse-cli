@@ -1,0 +1,82 @@
+# {{project.name}} — Architecture Constraints
+
+> **AI Steering File** — Kiro architecture adapter.
+> Full architecture rules are in `openspec/specs/architecture/`. This file summarizes the non-negotiables.
+
+## Canonical Rules
+
+All architecture rules live in `openspec/specs/architecture/`. Read them before generating any code.
+
+Key rule files:
+- `openspec/specs/architecture/architecture-rules.md` — structural invariants
+- `openspec/specs/architecture/archetype-rules.md` — archetype-specific constraints
+- `openspec/specs/architecture/scaffolding-rules.md` — how new layers and features must be structured
+- `openspec/specs/architecture/testing-rules.md` — test organization and coverage expectations
+- `openspec/specs/architecture/agent-limits.md` — what AI agents are and are not allowed to do
+
+## Architecture at a Glance
+
+This project uses **Onion Architecture + CQRS + MVVM** on .NET {{project.dotnet.dotnetVersion}} WPF.
+
+```
+Presentation  ←  WPF Views, ViewModels (MVVM) — dispatches via MediatR
+    ↓
+Application   ←  Commands, Queries, Handlers (MediatR + FluentValidation)
+    ↓
+Domain        ←  Aggregates, Value Objects, Domain Events, Repository Interfaces
+    ↓
+Infrastructure ← Persistence (EF Core{{#if project.dotnet.hasPersistence}} SQLite{{/if}}), External Adapters
+    ↓
+Common        ←  Primitives, Result<T>, PagedList<T>, base types — no dependencies
+```
+
+**Layer rules:**
+- Common has zero dependencies.
+- Domain depends on Common only.
+- Application depends on Domain + Common only.
+- Infrastructure depends on Application + Domain + Common.
+- Presentation depends on Application + Infrastructure + Common.
+- Cross-layer shortcuts are forbidden.
+
+## MVVM Pattern
+
+```csharp
+// ViewModel dispatches commands via MediatR
+public partial class OrdersViewModel : ViewModelBase
+{
+    [ObservableProperty] private IReadOnlyList<OrderDto> _orders = [];
+
+    [RelayCommand(CanExecute = nameof(IsNotBusy))]
+    private async Task LoadAsync()
+    {
+        IsBusy = true;
+        Orders = await _mediator.Send(new GetOrdersQuery());
+        IsBusy = false;
+    }
+    private bool IsNotBusy => !IsBusy;
+}
+```
+
+## CQRS Pattern
+
+```csharp
+// Handler in Application layer
+public sealed class GetOrdersQueryHandler : IRequestHandler<GetOrdersQuery, IReadOnlyList<OrderDto>>
+{
+    public async Task<IReadOnlyList<OrderDto>> Handle(GetOrdersQuery request, CancellationToken ct)
+    {
+        var orders = await _repository.GetAllAsync(ct);
+        return orders.Select(o => new OrderDto(o.Id, o.Name)).ToList();
+    }
+}
+```
+
+## What Kiro Must Never Do
+
+- Rename layers or change the folder structure without an approved architecture proposal.
+- Add NuGet packages not listed in the approved tech stack.
+- Write business logic in ViewModels or XAML code-behind.
+- Bypass the repository pattern with direct DbContext calls in Application.
+- Add direct service-to-service references (use MediatR + shared contracts only).
+- Delete or modify `openspec/` files outside the `openspec/changes/` flow.
+- Create or write files under `.kiro/specs/` — all specification outputs must go to `openspec/changes/`.

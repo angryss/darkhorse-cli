@@ -424,3 +424,97 @@ describe('init — Azure DevOps CI/CD', () => {
     expect(content).toContain('https://dev.azure.com/myorg');
   });
 });
+
+// ---------------------------------------------------------------------------
+// Golden path: `darkhorse-dotnet-desktop init` — Kiro adapter enabled
+// ---------------------------------------------------------------------------
+
+describe('init — Kiro adapter enabled', () => {
+  let projectRoot: string;
+  let files: string[];
+
+  beforeAll(async () => {
+    const tmpDir = await createTempDir('dh-desktop-init-kiro-');
+    const config = buildInitConfig({
+      outputDir: tmpDir,
+      name: 'my-kiro-app',
+      aiTools: { copilot: true, kiro: true },
+    });
+    await initAgent(config);
+    projectRoot = config.paths.root;
+    files = await getRelativeFiles(projectRoot);
+  });
+
+  afterAll(cleanupTempDirs);
+
+  it('creates .kiro/steering/ directory', () => {
+    const steeringFiles = files.filter((f) => f.startsWith('.kiro/steering/'));
+    expect(steeringFiles.length).toBeGreaterThanOrEqual(4);
+  });
+
+  it('creates .kiro/steering/00-project.md', () => {
+    expect(files).toContain('.kiro/steering/00-project.md');
+  });
+
+  it('creates .kiro/steering/01-workflow.md', () => {
+    expect(files).toContain('.kiro/steering/01-workflow.md');
+  });
+
+  it('creates .kiro/steering/02-architecture.md', () => {
+    expect(files).toContain('.kiro/steering/02-architecture.md');
+  });
+
+  it('creates .kiro/steering/03-tooling.md', () => {
+    expect(files).toContain('.kiro/steering/03-tooling.md');
+  });
+
+  it('creates .kiro/prompts/ directory', () => {
+    const promptFiles = files.filter((f) => f.startsWith('.kiro/prompts/'));
+    expect(promptFiles.length).toBeGreaterThanOrEqual(4);
+  });
+
+  it('creates .kiro/prompts/discover-next.md', () => {
+    expect(files).toContain('.kiro/prompts/discover-next.md');
+  });
+
+  it('creates .kiro/prompts/plan-next.md', () => {
+    expect(files).toContain('.kiro/prompts/plan-next.md');
+  });
+
+  it('creates .kiro/prompts/implement-next.md', () => {
+    expect(files).toContain('.kiro/prompts/implement-next.md');
+  });
+
+  it('creates .kiro/prompts/troubleshoot-next.md', () => {
+    expect(files).toContain('.kiro/prompts/troubleshoot-next.md');
+  });
+
+  it('00-project.md contains project name', async () => {
+    const content = await readText(path.join(projectRoot, '.kiro', 'steering', '00-project.md'));
+    expect(content).toContain('my-kiro-app');
+  });
+
+  it('02-architecture.md describes Onion + CQRS + MVVM', async () => {
+    const content = await readText(path.join(projectRoot, '.kiro', 'steering', '02-architecture.md'));
+    expect(content).toContain('Onion Architecture');
+    expect(content).toContain('CQRS');
+    expect(content).toContain('MVVM');
+  });
+
+  it('03-tooling.md describes WPF tech stack', async () => {
+    const content = await readText(path.join(projectRoot, '.kiro', 'steering', '03-tooling.md'));
+    expect(content).toContain('WPF');
+    expect(content).toContain('CommunityToolkit.Mvvm');
+  });
+
+  it('discover-next.md references OpenSpec workflow', async () => {
+    const content = await readText(path.join(projectRoot, '.kiro', 'prompts', 'discover-next.md'));
+    expect(content).toContain('openspec/AGENTS.md');
+    expect(content).toContain('openspec/changes/discoveries/');
+  });
+
+  it('does not create .kiro/specs/ directory', () => {
+    const specsDir = files.filter((f) => f.startsWith('.kiro/specs/'));
+    expect(specsDir.length).toBe(0);
+  });
+});

@@ -1,0 +1,69 @@
+# {{project.name}} — Tooling & Tech Stack
+
+> **AI Steering File** — Kiro tooling adapter.
+> This file tells Kiro which tools are active and how to use them in this project.
+
+## AI Tools in This Project
+
+This project supports multiple AI tools. All tools share the same OpenSpec source of truth.
+
+| Tool | Entry Point | Workflow Access |
+|---|---|---|
+| **Kiro** | `.kiro/steering/` (this folder) | Natural-language instructions → OpenSpec skills |
+| **GitHub Copilot** | `.github/copilot-instructions.md` | Slash commands in `.github/prompts/` |
+| **Copilot Agents** | `.github/agents/` | Dedicated agent markdown files |
+
+**Canonical AI entry point for all tools: `openspec/AGENTS.md`**
+
+## Technology Stack
+
+### Desktop (.NET {{project.dotnet.dotnetVersion}} WPF)
+
+| Layer | Technology |
+|---|---|
+| UI Framework | WPF + {{#eq project.dotnet.uiFramework "material-design"}}MaterialDesignThemes{{else}}WPF-UI (Fluent){{/eq}} |
+| MVVM | CommunityToolkit.Mvvm |
+| Messaging | MediatR 12.x |
+| Validation | FluentValidation 11.x |
+{{#if project.dotnet.hasPersistence}}| Persistence | Entity Framework Core (SQLite) |
+{{/if}}| DI Container | Microsoft.Extensions.DependencyInjection |
+| Logging | Microsoft.Extensions.Logging + Serilog |
+
+### Tests
+
+| Tool | Role |
+|---|---|
+| xUnit | Unit and integration tests |
+| FluentAssertions | Assertion library |
+| NSubstitute | Mocking framework |
+| Testcontainers | Integration test containers (if needed) |
+
+### Installer / Distribution
+
+| Tool | Role |
+|---|---|
+| WiX Toolset 4.x | MSI installer |
+| GitHub Actions / Azure DevOps | CI/CD pipeline |
+
+## MCP Integration
+
+MCP servers are configured in `.vscode/mcp.json`. They enable AI tools (including Kiro) to interact with:
+- DarkHorse CLI directly (`darkhorse-dotnet-desktop mcp-serve`)
+- GitHub, Azure DevOps
+
+## What Kiro Should Never Install or Use
+
+- LangChain, AutoGen, CrewAI, or other AI orchestration frameworks
+- ORMs other than Entity Framework Core
+- MVVM frameworks other than CommunityToolkit.Mvvm
+- UI frameworks other than the one configured at scaffold time ({{project.dotnet.uiFramework}})
+- Message brokers not defined in the project's `openspec/specs/architecture/` rules
+
+## Generating Code with Kiro
+
+Always follow this sequence:
+1. Confirm the relevant proposal exists in `openspec/changes/`.
+2. Read `openspec/AGENTS.md` for the current archetype constraints.
+3. Follow `openspec/specs/workflow/skills/implementation.md` step by step.
+4. Write tests alongside implementation — never defer tests.
+5. Update `openspec/changes/<mvp>/progress-tracker.md` after each completed item.
