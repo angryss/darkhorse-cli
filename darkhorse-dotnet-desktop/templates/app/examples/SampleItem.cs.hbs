@@ -1,0 +1,62 @@
+using {{project.dotnet.namespace}}.Common.Primitives;
+
+namespace {{project.dotnet.namespace}}.Domain.Entities;
+
+/// <summary>
+/// Example domain entity — demonstrates DDD entity patterns.
+/// Replace with your actual domain entities.
+///
+/// RULE: All state changes go through methods. No public setters.
+/// RULE: Domain logic lives here — not in Application handlers or ViewModels.
+/// RULE: Domain layer has ZERO external dependencies.
+/// </summary>
+public sealed class SampleItem : AggregateRoot
+{
+    public string Name { get; private set; }
+    public string Description { get; private set; }
+    public DateTime CreatedAt { get; private init; }
+    public bool IsActive { get; private set; }
+
+    private SampleItem(Guid id, string name, string description)
+        : base(id)
+    {
+        Name = name;
+        Description = description;
+        CreatedAt = DateTime.UtcNow;
+        IsActive = true;
+    }
+
+    /// <summary>EF Core parameterless constructor — do not use in application code.</summary>
+    private SampleItem() : base() { Name = string.Empty; Description = string.Empty; }
+
+    /// <summary>
+    /// Factory method — the only way to create a SampleItem.
+    /// Validates invariants and raises domain events.
+    /// </summary>
+    public static SampleItem Create(string name, string description)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(name);
+        ArgumentException.ThrowIfNullOrWhiteSpace(description);
+
+        var item = new SampleItem(Guid.NewGuid(), name.Trim(), description.Trim());
+
+        // TODO: raise domain event if needed
+        // item.RaiseDomainEvent(new SampleItemCreatedEvent(item.Id));
+
+        return item;
+    }
+
+    /// <summary>Updates the item's name. Raises a domain event.</summary>
+    public void UpdateName(string newName)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(newName);
+        Name = newName.Trim();
+    }
+
+    /// <summary>Deactivates the item. Deactivated items are soft-deleted.</summary>
+    public void Deactivate()
+    {
+        if (!IsActive) return;
+        IsActive = false;
+    }
+}

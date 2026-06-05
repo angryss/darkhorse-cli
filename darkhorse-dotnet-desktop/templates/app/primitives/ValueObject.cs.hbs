@@ -1,0 +1,25 @@
+namespace {{project.dotnet.namespace}}.Common.Primitives;
+
+/// <summary>
+/// Base class for value objects. Value objects have no identity — they are equal if
+/// all their components are equal. They must be immutable.
+/// </summary>
+public abstract class ValueObject
+{
+    protected abstract IEnumerable<object?> GetEqualityComponents();
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is null || obj.GetType() != GetType()) return false;
+        var other = (ValueObject)obj;
+        return GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
+    }
+
+    public override int GetHashCode() =>
+        GetEqualityComponents().Aggregate(0, HashCode.Combine);
+
+    public static bool operator ==(ValueObject? left, ValueObject? right) =>
+        left is null ? right is null : left.Equals(right);
+
+    public static bool operator !=(ValueObject? left, ValueObject? right) => !(left == right);
+}

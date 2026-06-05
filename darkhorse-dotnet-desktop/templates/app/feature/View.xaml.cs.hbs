@@ -1,0 +1,13 @@
+using System.Windows.Controls;
+using {{project.dotnet.namespace}}.Presentation.ViewModels.{{contextName}};
+
+namespace {{project.dotnet.namespace}}.Presentation.Views.{{contextName}};
+
+public partial class {{contextName}}View : UserControl
+{
+    public {{contextName}}View({{contextName}}ViewModel viewModel)
+    {
+        InitializeComponent();
+        DataContext = viewModel;
+    }
+}

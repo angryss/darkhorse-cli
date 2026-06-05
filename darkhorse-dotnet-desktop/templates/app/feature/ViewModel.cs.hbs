@@ -1,0 +1,22 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using MediatR;
+using {{project.dotnet.namespace}}.Common.Primitives;
+
+namespace {{project.dotnet.namespace}}.Presentation.ViewModels.{{contextName}};
+
+/// <summary>
+/// ViewModel for the {{contextName}} bounded context.
+/// Dispatches MediatR commands and queries. Contains zero business logic.
+/// </summary>
+public partial class {{contextName}}ViewModel : ViewModelBase
+{
+    private readonly IMediator _mediator;
+
+    public {{contextName}}ViewModel(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
+
+    // TODO: Add observable properties and relay commands for {{contextName}} operations
+}

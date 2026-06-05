@@ -1,0 +1,54 @@
+# 30 — Bounded Contexts
+
+> Domain context map for **{{project.name}}**.
+> Update this file as bounded contexts are defined and implemented.
+
+## Context Map
+
+*No bounded contexts defined yet. Use `/plan` to define your first context and update this file.*
+
+| Context | Layer Path | Status | Purpose |
+|---------|-----------|--------|---------|
+| *(none)* | — | — | — |
+
+## Defining a Bounded Context
+
+A bounded context owns:
+- Its own **entities and aggregates** in `src/{{project.dotnet.namespace}}.Domain/Entities/`
+- Its own **commands and queries** in `src/{{project.dotnet.namespace}}.Application/Commands/<Context>/` and `Queries/<Context>/`
+- Its own **views and viewmodels** in `src/{{project.dotnet.namespace}}.Presentation/Views/<Context>/` and `ViewModels/<Context>/`
+- A **spec file** in `openspec/specs/domain/<ContextName>.md`
+
+## Adding a Context
+
+```bash
+darkhorse-dotnet-desktop add --context <ContextName>
+```
+
+Or scaffold manually following the pattern:
+
+```
+src/
+├── {{project.dotnet.namespace}}.Domain/
+│   └── Entities/<ContextName>.cs               ← aggregate root
+├── {{project.dotnet.namespace}}.Application/
+│   ├── Commands/<ContextName>/Create<ContextName>Command.cs
+│   └── Queries/<ContextName>/Get<ContextName>Query.cs
+├── {{project.dotnet.namespace}}.Infrastructure/
+│   └── Repositories/<ContextName>/
+└── {{project.dotnet.namespace}}.Presentation/
+    ├── Views/<ContextName>/<ContextName>View.xaml
+    └── ViewModels/<ContextName>/<ContextName>ViewModel.cs
+```
+
+## Cross-Context Communication
+
+In a WPF desktop app, bounded contexts communicate through:
+
+| Mechanism | When to Use |
+|-----------|------------|
+| **MediatR notifications** | Domain events that multiple contexts care about |
+| **Application services** | Orchestrating cross-context workflows |
+| **Shared contracts** | DTOs in Common that cross context boundaries |
+
+Never have one bounded context directly instantiate or reference another's aggregate root.

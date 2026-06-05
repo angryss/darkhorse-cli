@@ -1,0 +1,46 @@
+<!-- {{project.dotnet.namespace}}.Presentation — WPF UI (entry point, views, viewmodels, resources) -->
+<!-- Presentation depends on all inner layers. Uses DI to wire up the full object graph. -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net{{project.dotnet.dotnetVersion}}.0-windows</TargetFramework>
+    <RootNamespace>{{project.dotnet.namespace}}.Presentation</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+    <UseWPF>true</UseWPF>
+    <OutputType>WinExe</OutputType>
+    <ApplicationIcon>Resources\app.ico</ApplicationIcon>
+    <Nullable>enable</Nullable>
+    <StartupObject>{{project.dotnet.namespace}}.Presentation.App</StartupObject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Onion: Presentation depends on Application + Infrastructure + Common -->
+    <!-- Infrastructure is referenced here ONLY for DI registration at startup -->
+    <ProjectReference Include="../{{project.dotnet.namespace}}.Application/{{project.dotnet.namespace}}.Application.csproj" />
+    <ProjectReference Include="../{{project.dotnet.namespace}}.Infrastructure/{{project.dotnet.namespace}}.Infrastructure.csproj" />
+    <ProjectReference Include="../{{project.dotnet.namespace}}.Common/{{project.dotnet.namespace}}.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- MVVM toolkit — ObservableObject, RelayCommand, IMessenger -->
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.*" />
+    <!-- Generic host for DI, configuration, and lifetime management -->
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="{{project.dotnet.dotnetVersion}}.0.*" />
+{{#if (eq project.dotnet.uiFramework "materialdesign")}}
+    <!-- Material Design in XAML Toolkit — Google Material Design for WPF -->
+    <PackageReference Include="MaterialDesignThemes" Version="5.*" />
+    <PackageReference Include="MaterialDesignColors" Version="3.*" />
+{{else}}
+    <!-- WPF UI — Windows 11-style Fluent Design System -->
+    <PackageReference Include="WPF-UI" Version="3.*" />
+{{/if}}
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- MediatR for dispatching commands and queries from ViewModels -->
+    <PackageReference Include="MediatR" Version="12.4.*" />
+  </ItemGroup>
+
+</Project>

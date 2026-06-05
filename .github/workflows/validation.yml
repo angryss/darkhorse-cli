@@ -15,6 +15,7 @@ jobs:
       matrix:
         package:
           - darkhorse-dotnet
+          - darkhorse-dotnet-desktop
           - darkhorse-java
           - darkhorse-rust
 

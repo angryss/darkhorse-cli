@@ -1,0 +1,14 @@
+using MediatR;
+
+namespace {{project.dotnet.namespace}}.Common.Primitives;
+
+/// <summary>
+/// Marker interface for domain events.
+/// Domain events are raised by aggregate roots and dispatched via MediatR
+/// after the aggregate state has been persisted.
+/// </summary>
+public interface IDomainEvent : INotification
+{
+    Guid Id { get; }
+    DateTime OccurredOn { get; }
+}

@@ -1,0 +1,38 @@
+# Copilot Instructions — {{project.name}}
+
+> Workspace-level instructions for GitHub Copilot and Claude.
+> Read `openspec/AGENTS.md` for the full agent ruleset.
+
+## Project
+
+**{{project.name}}** — {{project.description}}
+
+WPF Desktop | .NET {{project.dotnet.dotnetVersion}} | DDD + Onion Architecture + CQRS + MVVM
+
+## Architecture Non-Negotiables
+
+1. **Onion Architecture:** Dependencies always point inward. Domain → Common only. Never outward.
+2. **CQRS via MediatR:** ViewModels dispatch commands and queries via `IMediator`. Never call repos directly.
+3. **MVVM:** Views have zero business logic. Code-behind contains only `DataContext = viewModel`.
+4. **Domain purity:** `{{project.dotnet.namespace}}.Domain` has ZERO external NuGet packages.
+5. **Implementation order:** Always inside-out — Domain → Application → Infrastructure → Presentation.
+
+## Development Workflow
+
+1. `/discover` — explore and shape the idea
+2. `/plan` — create a proposal in `openspec/changes/`
+3. `/implement` — execute the proposal inside-out
+4. `/troubleshoot` — diagnose if something breaks
+
+## Quick Reference
+
+| Question | Answer |
+|----------|--------|
+| Where are domain entities? | `src/{{project.dotnet.namespace}}.Domain/Entities/` |
+| Where are commands? | `src/{{project.dotnet.namespace}}.Application/Commands/` |
+| Where are queries? | `src/{{project.dotnet.namespace}}.Application/Queries/` |
+| Where are ViewModels? | `src/{{project.dotnet.namespace}}.Presentation/ViewModels/` |
+| Where are WPF Views? | `src/{{project.dotnet.namespace}}.Presentation/Views/` |
+| Where are specs? | `openspec/specs/` |
+| Where are active proposals? | `openspec/changes/` |
+| Where is the roadmap? | `openspec/specs/project/roadmap.md` |

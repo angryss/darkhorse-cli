@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  WiX 4 main installer definition for {{project.dotnet.namespace}}.
+  Features:
+    - ProductFeature  : application binaries
+    - StartMenuShortcut: Start Menu shortcut (always installed)
+    - DesktopShortcut : Desktop shortcut (shown in FeatureTree UI, user can opt out)
+  UI: WixUI_FeatureTree — shows license + feature selection page.
+  Launch on Finish: optional checkbox on the exit dialog via WixUI WIXUI_EXITDIALOGOPTIONALCHECKBOX.
+-->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui"
+     xmlns:util="http://wixtoolset.org/schemas/v4/wxs/util">
+
+  <?include Variables.wxi ?>
+
+  <Package Name="$(ProductName)"
+           Manufacturer="$(Manufacturer)"
+           Version="$(ProductVersion)"
+           UpgradeCode="$(UpgradeCode)"
+           Scope="perMachine"
+           InstallerVersion="500"
+           Compressed="yes">
+
+    <!-- Upgrade: always remove older versions before installing -->
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+
+    <!-- Embed all binaries in a single cab inside the MSI -->
+    <MediaTemplate EmbedCab="yes" />
+
+    <!-- ================================================================== -->
+    <!-- Feature tree                                                         -->
+    <!-- ================================================================== -->
+    <Feature Id="ProductFeature"
+             Title="$(ProductName)"
+             Description="Main application files"
+             Level="1"
+             ConfigurableDirectory="INSTALLFOLDER">
+      <ComponentRef Id="ApplicationBinaries" />
+      <ComponentRef Id="StartMenuShortcut" />
+    </Feature>
+
+    <Feature Id="FeatureDesktopShortcut"
+             Title="Desktop Shortcut"
+             Description="Create a shortcut on the desktop"
+             Level="1"
+             Absent="allow">
+      <ComponentRef Id="DesktopShortcutComponent" />
+    </Feature>
+
+    <!-- ================================================================== -->
+    <!-- Standard directories                                                 -->
+    <!-- ================================================================== -->
+    <StandardDirectory Id="ProgramFiles6432Folder">
+      <Directory Id="ManufacturerFolder" Name="$(Manufacturer)">
+        <Directory Id="INSTALLFOLDER" Name="$(ProductName)" />
+      </Directory>
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="StartMenuProductFolder" Name="$(ProductName)" />
+    </StandardDirectory>
+
+    <StandardDirectory Id="DesktopFolder" />
+
+    <!-- ================================================================== -->
+    <!-- Components                                                           -->
+    <!-- ================================================================== -->
+
+    <!-- Application binaries (self-contained publish output) -->
+    <Component Id="ApplicationBinaries" Directory="INSTALLFOLDER" Guid="*">
+      <File Id="ApplicationExe"
+            Source="$(SourceDir)\$(ExeFileName)"
+            KeyPath="yes" />
+      <!-- Additional files from the publish output are harvested by wix heat or
+           by adding more <File> elements here. For a self-contained publish, use
+           WiX heat to auto-harvest: see README in this folder. -->
+    </Component>
+
+    <!-- Start Menu shortcut -->
+    <Component Id="StartMenuShortcut" Directory="StartMenuProductFolder" Guid="*">
+      <Shortcut Id="StartMenuShortcutId"
+                Name="$(ProductName)"
+                Description="$(ProductName)"
+                Target="[INSTALLFOLDER]$(ExeFileName)"
+                WorkingDirectory="INSTALLFOLDER"
+                Icon="AppIconRef" />
+      <RemoveFolder Id="RemoveStartMenuFolder" On="uninstall" />
+      <RegistryValue Root="HKCU"
+                     Key="Software\$(Manufacturer)\$(ProductName)"
+                     Name="StartMenuShortcut"
+                     Type="integer"
+                     Value="1"
+                     KeyPath="yes" />
+    </Component>
+
+    <!-- Desktop shortcut (optional feature) -->
+    <Component Id="DesktopShortcutComponent" Directory="DesktopFolder" Guid="*">
+      <Shortcut Id="DesktopShortcutId"
+                Name="$(ProductName)"
+                Description="$(ProductName)"
+                Target="[INSTALLFOLDER]$(ExeFileName)"
+                WorkingDirectory="INSTALLFOLDER"
+                Icon="AppIconRef" />
+      <RegistryValue Root="HKCU"
+                     Key="Software\$(Manufacturer)\$(ProductName)"
+                     Name="DesktopShortcut"
+                     Type="integer"
+                     Value="1"
+                     KeyPath="yes" />
+    </Component>
+
+    <!-- ================================================================== -->
+    <!-- Icon                                                                 -->
+    <!-- ================================================================== -->
+    <Icon Id="AppIconRef" SourceFile="assets\app.ico" />
+    <Property Id="ARPPRODUCTICON" Value="AppIconRef" />
+
+    <!-- ================================================================== -->
+    <!-- Launch application on finish                                         -->
+    <!-- The WixUI WIXUI_EXITDIALOGOPTIONALCHECKBOX mechanism adds a         -->
+    <!-- "Launch <ProductName> now" checkbox to the exit dialog.             -->
+    <!-- ================================================================== -->
+    <Property Id="WixShellExecTarget" Value="[INSTALLFOLDER]$(ExeFileName)" />
+    <CustomAction Id="LaunchApplication"
+                  BinaryRef="Wix4UtilCA_X86"
+                  DllEntry="WixShellExec"
+                  Impersonate="yes" />
+
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT"
+              Value="Launch $(ProductName) now" />
+    <!-- Pre-check the checkbox by default -->
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
+
+    <!-- ================================================================== -->
+    <!-- WiX standard UI — FeatureTree shows the desktop shortcut option    -->
+    <!-- ================================================================== -->
+    <ui:WixUI Id="WixUI_FeatureTree" />
+
+    <!-- Wire launch checkbox to the custom action -->
+    <ui:Publish Dialog="ExitDialog"
+                Control="Finish"
+                Event="DoAction"
+                Value="LaunchApplication">
+      WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 AND NOT Installed
+    </ui:Publish>
+
+    <!-- Custom exit dialog fragment (adds launch checkbox text above Finish) -->
+    <!-- See ui/ExitDialogOverride.wxs                                        -->
+
+    <!-- ================================================================== -->
+    <!-- Uninstall entry in Programs and Features                             -->
+    <!-- ================================================================== -->
+    <Property Id="ARPHELPLINK" Value="https://github.com/{{project.dotnet.namespace}}/{{project.name}}" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/{{project.dotnet.namespace}}/{{project.name}}" />
+
+  </Package>
+</Wix>

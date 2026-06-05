@@ -1,0 +1,30 @@
+<!-- {{project.dotnet.namespace}}.Application — Use cases, CQRS commands/queries/handlers, ports -->
+<!-- Application depends on Domain and Common only. No infrastructure or UI concerns here. -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net{{project.dotnet.dotnetVersion}}.0</TargetFramework>
+    <RootNamespace>{{project.dotnet.namespace}}.Application</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Onion: Application depends on Domain + Common only -->
+    <ProjectReference Include="../{{project.dotnet.namespace}}.Domain/{{project.dotnet.namespace}}.Domain.csproj" />
+    <ProjectReference Include="../{{project.dotnet.namespace}}.Common/{{project.dotnet.namespace}}.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- CQRS dispatch via MediatR -->
+    <PackageReference Include="MediatR" Version="12.4.*" />
+    <!-- Validation of commands and queries -->
+    <PackageReference Include="FluentValidation" Version="11.9.*" />
+    <!-- DI abstractions for port registration -->
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="{{project.dotnet.dotnetVersion}}.0.*" />
+    <!-- Logging abstractions -->
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="{{project.dotnet.dotnetVersion}}.0.*" />
+  </ItemGroup>
+
+</Project>

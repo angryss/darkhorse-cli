@@ -1,0 +1,15 @@
+using MediatR;
+
+namespace {{project.dotnet.namespace}}.Application.Commands.Examples;
+
+/// <summary>
+/// Example CQRS Command — demonstrates the Command pattern.
+/// Replace this with your domain-specific commands.
+///
+/// RULE: Commands change state. Queries read state. Never mix them.
+/// RULE: Commands live in Application layer. They dispatch to Domain via repository interfaces.
+/// </summary>
+public sealed record CreateSampleItemCommand(
+    string Name,
+    string Description
+) : IRequest<Guid>;

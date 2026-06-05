@@ -1,0 +1,55 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using MediatR;
+
+namespace {{project.dotnet.namespace}}.Presentation.ViewModels;
+
+/// <summary>
+/// ViewModel for the main application window.
+/// Follows MVVM: all state is in the ViewModel, the View has zero business logic.
+/// Uses CommunityToolkit.Mvvm source-generators for property and command boilerplate.
+/// </summary>
+public partial class MainWindowViewModel : ObservableObject
+{
+    private readonly IMediator _mediator;
+
+    [ObservableProperty]
+    private string _statusMessage = "Ready";
+
+    [ObservableProperty]
+    private string _title = "{{project.name}}";
+
+    [ObservableProperty]
+    private bool _isBusy;
+
+    public MainWindowViewModel(IMediator mediator)
+    {
+        _mediator = mediator;
+    }
+
+    /// <summary>
+    /// Example async relay command — replace with real commands for your bounded contexts.
+    /// </summary>
+    [RelayCommand(CanExecute = nameof(CanExecuteAction))]
+    private async Task ExecuteActionAsync()
+    {
+        try
+        {
+            IsBusy = true;
+            StatusMessage = "Working...";
+
+            // TODO: Dispatch a MediatR command here
+            // await _mediator.Send(new YourCommand());
+
+            await Task.Delay(100); // placeholder
+
+            StatusMessage = "Ready";
+        }
+        finally
+        {
+            IsBusy = false;
+        }
+    }
+
+    private bool CanExecuteAction() => !IsBusy;
+}

@@ -20,7 +20,7 @@ The goal is to help teams use AI without locking their process to one vendor or 
 
 DarkHorse is currently **public-alpha/pre-alpha quality**. The repository is being prepared for a credible public open-source release, but some capabilities are still experimental and cleanup work remains.
 
-- **Initial stable focus:** the scaffolders (`darkhorse-dotnet`, `darkhorse-java`, and `darkhorse-rust`) and the generated OpenSpec/context/workflow assets they produce.
+- **Initial stable focus:** the scaffolders (`darkhorse-dotnet`, `darkhorse-java`, `darkhorse-rust`, and `darkhorse-dotnet-desktop`) and the generated OpenSpec/context/workflow assets they produce.
 - **Experimental surfaces:** MCP support and advanced AI tool adapters should be treated as experimental unless a package explicitly documents a complete implementation.
 - **Desktop app:** `darkhorse-desktop` is a companion/showcase product for the DarkHorse lifecycle. It is not the core framework surface and does not own scaffolder behavior.
 - **Generated projects:** scaffolded projects are intended to be self-contained and should not require the DarkHorse CLI after generation.
@@ -29,7 +29,7 @@ DarkHorse is currently **public-alpha/pre-alpha quality**. The repository is bei
 
 ## Repository Map
 
-- **Scaffolders:** `darkhorse-dotnet/`, `darkhorse-java/`, and `darkhorse-rust/` are TypeScript CLI packages. They own templates, generation logic, rules, guides, workflow prompts, and generated-project source assets.
+- **Scaffolders:** `darkhorse-dotnet/`, `darkhorse-java/`, `darkhorse-rust/`, and `darkhorse-dotnet-desktop/` are TypeScript CLI packages. They own templates, generation logic, rules, guides, workflow prompts, and generated-project source assets.
 - **Desktop app:** `darkhorse-desktop/` is a Rust/Tauri companion product that demonstrates DarkHorse workflow concepts in a local-first application.
 - **Docs:** root documentation covers the ecosystem overview, architecture, repository status, release checklist, and validation status. Package READMEs describe package-specific usage.
 - **Examples:** no dedicated root `examples/` directory is present yet. Generated test projects and temporary outputs should not be treated as public examples.
@@ -41,7 +41,7 @@ DarkHorse is currently **public-alpha/pre-alpha quality**. The repository is bei
 
 | Surface | Current Status | Notes |
 | --- | --- | --- |
-| Scaffolders | Stable focus | Primary OSS entry point. The .NET, Java, and Rust/Tauri CLIs are the first surfaces contributors should validate and improve. |
+| Scaffolders | Stable focus | Primary OSS entry point. The .NET web, .NET desktop, Java, and Rust/Tauri CLIs are the first surfaces contributors should validate and improve. |
 | OpenSpec support | Beta | Generated OpenSpec/context assets are central to the framework, but schemas and versioned contracts are not finalized yet. |
 | Workflow packs | Beta | Discover, plan, implement, and troubleshoot workflow assets exist and are useful, but public versioning and compatibility rules are still forming. |
 | Desktop | Beta/showcase | Companion product that demonstrates the DarkHorse lifecycle. It is not the core framework API. |
@@ -78,6 +78,7 @@ This monorepo contains scaffolders and a companion product.
 | Project | Tech | What It Does |
 | --- | --- | --- |
 | [`darkhorse-dotnet`](darkhorse-dotnet/) | TypeScript CLI | Scaffolds .NET products with ASP.NET Core, React frontend options, Docker Compose, OpenSpec, context, and workflow assets. |
+| [`darkhorse-dotnet-desktop`](darkhorse-dotnet-desktop/) | TypeScript CLI | Scaffolds .NET WPF desktop products with Onion Architecture, DDD, CQRS, MVVM, WiX MSI installer, CI/CD pipelines, OpenSpec, context, and workflow assets. |
 | [`darkhorse-java`](darkhorse-java/) | TypeScript CLI | Scaffolds Java/Quarkus products with React frontend options, Docker Compose, OpenSpec, context, and workflow assets. |
 | [`darkhorse-rust`](darkhorse-rust/) | TypeScript CLI | Scaffolds Rust/Tauri desktop products with Cargo workspace, Vite frontend, OpenSpec, context, and workflow assets. |
 
@@ -97,16 +98,17 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for the ecosystem design.
 
 ## How It Works
 
-All three scaffolders follow the same pattern:
+All four scaffolders follow the same pattern:
 
 ```text
 command -> agent -> skill
 ```
 
 - `init` scaffolds a complete project: runtime structure plus development guidance system.
-- `add` adds services to an existing workspace (`darkhorse-dotnet` only today).
+- `add` adds services to an existing workspace (`darkhorse-dotnet`) or bounded contexts to a desktop project (`darkhorse-dotnet-desktop`).
 - `discover`, `plan`, `implement`, and `troubleshoot` form a continuous AI-native workflow loop.
 - `nx-monorepo` analyzes workspace fit for Nx and produces a phased adoption plan (`darkhorse-dotnet` and `darkhorse-java`).
+- `deploy setup-cicd` provisions CI/CD pipelines (`darkhorse-dotnet-desktop`).
 - `mcp-serve` is intended to expose CLI tools to AI agents via the Model Context Protocol, but MCP support should be treated as experimental unless a package documents full implementation.
 
 The `init` pipeline runs three core skills:
@@ -189,6 +191,12 @@ npx darkhorse-dotnet init --name my-product --frontend --platform web
 # .NET - add a backend service
 npx darkhorse-dotnet add api --name orders
 
+# .NET Desktop - scaffold a WPF desktop application
+npx darkhorse-dotnet-desktop init --name my-wpf-app --ui materialdesign --persistence
+
+# .NET Desktop - add a bounded context (feature module)
+npx darkhorse-dotnet-desktop add --context OrderManagement
+
 # Java - scaffold a full product
 npx darkhorse-java init --type api --name my-service --group-id com.example
 
@@ -257,6 +265,15 @@ npm test
 
 Use the same commands for `darkhorse-java` and `darkhorse-rust`.
 
+For the WPF desktop scaffolder:
+
+```bash
+cd darkhorse-dotnet-desktop
+npm install
+npm run type-check
+npm test
+```
+
 ### Desktop Development
 
 ```bash
@@ -271,18 +288,20 @@ cargo tauri build
 
 ## Project Status
 
-All four sub-projects are at `v0.1.0`.
+All five sub-projects are at `v0.1.0`.
 
-| Capability | dotnet | java | rust | desktop |
-| --- | --- | --- | --- | --- |
-| Product scaffolding (`init`) | Stable focus | Stable focus | Stable focus | Product only |
-| Service addition (`add`) | Available | Not available | Not available | Product only |
-| Nx monorepo analysis | Available | Available | Not available | Not available |
-| Discovery workflow | v1 workflow assets | v1 workflow assets | v1 workflow assets | Available |
-| Planning workflow | v1 workflow assets | v1 workflow assets | v1 workflow assets | Available |
-| Implementation workflow | v1 workflow assets | v1 workflow assets | v1 workflow assets | Available |
-| Troubleshooting workflow | v1 workflow assets | v1 workflow assets | v1 workflow assets | Not available |
-| MCP server | Experimental | Experimental | Experimental | Not available |
+| Capability | dotnet | dotnet-desktop | java | rust | desktop |
+| --- | --- | --- | --- | --- | --- |
+| Product scaffolding (`init`) | Stable focus | Stable focus | Stable focus | Stable focus | Product only |
+| Service/context addition (`add`) | Available | Available | Not available | Not available | Product only |
+| Nx monorepo analysis | Available | Not available | Available | Not available | Not available |
+| WiX MSI installer | Not applicable | Generated | Not applicable | Not applicable | Not applicable |
+| CI/CD pipeline (GHA/ADO) | Not applicable | Generated | Not applicable | Not applicable | Not applicable |
+| Discovery workflow | v1 workflow assets | v1 workflow assets | v1 workflow assets | v1 workflow assets | Available |
+| Planning workflow | v1 workflow assets | v1 workflow assets | v1 workflow assets | v1 workflow assets | Available |
+| Implementation workflow | v1 workflow assets | v1 workflow assets | v1 workflow assets | v1 workflow assets | Available |
+| Troubleshooting workflow | v1 workflow assets | v1 workflow assets | v1 workflow assets | v1 workflow assets | Not available |
+| MCP server | Experimental | Experimental | Experimental | Experimental | Not available |
 
 ---
 
@@ -294,4 +313,4 @@ MIT. See [LICENSE](LICENSE).
 
 DarkHorse CLI is a public-alpha AI-native engineering framework for structured software delivery. It helps teams organize AI-assisted development around open specification workflows, software scaffolding, developer workflow automation, and reusable engineering context.
 
-The framework includes early scaffolder workflows for .NET, Java, and Rust/Tauri projects. These scaffolders are intended to make repeatable project setup and specification-driven delivery easier to evaluate while DarkHorse continues to mature.
+The framework includes early scaffolder workflows for .NET web services, .NET WPF desktop apps, Java, and Rust/Tauri projects. These scaffolders are intended to make repeatable project setup and specification-driven delivery easier to evaluate while DarkHorse continues to mature.

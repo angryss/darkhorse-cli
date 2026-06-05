@@ -1,0 +1,17 @@
+using System.Windows;
+using {{project.dotnet.namespace}}.Presentation.ViewModels;
+
+namespace {{project.dotnet.namespace}}.Presentation.Views;
+
+/// <summary>
+/// Main application window — shell for the WPF host.
+/// DataContext is injected by the DI container configured in App.xaml.cs.
+/// </summary>
+public partial class MainWindow : Window
+{
+    public MainWindow(MainWindowViewModel viewModel)
+    {
+        InitializeComponent();
+        DataContext = viewModel;
+    }
+}

@@ -1,0 +1,41 @@
+# Roadmap — {{project.name}}
+
+> Generated: {{timestamp}}
+
+## MVP Lifecycle
+
+Each MVP is a fully deliverable increment of the desktop application. MVPs flow through:
+
+```
+Active (openspec/changes/mvp-X.Y/) → Completed (openspec/archive/mvp-X.Y/)
+```
+
+When all requirements in an MVP are `Done` and all tests pass:
+1. Update the MVP row below to `Completed`
+2. Move `openspec/changes/mvp-X.Y/` to `openspec/archive/mvp-X.Y/`
+
+## Requirement ID Format
+
+`REQ-{MVP}-{###}` where:
+- `MVP` = milestone number (e.g. `1.0`, `1.1`, `2.0`)
+- `###` = three-digit sequence within the MVP (e.g. `001`)
+
+## MVPs
+
+| MVP | Status | Description |
+|-----|--------|-------------|
+| 1.0 | Active | Initial release — core application skeleton and first bounded context |
+
+## MVP 1.0 — Requirements
+
+| ID | Requirement | Status |
+|----|-------------|--------|
+| REQ-1.0-001 | Project skeleton compiles and launches the WPF application | Not Started |
+| REQ-1.0-002 | Define domain model for first bounded context | Not Started |
+| REQ-1.0-003 | Implement CQRS commands and queries for first bounded context | Not Started |
+| REQ-1.0-004 | Implement WPF views and viewmodels for first bounded context | Not Started |
+| REQ-1.0-005 | Unit tests pass (domain and application layers) | Not Started |
+
+---
+
+*Add future MVPs below as new table rows.*

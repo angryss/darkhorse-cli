@@ -1,0 +1,39 @@
+using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace {{project.dotnet.namespace}}.Common.Primitives;
+
+/// <summary>
+/// Base class for all ViewModels in the Presentation layer.
+/// Extends CommunityToolkit.Mvvm ObservableObject which provides INotifyPropertyChanged.
+/// All ViewModels that need observable properties or relay commands should inherit from this.
+/// </summary>
+public abstract class ViewModelBase : ObservableObject
+{
+    private bool _isBusy;
+    private string _errorMessage = string.Empty;
+
+    /// <summary>
+    /// Indicates the ViewModel is performing an asynchronous operation.
+    /// Bind to this to show loading indicators.
+    /// </summary>
+    public bool IsBusy
+    {
+        get => _isBusy;
+        protected set => SetProperty(ref _isBusy, value);
+    }
+
+    /// <summary>
+    /// Current error message. Empty string means no error.
+    /// </summary>
+    public string ErrorMessage
+    {
+        get => _errorMessage;
+        protected set => SetProperty(ref _errorMessage, value);
+    }
+
+    public bool HasError => !string.IsNullOrEmpty(ErrorMessage);
+
+    protected void ClearError() => ErrorMessage = string.Empty;
+
+    protected void SetError(string message) => ErrorMessage = message;
+}

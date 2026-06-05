@@ -1,0 +1,52 @@
+<Project Sdk="WixToolset.Sdk/4.0.5">
+
+  <PropertyGroup>
+    <!-- MSI output name: {{project.name}}-setup-{version}.msi -->
+    <OutputName>{{project.name}}-setup</OutputName>
+    <OutputType>Package</OutputType>
+    <!-- Platform: x64 for modern Windows apps, x86 for 32-bit targets -->
+    <Platforms>x64</Platforms>
+    <Platform>x64</Platform>
+    <!-- Suppress WiX warnings that aren't relevant for SDK-style projects -->
+    <SuppressIces>ICE60;ICE61</SuppressIces>
+  </PropertyGroup>
+
+  <!-- WiX extension packages -->
+  <ItemGroup>
+    <!-- Standard WiX dialog sets (WixUI_FeatureTree, etc.) -->
+    <PackageReference Include="WixToolset.UI.wixext" Version="4.0.*" />
+    <!-- WixShellExec custom action for launching the app after install -->
+    <PackageReference Include="WixToolset.Util.wixext" Version="4.0.*" />
+  </ItemGroup>
+
+  <!--
+    BUILDING THE INSTALLER
+    ======================
+    Pre-requisites:
+      1. Install WiX 4 toolset:  dotnet tool install --global wix
+      2. Install HeatWave VS extension for IDE support (optional).
+
+    Build steps:
+      # 1. Publish the app (self-contained, ready to install)
+      dotnet publish src/{{project.dotnet.namespace}}.Presentation \
+        -c Release -r win-x64 --self-contained true \
+        -p:PublishSingleFile=false
+
+      # 2. Build the installer MSI
+      dotnet build deploy/installer/{{project.dotnet.namespace}}.Installer.wixproj \
+        -c Release
+
+      # Output: deploy/installer/bin/Release/{{project.name}}-setup.msi
+
+    Harvesting additional files from publish output:
+      For a self-contained app with many DLLs, use wix heat:
+        wix heat dir "src/.../bin/Release/.../publish" \
+          -o deploy/installer/HarvestedFiles.wxs \
+          -cg AppBinaries -dr INSTALLFOLDER \
+          -scom -sreg -gg -nologo
+
+    Version bump:
+      Edit deploy/installer/Variables.wxi — change <?define ProductVersion = "x.y.z" ?>
+  -->
+
+</Project>

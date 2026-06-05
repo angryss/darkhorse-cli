@@ -1,0 +1,75 @@
+# 00 — Start Here
+
+> **Entry point for all AI agents and developers working on {{project.name}}.**
+
+## What Is This Project?
+
+**{{project.name}}** — {{project.description}}
+
+- **Architecture:** DDD + Onion Architecture + CQRS + MVVM
+- **Platform:** WPF Desktop (.NET {{project.dotnet.dotnetVersion}}, Windows)
+- **UI Framework:** {{#if (eq project.dotnet.uiFramework "materialdesign")}}Material Design in XAML Toolkit{{else}}WPF UI (Fluent Design){{/if}}
+- **Persistence:** {{#if project.features.persistence}}EF Core SQLite (local-first){{else}}None{{/if}}
+
+## Navigation
+
+| File | Purpose |
+|------|---------|
+| `context/00-START-HERE.md` | You are here |
+| `context/10-REPO-MAP.md` | Folder layout and file descriptions |
+| `context/30-BOUNDED-CONTEXTS.md` | Domain contexts and relationships |
+| `context/50-SEARCH-QUERIES.md` | Search patterns for finding code |
+| `openspec/AGENTS.md` | **Read next** — AI agent rules and workflow system |
+
+## Project Structure
+
+```
+{{project.name}}/
+├── context/                              ← AI navigation (this folder)
+├── openspec/                             ← Specs, proposals, workflow
+│   ├── AGENTS.md                         ← AI reads this second
+│   ├── specs/
+│   │   ├── architecture/                 ← Mandatory architecture rules
+│   │   ├── patterns/                     ← Implementation patterns
+│   │   ├── workflow/skills/              ← Workflow skill definitions
+│   │   ├── domain/                       ← Bounded context specs
+│   │   └── project/roadmap.md            ← MVP roadmap
+│   ├── changes/mvp-1.0/                  ← Active MVP (proposals + tracker)
+│   └── archive/                          ← Completed MVPs
+├── src/
+│   ├── {{project.dotnet.namespace}}.Common/          ← Shared primitives, contracts (no deps)
+│   ├── {{project.dotnet.namespace}}.Domain/          ← Entities, VOs, aggregates, events
+│   ├── {{project.dotnet.namespace}}.Application/     ← CQRS commands, queries, handlers
+│   ├── {{project.dotnet.namespace}}.Infrastructure/  ← Persistence, adapters
+│   └── {{project.dotnet.namespace}}.Presentation/    ← WPF views, viewmodels, resources
+├── tests/
+│   ├── {{project.dotnet.namespace}}.UnitTests/
+│   └── {{project.dotnet.namespace}}.IntegrationTests/
+├── {{project.dotnet.namespace}}.sln
+└── .darkhorse.yaml
+```
+
+## Onion Architecture — Layer Rules
+
+```
+┌─────────────────────────────────────────┐
+│           Presentation (WPF)            │  ← depends on Application + Infrastructure (DI only)
+├─────────────────────────────────────────┤
+│            Infrastructure               │  ← depends on Application + Domain
+├─────────────────────────────────────────┤
+│             Application                 │  ← depends on Domain + Common
+├─────────────────────────────────────────┤
+│               Domain                    │  ← depends on Common only
+├─────────────────────────────────────────┤
+│               Common                    │  ← depends on NOTHING
+└─────────────────────────────────────────┘
+```
+
+> **Never violate the dependency direction.** If you feel the need to, re-read `openspec/specs/architecture/architecture-rules.md` first.
+
+## Development Workflow
+
+1. **Discover** — `/discover` to explore and shape ideas
+2. **Plan** — `/plan` to create a DDD-compliant proposal
+3. **Implement** — `/implement` to scaffold and build inside-out (Domain → Application → Infrastructure → Presentation)
+4. **Troubleshoot** — `/troubleshoot` when something breaks

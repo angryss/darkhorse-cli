@@ -1,0 +1,30 @@
+using Microsoft.Extensions.DependencyInjection;
+{{#if project.features.persistence}}
+using Microsoft.EntityFrameworkCore;
+{{/if}}
+
+namespace {{project.dotnet.namespace}}.Infrastructure;
+
+/// <summary>
+/// Infrastructure layer service registrations.
+/// Registers EF Core, repository implementations, and external service adapters.
+/// Call this from App.xaml.cs in the Presentation layer.
+/// </summary>
+public static class DependencyInjection
+{
+    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
+    {
+{{#if project.features.persistence}}
+        // EF Core SQLite — local-first desktop persistence
+        services.AddDbContext<ApplicationDbContext>(options =>
+            options.UseSqlite("Data Source=app.db"));
+{{/if}}
+
+        // TODO: Register repository implementations here
+        // services.AddScoped<ISampleItemRepository, SampleItemRepository>();
+
+        // TODO: Register external service adapters here
+
+        return services;
+    }
+}

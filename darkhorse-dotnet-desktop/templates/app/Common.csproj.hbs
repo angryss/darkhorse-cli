@@ -1,0 +1,16 @@
+<!-- {{project.dotnet.namespace}}.Common — Shared primitives, contracts, utilities (no external deps) -->
+<!-- Common is the foundation shared by all layers. Keep it stable and minimal. -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net{{project.dotnet.dotnetVersion}}.0</TargetFramework>
+    <RootNamespace>{{project.dotnet.namespace}}.Common</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <!-- No ProjectReference — Common depends on NOTHING -->
+  <!-- No external PackageReference — Common has ZERO external dependencies -->
+
+</Project>

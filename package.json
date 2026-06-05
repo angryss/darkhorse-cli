@@ -5,9 +5,9 @@
   "description": "DarkHorse public-alpha monorepo for AI-native engineering scaffolders and companion products.",
   "license": "MIT",
   "scripts": {
-    "build": "npm --prefix darkhorse-dotnet run build && npm --prefix darkhorse-java run build && npm --prefix darkhorse-rust run build",
-    "type-check": "npm --prefix darkhorse-dotnet run type-check && npm --prefix darkhorse-java run type-check && npm --prefix darkhorse-rust run type-check",
-    "test": "npm --prefix darkhorse-dotnet test && npm --prefix darkhorse-java test && npm --prefix darkhorse-rust test",
+    "build": "npm --prefix darkhorse-dotnet run build && npm --prefix darkhorse-java run build && npm --prefix darkhorse-rust run build && npm --prefix darkhorse-dotnet-desktop run build",
+    "type-check": "npm --prefix darkhorse-dotnet run type-check && npm --prefix darkhorse-java run type-check && npm --prefix darkhorse-rust run type-check && npm --prefix darkhorse-dotnet-desktop run type-check",
+    "test": "npm --prefix darkhorse-dotnet test && npm --prefix darkhorse-java test && npm --prefix darkhorse-rust test && npm --prefix darkhorse-dotnet-desktop test",
     "clean": "git clean -fdX"
   },
   "author": "Angry Software Solutions",

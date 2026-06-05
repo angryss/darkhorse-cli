@@ -1,0 +1,52 @@
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System.Windows;
+using {{project.dotnet.namespace}}.Application;
+using {{project.dotnet.namespace}}.Infrastructure;
+using {{project.dotnet.namespace}}.Presentation.ViewModels;
+using {{project.dotnet.namespace}}.Presentation.Views;
+
+namespace {{project.dotnet.namespace}}.Presentation;
+
+/// <summary>
+/// Application entry point.
+/// Uses Microsoft.Extensions.Hosting generic host for DI, logging, and configuration.
+/// </summary>
+public partial class App : Application
+{
+    private IHost _host = null!;
+
+    protected override async void OnStartup(StartupEventArgs e)
+    {
+        base.OnStartup(e);
+
+        _host = Host.CreateDefaultBuilder()
+            .ConfigureServices(ConfigureServices)
+            .Build();
+
+        await _host.StartAsync();
+
+        var mainWindow = _host.Services.GetRequiredService<MainWindow>();
+        mainWindow.Show();
+    }
+
+    protected override async void OnExit(ExitEventArgs e)
+    {
+        await _host.StopAsync();
+        _host.Dispose();
+        base.OnExit(e);
+    }
+
+    private static void ConfigureServices(IServiceCollection services)
+    {
+        // Register application layer (MediatR, validators, pipeline behaviors)
+        services.AddApplicationServices();
+
+        // Register infrastructure layer (repositories, EF Core, adapters)
+        services.AddInfrastructureServices();
+
+        // Register presentation layer views and viewmodels
+        services.AddTransient<MainWindow>();
+        services.AddTransient<MainWindowViewModel>();
+    }
+}

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  WiX 4 preprocessor variables for {{project.dotnet.namespace}} installer.
+  Edit ProductVersion before each release.
+  Never change UpgradeCode — it is the stable identity of this product across all versions.
+-->
+<Include xmlns="http://wixtoolset.org/schemas/v4/wxs">
+  <?define ProductName     = "{{project.name}}" ?>
+  <?define Manufacturer    = "{{project.dotnet.namespace}}" ?>
+  <?define ProductVersion  = "1.0.0" ?>
+  <?define UpgradeCode     = "{A0000001-DEAD-BEEF-0000-{{project.dotnet.namespace}}0001}" ?>
+  <?define InstallDirName  = "$(Manufacturer)\$(ProductName)" ?>
+  <?define ExeFileName     = "{{project.dotnet.namespace}}.Presentation.exe" ?>
+  <?define SourceDir       = "..\..\src\{{project.dotnet.namespace}}.Presentation\bin\Release\net{{project.dotnet.dotnetVersion}}.0-windows\win-x64\publish" ?>
+</Include>

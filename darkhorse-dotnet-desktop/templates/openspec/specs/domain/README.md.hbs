@@ -1,0 +1,45 @@
+# Domain Specs
+
+> Define your bounded contexts here.
+
+## How to Add a Bounded Context
+
+1. Create a spec file: `openspec/specs/domain/<ContextName>.md`
+2. Scaffold the code structure: `darkhorse-dotnet-desktop add --context <ContextName>`
+3. Add a glossary: `src/{{project.dotnet.namespace}}.Domain/Entities/GLOSSARY.md` (per context)
+4. Update `context/30-BOUNDED-CONTEXTS.md`
+
+## Context Spec Template
+
+```markdown
+# <ContextName>
+
+## Purpose
+What business capability does this context own within the desktop application?
+
+## Entities
+- **Entity1** — Description, lifecycle, invariants
+
+## Value Objects
+- **ValueObject1** — Immutable. Equal if all components are equal.
+
+## Aggregates
+- **AggregateRoot** — Transaction boundary. Which entities does it own?
+
+## Domain Events
+- **EntityCreatedEvent** — When is this raised? Who handles it?
+
+## Commands
+- **CreateEntityCommand** — What state does it change?
+- **UpdateEntityCommand** — What invariants must hold?
+
+## Queries
+- **GetEntityQuery** — What does it return? What filters?
+- **ListEntitiesQuery** — Pagination? Sorting?
+
+## Repository Interface
+- `IEntityRepository` — What methods does the domain need?
+
+## ViewModel
+- **EntityViewModel** — What observable properties? What relay commands?
+```

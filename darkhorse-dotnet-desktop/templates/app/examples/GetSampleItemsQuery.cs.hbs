@@ -1,0 +1,16 @@
+using MediatR;
+
+namespace {{project.dotnet.namespace}}.Application.Queries.Examples;
+
+/// <summary>
+/// Example DTO returned by the GetSampleItemsQuery.
+/// DTOs carry data between Application and Presentation layers only.
+/// Never return domain entities from query handlers.
+/// </summary>
+public sealed record SampleItemDto(Guid Id, string Name, string Description);
+
+/// <summary>
+/// Example CQRS Query — demonstrates the Query pattern.
+/// Queries read state and return data. They must not change state.
+/// </summary>
+public sealed record GetSampleItemsQuery : IRequest<IReadOnlyList<SampleItemDto>>;

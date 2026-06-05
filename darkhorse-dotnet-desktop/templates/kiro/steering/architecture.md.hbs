@@ -1,0 +1,57 @@
+# Architecture — {{project.name}}
+
+> Kiro steering: architecture rules and patterns.
+
+## Pattern: Onion Architecture
+
+```
+Presentation → Application + Infrastructure (DI only)
+Infrastructure → Application + Domain + Common
+Application → Domain + Common
+Domain → Common
+Common → nothing
+```
+
+## Pattern: CQRS via MediatR
+
+```csharp
+// ViewModel dispatches
+await _mediator.Send(new CreateOrderCommand(name));
+var orders = await _mediator.Send(new GetOrdersQuery());
+
+// Handler implements
+public sealed class CreateOrderCommandHandler : IRequestHandler<CreateOrderCommand, Guid>
+{
+    public async Task<Guid> Handle(CreateOrderCommand request, CancellationToken ct)
+    {
+        var order = Order.Place(request.CustomerId, request.Lines);  // domain
+        await _repository.AddAsync(order, ct);                        // infrastructure
+        return order.Id;
+    }
+}
+```
+
+## Pattern: MVVM
+
+```csharp
+public partial class OrdersViewModel : ViewModelBase
+{
+    [ObservableProperty] private IReadOnlyList<OrderDto> _orders = [];
+
+    [RelayCommand(CanExecute = nameof(IsNotBusy))]
+    private async Task LoadOrdersAsync()
+    {
+        IsBusy = true;
+        Orders = await _mediator.Send(new GetOrdersQuery());
+        IsBusy = false;
+    }
+    private bool IsNotBusy => !IsBusy;
+}
+```
+
+## Never Do
+
+- Domain referencing Application, Infrastructure, or Presentation
+- ViewModel calling a repository directly
+- Business logic in XAML code-behind
+- Public setters on domain entities

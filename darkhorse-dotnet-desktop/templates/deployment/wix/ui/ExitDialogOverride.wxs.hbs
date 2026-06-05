@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ExitDialogOverride.wxs — overrides the WixUI ExitDialog finish text.
+
+  WiX 4 / WixUI_FeatureTree already supports WIXUI_EXITDIALOGOPTIONALCHECKBOX.
+  This fragment ensures the checkbox and descriptive text appear correctly.
+
+  The actual "Launch application" wire-up is in Product.wxs via:
+    <ui:Publish Dialog="ExitDialog" Control="Finish" Event="DoAction" Value="LaunchApplication">
+      WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 AND NOT Installed
+    </ui:Publish>
+
+  No extra dialogs needed — WixUI_FeatureTree includes ExitDialog automatically.
+  This file is here for future custom dialog work.
+-->
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+
+  <?include ..\Variables.wxi ?>
+
+  <Fragment>
+    <!--
+      Optional: Add extra UI text to the exit dialog.
+      Uncomment and customize to replace the default finish text.
+    -->
+    <!--
+    <ui:UIRef Id="WixUI_ExitDialog">
+      <ui:Property Id="ExitDialogOptionalText"
+                   Value="Thank you for installing $(ProductName)." />
+    </ui:UIRef>
+    -->
+  </Fragment>
+
+</Wix>

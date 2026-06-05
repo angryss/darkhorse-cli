@@ -1,0 +1,27 @@
+using {{project.dotnet.namespace}}.Common.Primitives;
+
+namespace {{project.dotnet.namespace}}.Domain.Entities;
+
+/// <summary>
+/// {{contextName}} aggregate root.
+/// Define your domain model, invariants, and business rules here.
+///
+/// RULE: All state changes go through methods. No public setters.
+/// RULE: Domain events are raised here and dispatched after persistence.
+/// </summary>
+public sealed class {{contextName}} : AggregateRoot
+{
+    // TODO: Add domain properties
+
+    private {{contextName}}(Guid id) : base(id) { }
+
+    private {{contextName}}() : base() { }
+
+    /// <summary>Factory method — the only way to create a {{contextName}}.</summary>
+    public static {{contextName}} Create(/* TODO: add parameters */)
+    {
+        var entity = new {{contextName}}(Guid.NewGuid());
+        // TODO: validate invariants, raise domain event
+        return entity;
+    }
+}

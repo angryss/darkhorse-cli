@@ -1,0 +1,113 @@
+# 10 — Repository Map
+
+> Folder layout and file descriptions for **{{project.name}}**.
+
+## Root
+
+| Path | Purpose |
+|------|---------|
+| `{{project.dotnet.namespace}}.sln` | Visual Studio solution — opens all five projects |
+| `.darkhorse.yaml` | DarkHorse provenance config (read-only after init) |
+| `.gitignore` | Git ignore file |
+| `README.md` | Public-facing README |
+
+## `src/` — Source Projects
+
+### `{{project.dotnet.namespace}}.Common/`
+Shared primitives and contracts. No external dependencies.
+
+| Path | Contents |
+|------|---------|
+| `Primitives/Entity.cs` | Base class for domain entities (identity-based equality) |
+| `Primitives/AggregateRoot.cs` | Base class for aggregate roots (domain event dispatch) |
+| `Primitives/ValueObject.cs` | Base class for value objects (value-based equality) |
+| `Primitives/IDomainEvent.cs` | Marker interface for domain events |
+| `Primitives/ViewModelBase.cs` | Base class for WPF ViewModels (IsBusy, ErrorMessage) |
+| `Contracts/` | Shared interfaces and contracts |
+| `Utilities/` | Pure utility functions (no dependencies) |
+| `Extensions/` | Extension methods |
+
+### `{{project.dotnet.namespace}}.Domain/`
+Core business domain. **No external dependencies.** Zero references to infrastructure, WPF, or application concerns.
+
+| Path | Contents |
+|------|---------|
+| `Entities/` | Domain entities and aggregate roots |
+| `ValueObjects/` | Immutable value types |
+| `Aggregates/` | Bounded context aggregate roots (complex aggregates) |
+| `DomainEvents/` | Domain events raised by aggregates |
+| `Repositories/` | Repository interfaces (implemented in Infrastructure) |
+| `Services/` | Domain services (stateless domain logic across aggregates) |
+
+### `{{project.dotnet.namespace}}.Application/`
+Use cases — CQRS commands, queries, handlers. Depends on Domain + Common only.
+
+| Path | Contents |
+|------|---------|
+| `Commands/` | Write-side: `*Command.cs` records + handlers |
+| `Queries/` | Read-side: `*Query.cs` records + handlers + DTOs |
+| `Handlers/` | Cross-cutting handlers (if not co-located with commands/queries) |
+| `DTOs/` | Data transfer objects returned from queries |
+| `Behaviours/` | MediatR pipeline behaviors (validation, logging, performance) |
+| `Ports/` | Application port interfaces (implemented in Infrastructure) |
+| `DependencyInjection.cs` | Registers application services (MediatR, validators) |
+
+### `{{project.dotnet.namespace}}.Infrastructure/`
+Persistence, external services, adapters. Implements ports from Application.
+
+| Path | Contents |
+|------|---------|
+{{#if project.features.persistence}}
+| `Persistence/` | EF Core DbContext, migrations, entity configurations |
+{{/if}}
+| `Repositories/` | Repository implementations using EF Core or other data access |
+| `Adapters/` | External service adapters (file system, OS APIs, HTTP clients) |
+| `DependencyInjection.cs` | Registers infrastructure services |
+
+### `{{project.dotnet.namespace}}.Presentation/`
+WPF application. Entry point, views, viewmodels, resources.
+
+| Path | Contents |
+|------|---------|
+| `App.xaml` / `App.xaml.cs` | Application entry point, DI host bootstrap |
+| `Views/` | XAML files (`.xaml` + `.xaml.cs` code-behind) |
+| `ViewModels/` | ViewModel classes using CommunityToolkit.Mvvm |
+| `Resources/Theme.xaml` | UI theme configuration |
+| `Resources/Colors.xaml` | Semantic color token definitions |
+| `Converters/` | WPF value converters |
+
+## `tests/` — Test Projects
+
+| Project | Tests |
+|---------|-------|
+| `{{project.dotnet.namespace}}.UnitTests/` | Domain and Application tests (xUnit + FluentAssertions + NSubstitute) |
+| `{{project.dotnet.namespace}}.IntegrationTests/` | Infrastructure tests (EF Core in-memory, end-to-end flows) |
+
+## `deploy/` — Deployment
+
+| Path | Purpose |
+|------|---------|
+| `installer/{{project.dotnet.namespace}}.Installer.wixproj` | WiX 4 SDK-style MSI installer project |
+| `installer/Product.wxs` | Main installer definition — features, shortcuts, upgrade logic |
+| `installer/Variables.wxi` | Preprocessor variables — name, version, upgrade GUID |
+| `installer/ui/ExitDialogOverride.wxs` | WiX UI exit dialog customization (launch checkbox) |
+| `installer/assets/app.ico` | Application icon for installer (replace placeholder) |
+{{#if (eq project.deployment.cicd "github-actions")}}
+| `.github/workflows/build-installer.yml` | GitHub Actions — build, test, package MSI on version tags |
+{{/if}}
+{{#if (eq project.deployment.cicd "ado")}}
+| `azure-pipelines.yml` | Azure DevOps — build, test, package MSI on version tags |
+{{/if}}
+
+## `openspec/` — Spec System
+
+| Path | Purpose |
+|------|---------|
+| `AGENTS.md` | AI agent entry point and workflow rules |
+| `specs/architecture/` | Mandatory architecture rules (from scaffolder `rules/`) |
+| `specs/patterns/` | Implementation patterns (from scaffolder `guides/`) |
+| `specs/workflow/skills/` | Workflow skill definitions |
+| `specs/domain/` | Bounded context specs (you define these) |
+| `specs/project/roadmap.md` | MVP roadmap |
+| `changes/mvp-1.0/` | Active MVP: proposals and progress tracker |
+| `archive/` | Completed and archived MVPs |

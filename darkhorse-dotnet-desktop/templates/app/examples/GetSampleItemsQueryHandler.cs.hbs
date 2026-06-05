@@ -1,0 +1,24 @@
+using MediatR;
+
+namespace {{project.dotnet.namespace}}.Application.Queries.Examples;
+
+/// <summary>
+/// Handler for <see cref="GetSampleItemsQuery"/>.
+/// Reads data via repository and maps to DTOs. Never returns domain entities.
+/// </summary>
+public sealed class GetSampleItemsQueryHandler
+    : IRequestHandler<GetSampleItemsQuery, IReadOnlyList<SampleItemDto>>
+{
+    // TODO: Inject read repository or DB context
+    // private readonly ISampleItemReadRepository _repository;
+
+    public async Task<IReadOnlyList<SampleItemDto>> Handle(
+        GetSampleItemsQuery request,
+        CancellationToken cancellationToken)
+    {
+        // TODO: Replace with real data access
+        await Task.CompletedTask;
+
+        return [];
+    }
+}

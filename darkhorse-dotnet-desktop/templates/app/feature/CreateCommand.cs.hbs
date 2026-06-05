@@ -1,0 +1,11 @@
+using MediatR;
+
+namespace {{project.dotnet.namespace}}.Application.Commands.{{contextName}};
+
+/// <summary>
+/// Command to create a new {{contextName}}.
+/// TODO: Add required properties for this use case.
+/// </summary>
+public sealed record Create{{contextName}}Command(
+    // TODO: Add properties
+) : IRequest<Guid>;

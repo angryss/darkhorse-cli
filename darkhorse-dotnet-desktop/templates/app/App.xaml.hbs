@@ -1,0 +1,23 @@
+<Application x:Class="{{project.dotnet.namespace}}.Presentation.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:{{project.dotnet.namespace}}.Presentation"
+             ShutdownMode="OnMainWindowClose">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <!-- Project theme and color resources -->
+                <ResourceDictionary Source="Resources/Theme.xaml" />
+                <ResourceDictionary Source="Resources/Colors.xaml" />
+{{#if (eq project.dotnet.uiFramework "materialdesign")}}
+                <!-- Material Design in XAML — base theme -->
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Defaults.xaml" />
+{{else}}
+                <!-- WPF UI Fluent — base theme -->
+                <ui:ThemesDictionary Theme="Dark" />
+                <ui:ControlsDictionary />
+{{/if}}
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

@@ -1,0 +1,34 @@
+# Project Structure — {{project.name}}
+
+> Kiro steering: project layout and file organization.
+
+## Solution Structure
+
+```
+{{project.name}}/
+├── src/
+│   ├── {{project.dotnet.namespace}}.Common/        # primitives, contracts — no deps
+│   ├── {{project.dotnet.namespace}}.Domain/        # entities, aggregates, domain events — no external deps
+│   ├── {{project.dotnet.namespace}}.Application/   # CQRS commands, queries, handlers — depends on Domain + Common
+│   ├── {{project.dotnet.namespace}}.Infrastructure/ # persistence, adapters — depends on Application + Domain + Common
+│   └── {{project.dotnet.namespace}}.Presentation/  # WPF app — depends on Application + Infrastructure + Common
+├── tests/
+│   ├── {{project.dotnet.namespace}}.UnitTests/
+│   └── {{project.dotnet.namespace}}.IntegrationTests/
+├── context/
+└── openspec/
+```
+
+## Layer Responsibilities
+
+| Layer | Purpose | Key Packages |
+|-------|---------|-------------|
+| Common | Primitives, contracts | None |
+| Domain | Business model | None |
+| Application | Use cases | MediatR, FluentValidation |
+| Infrastructure | Persistence, adapters | EF Core, Microsoft.Extensions.DI |
+| Presentation | WPF UI | CommunityToolkit.Mvvm, MaterialDesignThemes/WPF-UI, MediatR |
+
+## Dependency Rule
+
+Dependencies always point inward. Never outward.

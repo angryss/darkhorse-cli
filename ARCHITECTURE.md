@@ -48,8 +48,9 @@ A scaffolder does NOT contain runtime application code. It is a tool that produc
 | Scaffolder | Platform | Status |
 |------------|----------|--------|
 | `darkhorse-dotnet` | .NET / ASP.NET Core | Active |
+| `darkhorse-dotnet-desktop` | .NET / WPF | Active |
 | `darkhorse-java` | Java / Quarkus | Active |
-| `darkhorse-rust` | Rust / Tauri | Planned |
+| `darkhorse-rust` | Rust / Tauri | Active |
 
 ### Products (Applications)
 
@@ -69,7 +70,7 @@ A product does NOT contain Handlebars templates, Commander.js commands, or scaff
 
 ## Scaffolder Architecture
 
-Both active scaffolders (`darkhorse-dotnet`, `darkhorse-java`) share an identical architecture.
+All active scaffolders (`darkhorse-dotnet`, `darkhorse-dotnet-desktop`, `darkhorse-java`, `darkhorse-rust`) share an identical architecture.
 
 ### Source Layout
 
@@ -203,7 +204,69 @@ The .NET and Java scaffolders were built first because they target the most comm
 
 ---
 
-## Scaffolder: `darkhorse-rust`
+## Desktop Support: `darkhorse-dotnet-desktop`
+
+`darkhorse-dotnet-desktop` is the scaffolder for .NET WPF desktop applications. It follows the same architecture as `darkhorse-dotnet` and `darkhorse-java` with WPF-specific extensions.
+
+### Architecture
+
+```
+darkhorse-dotnet-desktop/
+├── src/
+│   ├── commands/         # Commander.js CLI (init, add, deploy, discover, plan, implement, troubleshoot)
+│   ├── agents/           # Thin orchestrators
+│   ├── skills/           # Scaffold, deployment, openspec, context skills
+│   ├── core/             # Template engine, config, types
+│   └── mcp/              # MCP server integration
+├── rules/                # WPF/Onion Architecture rules
+├── guides/               # WPF development patterns, deployment patterns
+├── workflows/            # Skills, commands, agents for WPF projects
+├── templates/
+│   ├── app/              # C# project templates (csproj, XAML, ViewModels, DI)
+│   ├── tests/            # Test project templates (xUnit)
+│   ├── context/          # Context templates
+│   ├── openspec/         # OpenSpec templates
+│   ├── deployment/
+│   │   ├── wix/          # WiX 4 MSI installer templates
+│   │   └── ci/           # GitHub Actions and Azure DevOps pipeline templates
+│   ├── github/           # Copilot adapter templates
+│   ├── kiro/             # Kiro steering templates
+│   └── vscode/           # VS Code config templates
+├── tests/
+└── package.json          # "bin": { "darkhorse-dotnet-desktop": "./dist/index.js" }
+```
+
+### What `init` Generates
+
+One `init` creates a complete, self-contained WPF project with five Onion Architecture layers:
+
+| Layer | Project | Dependencies |
+|-------|---------|-------------|
+| `*.Common` | Primitives, contracts | None |
+| `*.Domain` | Entities, aggregates, domain events, repositories | Common |
+| `*.Application` | CQRS commands, queries, handlers, validators | Domain + Common |
+| `*.Infrastructure` | Persistence (EF Core SQLite), adapters | Application + Domain + Common |
+| `*.Presentation` | WPF UI, ViewModels, DI host bootstrap | All layers |
+
+In addition to the five application layers, `init` generates:
+- `deploy/installer/` — WiX 4 SDK MSI installer project (desktop shortcut feature, launch-on-finish checkbox)
+- `.github/workflows/build-installer.yml` (when `--cicd github-actions`) or `azure-pipelines.yml` (when `--cicd ado`)
+- Full OpenSpec + context + workflow assets (same pattern as all other scaffolders)
+
+### Key Differences from Other Scaffolders
+
+| Aspect | `darkhorse-dotnet` | `darkhorse-dotnet-desktop` |
+|--------|-------------------|---------------------------|
+| Scope | Multi-service workspace | Single WPF desktop app |
+| `add` command | Adds a service to the workspace | Adds a bounded context (feature module) |
+| Packaging | Docker Compose | WiX 4 MSI installer |
+| CI/CD | Not generated | GitHub Actions or Azure DevOps (optional) |
+| MVVM | Not applicable | CommunityToolkit.Mvvm source generators |
+| UI framework | React / Chakra UI | MaterialDesignThemes or WPF UI (Fluent) |
+
+---
+
+## Rust Desktop Scaffolder: `darkhorse-rust`
 
 `darkhorse-rust` is the scaffolder for Rust/Tauri desktop projects. It follows the exact same architecture as `darkhorse-dotnet` and `darkhorse-java`.
 
@@ -287,7 +350,7 @@ The `init` command must also generate:
 | Scaffolders and products are distinct project types | Scaffolders own templates + generation logic; products are runtime apps |
 | Generated projects are self-contained | Zero runtime dependency on the CLI after scaffolding |
 | OpenSpec/context in a product repo is authored documentation | Not scaffold source material — explicitly different from scaffolder-owned assets |
-| Desktop support requires a dedicated scaffolder | `darkhorse-desktop` is a product; `darkhorse-rust` is the future scaffolder |
+| Desktop support requires a dedicated scaffolder | `darkhorse-desktop` is a product; `darkhorse-dotnet-desktop` scaffolds WPF projects; `darkhorse-rust` scaffolds Tauri projects |
 | No hybrid tool/product projects | Do not mix template packaging, generation logic, and runtime app concerns |
 
 ---

@@ -1,0 +1,9 @@
+using MediatR;
+
+namespace {{project.dotnet.namespace}}.Application.Queries.{{contextName}};
+
+/// <summary>DTO returned by {{contextName}} queries.</summary>
+public sealed record {{contextName}}Dto(Guid Id /* TODO: add properties */);
+
+/// <summary>Query to retrieve {{contextName}} items.</summary>
+public sealed record Get{{contextName}}Query : IRequest<IReadOnlyList<{{contextName}}Dto>>;

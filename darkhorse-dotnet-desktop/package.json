@@ -1,0 +1,70 @@
+{
+  "name": "darkhorse-dotnet-desktop",
+  "version": "0.1.0",
+  "description": "Opinionated WPF desktop project scaffolding CLI - DDD, Onion Architecture, CQRS, MVVM",
+  "type": "module",
+  "bin": {
+    "darkhorse-dotnet-desktop": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "lint": "eslint src/",
+    "type-check": "tsc --noEmit",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "dotnet",
+    "wpf",
+    "desktop",
+    "ddd",
+    "clean-architecture",
+    "onion-architecture",
+    "cqrs",
+    "mvvm",
+    "scaffolding",
+    "cli",
+    "darkhorse",
+    "ai-native",
+    "openspec"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [
+    "dist/",
+    "rules/",
+    "guides/",
+    "workflows/",
+    "templates/"
+  ],
+  "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^12.1.0",
+    "handlebars": "^4.7.8",
+    "inquirer": "^9.3.0",
+    "yaml": "^2.4.0"
+  },
+  "devDependencies": {
+    "@types/inquirer": "^9.0.9",
+    "@types/node": "^20.14.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0"
+  },
+  "author": "Angry Software Solutions",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/angryss/darkhorse-cli.git",
+    "directory": "darkhorse-dotnet-desktop"
+  },
+  "bugs": {
+    "url": "https://github.com/angryss/darkhorse-cli/issues"
+  },
+  "homepage": "https://angryss.com"
+}

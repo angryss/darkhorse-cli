@@ -2,7 +2,7 @@
 
 ## Summary
 
-All three scaffolder packages pass type-check and full test suites as of Phase 4 validation. 302 tests pass across the scaffolders. CI is configured via `.github/workflows/validation.yml`.
+All four scaffolder packages pass type-check and full test suites as of the latest validation. 363 tests pass across the scaffolders. CI is configured via `.github/workflows/validation.yml`.
 
 The main Phase 2 failures were caused by an outdated test expectation and an environment-specific NuGet network limitation, not by the generated-artifact cleanup. Both were resolved in Phase 3.
 
@@ -11,9 +11,10 @@ The main Phase 2 failures were caused by an outdated test expectation and an env
 | Package | Type-Check | Tests | Test Count | CLI Smoke |
 | --- | --- | --- | --- | --- |
 | `darkhorse-dotnet` | Pass | Pass | 238 | Pass |
+| `darkhorse-dotnet-desktop` | Pass | Pass | 61 | Pass |
 | `darkhorse-java` | Pass | Pass | 23 | Pass |
 | `darkhorse-rust` | Pass | Pass | 41 | Pass |
-| **Total** | **Pass** | **Pass** | **302** | **Pass** |
+| **Total** | **Pass** | **Pass** | **363** | **Pass** |
 
 CI workflow added: `.github/workflows/validation.yml` — runs matrix over all three scaffolders on `ubuntu-latest`, Node 20, triggered on push to main and pull requests.
 

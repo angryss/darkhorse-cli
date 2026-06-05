@@ -8,7 +8,7 @@ The repository should be considered suitable for early technical review, experim
 
 ## Stable Surfaces
 
-- **Scaffolder entry point:** `darkhorse-dotnet`, `darkhorse-java`, and `darkhorse-rust` are the primary OSS surfaces.
+- **Scaffolder entry point:** `darkhorse-dotnet`, `darkhorse-dotnet-desktop`, `darkhorse-java`, and `darkhorse-rust` are the primary OSS surfaces.
 - **Generated project principle:** scaffolded projects should be self-contained after generation.
 - **Core scaffold pipeline concept:** command -> agent -> skill remains the intended scaffolder flow.
 - **OpenSpec/context generation:** central to the framework value proposition, though still evolving.

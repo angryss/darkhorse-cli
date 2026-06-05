@@ -1,0 +1,35 @@
+<!-- {{project.dotnet.namespace}}.Infrastructure — Persistence, external services, adapters -->
+<!-- Infrastructure depends on Application + Domain + Common. Implements ports defined in Application. -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net{{project.dotnet.dotnetVersion}}.0</TargetFramework>
+    <RootNamespace>{{project.dotnet.namespace}}.Infrastructure</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Onion: Infrastructure depends on Application + Domain + Common -->
+    <ProjectReference Include="../{{project.dotnet.namespace}}.Application/{{project.dotnet.namespace}}.Application.csproj" />
+    <ProjectReference Include="../{{project.dotnet.namespace}}.Domain/{{project.dotnet.namespace}}.Domain.csproj" />
+    <ProjectReference Include="../{{project.dotnet.namespace}}.Common/{{project.dotnet.namespace}}.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- DI registration -->
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="{{project.dotnet.dotnetVersion}}.0.*" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="{{project.dotnet.dotnetVersion}}.0.*" />
+{{#if project.features.persistence}}
+    <!-- EF Core SQLite — local-first desktop persistence -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="{{project.dotnet.dotnetVersion}}.0.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="{{project.dotnet.dotnetVersion}}.0.*" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="{{project.dotnet.dotnetVersion}}.0.*">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+{{/if}}
+  </ItemGroup>
+
+</Project>

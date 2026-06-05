@@ -1,0 +1,20 @@
+<!-- {{project.dotnet.namespace}}.Domain — Core domain model (entities, value objects, aggregates, domain events) -->
+<!-- Domain has ZERO external dependencies — this is the innermost ring of Onion Architecture -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net{{project.dotnet.dotnetVersion}}.0</TargetFramework>
+    <RootNamespace>{{project.dotnet.namespace}}.Domain</RootNamespace>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Onion: Domain depends on Common only (shared primitives and contracts) -->
+    <ProjectReference Include="../{{project.dotnet.namespace}}.Common/{{project.dotnet.namespace}}.Common.csproj" />
+  </ItemGroup>
+
+  <!-- No external PackageReference — Domain has ZERO external dependencies -->
+
+</Project>

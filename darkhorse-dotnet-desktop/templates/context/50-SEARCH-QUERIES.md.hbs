@@ -1,0 +1,60 @@
+# 50 — Search Queries
+
+> Common search patterns for AI agents and developers working on **{{project.name}}**.
+
+## Finding Code by Layer
+
+| What you want | Search pattern |
+|---------------|----------------|
+| All entities | `class * : AggregateRoot` or `class * : Entity` |
+| All value objects | `class * : ValueObject` |
+| All domain events | `implements IDomainEvent` or `: IDomainEvent` |
+| All commands | `IRequest<` in `Commands/` folder |
+| All queries | `IRequest<` in `Queries/` folder |
+| All command handlers | `IRequestHandler<` in `Commands/` folder |
+| All query handlers | `IRequestHandler<` in `Queries/` folder |
+| All ViewModels | `class * : ViewModelBase` or `class * : ObservableObject` |
+| All WPF Views | `*.xaml` in `Presentation/Views/` |
+| All repository interfaces | `interface I*Repository` in `Domain/` |
+| All repository implementations | `class * : I*Repository` in `Infrastructure/` |
+
+## Finding Code by Context
+
+Replace `<Context>` with your bounded context name:
+
+| What you want | Search pattern |
+|---------------|----------------|
+| Context domain entity | `src/{{project.dotnet.namespace}}.Domain/Entities/<Context>.cs` |
+| Context commands | `src/{{project.dotnet.namespace}}.Application/Commands/<Context>/` |
+| Context queries | `src/{{project.dotnet.namespace}}.Application/Queries/<Context>/` |
+| Context view | `src/{{project.dotnet.namespace}}.Presentation/Views/<Context>/` |
+| Context viewmodel | `src/{{project.dotnet.namespace}}.Presentation/ViewModels/<Context>/` |
+| Context spec | `openspec/specs/domain/<Context>.md` |
+
+## Architecture Compliance Checks
+
+| Check | Search pattern |
+|-------|----------------|
+| Domain referencing external packages | Look for non-Common `using` in `{{project.dotnet.namespace}}.Domain/` |
+| ViewModel referencing Infrastructure | `using {{project.dotnet.namespace}}.Infrastructure` in `ViewModels/` |
+| Business logic in code-behind | Any logic beyond `DataContext = viewModel` in `*.xaml.cs` |
+| Direct DbContext usage in Application | `DbContext` references in `Application/` |
+
+## Finding Tests
+
+| What you want | Search pattern |
+|---------------|----------------|
+| All unit tests | `tests/{{project.dotnet.namespace}}.UnitTests/**/*.cs` |
+| All integration tests | `tests/{{project.dotnet.namespace}}.IntegrationTests/**/*.cs` |
+| Tests for a context | `*<Context>*Tests.cs` |
+
+## Finding Documentation
+
+| What you want | Path |
+|---------------|------|
+| Architecture rules | `openspec/specs/architecture/architecture-rules.md` |
+| WPF patterns | `openspec/specs/patterns/frontend-patterns.md` |
+| Domain patterns | `openspec/specs/patterns/backend-patterns.md` |
+| Active proposals | `openspec/changes/mvp-*/` |
+| Roadmap | `openspec/specs/project/roadmap.md` |
+| Progress tracker | `openspec/changes/mvp-1.0/progress-tracker.md` |

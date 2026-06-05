@@ -1,0 +1,52 @@
+<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+{{#if (eq project.dotnet.uiFramework "materialdesign")}}
+    <!--
+        Material Design in XAML Toolkit — Theme Configuration
+        Docs: https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit
+    -->
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.Dark.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.DeepPurple.Named.xaml" />
+        <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/MaterialDesignColor.Cyan.Named.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Custom overrides applied on top of Material Design base -->
+    <SolidColorBrush x:Key="AppPrimaryBrush" Color="#7E57C2" />
+    <SolidColorBrush x:Key="AppSecondaryBrush" Color="#00BCD4" />
+    <SolidColorBrush x:Key="AppSurfaceBrush" Color="#1E1E2E" />
+    <SolidColorBrush x:Key="AppBackgroundBrush" Color="#12121E" />
+{{else}}
+    <!--
+        WPF UI (Fluent Design) — Theme Configuration
+        Docs: https://github.com/lepoco/wpfui
+    -->
+    <!-- Custom semantic brushes on top of WPF UI Fluent base -->
+    <SolidColorBrush x:Key="AppPrimaryBrush" Color="#0078D4" />
+    <SolidColorBrush x:Key="AppSecondaryBrush" Color="#005FB8" />
+    <SolidColorBrush x:Key="AppSurfaceBrush" Color="#202020" />
+    <SolidColorBrush x:Key="AppBackgroundBrush" Color="#161616" />
+{{/if}}
+
+    <!-- Shared Typography Styles -->
+    <Style x:Key="PageHeaderStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="24" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+        <Setter Property="Margin" Value="0,0,0,16" />
+    </Style>
+
+    <Style x:Key="SectionHeaderStyle" TargetType="TextBlock">
+        <Setter Property="FontSize" Value="16" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Margin" Value="0,0,0,8" />
+    </Style>
+
+    <!-- Shared Layout Styles -->
+    <Style x:Key="CardStyle" TargetType="Border">
+        <Setter Property="CornerRadius" Value="8" />
+        <Setter Property="Padding" Value="16" />
+        <Setter Property="Margin" Value="0,0,0,12" />
+    </Style>
+
+</ResourceDictionary>
