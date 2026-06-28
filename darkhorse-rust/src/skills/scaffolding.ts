@@ -124,7 +124,10 @@ export async function scaffoldProject(config: DarkhorseConfig): Promise<SkillRes
     const infraModules = ['database', 'errors', 'filesystem', 'logging', 'settings'];
     for (const mod of infraModules) {
       const stubPath = path.join(crates, `${prefix}-infrastructure`, 'src', `${mod}.rs`);
-      await writeFile(stubPath, `//! ${mod} module for ${config.name} infrastructure layer.\n`);
+      const content = mod === 'logging'
+        ? `//! Logging setup for the infrastructure layer.\n\nuse tracing_subscriber::{fmt, EnvFilter};\n\npub fn init() {\n    let filter = EnvFilter::try_from_default_env().unwrap_or_else(|_| EnvFilter::new("info"));\n    let _ = fmt().with_env_filter(filter).try_init();\n}\n`
+        : `//! ${mod} module for ${config.name} infrastructure layer.\n`;
+      await writeFile(stubPath, content);
       filesCreated.push(`crates/${prefix}-infrastructure/src/${mod}.rs`);
     }
 

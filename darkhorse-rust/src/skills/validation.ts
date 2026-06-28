@@ -7,7 +7,7 @@
 
 import path from 'node:path';
 import type { DarkhorseConfig, SkillResult } from '../core/types.js';
-import { pathExists } from '../core/fs.js';
+import { pathExists, readText } from '../core/fs.js';
 
 export interface ValidationError {
   category: 'tauri-config' | 'icons' | 'rust-modules' | 'cargo' | 'frontend';
@@ -100,6 +100,18 @@ async function runAllValidations(config: DarkhorseConfig): Promise<ValidationErr
   }
 
   // ── 4. Required Cargo.toml files ─────────────────────────────
+
+  const loggingPath = path.join(crates, `${prefix}-infrastructure`, 'src', 'logging.rs');
+  if (await pathExists(loggingPath)) {
+    const loggingSource = await readText(loggingPath);
+    if (!loggingSource.includes('pub fn init()')) {
+      errors.push({
+        category: 'rust-modules',
+        message: 'logging.rs must expose pub fn init() for the desktop crate startup path',
+        filePath: loggingPath,
+      });
+    }
+  }
 
   const rootCargo = path.join(root, 'Cargo.toml');
   if (!(await pathExists(rootCargo))) {
