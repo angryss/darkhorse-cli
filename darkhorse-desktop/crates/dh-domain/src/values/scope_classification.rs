@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-/// Classification of an item during scope definition.
-/// Used by ScopeCandidate to track whether something belongs in MVP scope.
+/// Local draft classification for A1 input, never canonical scope.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub enum ScopeClassification {
     /// Confirmed for this MVP
@@ -15,7 +14,7 @@ pub enum ScopeClassification {
 }
 
 impl ScopeClassification {
-    pub fn is_decided(&self) -> bool {
+    pub fn has_draft_classification(&self) -> bool {
         !matches!(self, ScopeClassification::Undecided)
     }
 }

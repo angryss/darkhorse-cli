@@ -4,9 +4,8 @@ use uuid::Uuid;
 
 use crate::values::ArtifactPath;
 
-/// Structured artifact produced when discovery transitions into formal planning.
-/// Unlike raw generated text, this is a first-class domain concept that
-/// captures the planning output structure and metadata.
+/// Legacy Desktop planning draft retained as optional A1 adapter input. After
+/// A1 exists this value is never editable plan authority or readiness truth.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PlanningOutput {
     id: Uuid,
@@ -23,8 +22,7 @@ pub struct PlanningOutput {
     generated_at: DateTime<Utc>,
 }
 
-/// A requirement as captured in planning output — before it becomes
-/// a full Requirement entity.
+/// A non-authoritative requirement observation captured before A1.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PlannedRequirement {
     pub title: String,
@@ -56,17 +54,39 @@ impl PlanningOutput {
         }
     }
 
-    pub fn id(&self) -> Uuid { self.id }
-    pub fn initiative_id(&self) -> Uuid { self.initiative_id }
-    pub fn mvp_id(&self) -> Uuid { self.mvp_id }
-    pub fn title(&self) -> &str { &self.title }
-    pub fn executive_summary(&self) -> &str { &self.executive_summary }
-    pub fn scope_definition(&self) -> &str { &self.scope_definition }
-    pub fn requirement_outline(&self) -> &[PlannedRequirement] { &self.requirement_outline }
-    pub fn implementation_approach(&self) -> &str { &self.implementation_approach }
-    pub fn risk_summary(&self) -> &[String] { &self.risk_summary }
-    pub fn success_criteria(&self) -> &[String] { &self.success_criteria }
-    pub fn artifact_path(&self) -> Option<&ArtifactPath> { self.artifact_path.as_ref() }
+    pub fn id(&self) -> Uuid {
+        self.id
+    }
+    pub fn initiative_id(&self) -> Uuid {
+        self.initiative_id
+    }
+    pub fn mvp_id(&self) -> Uuid {
+        self.mvp_id
+    }
+    pub fn title(&self) -> &str {
+        &self.title
+    }
+    pub fn executive_summary(&self) -> &str {
+        &self.executive_summary
+    }
+    pub fn scope_definition(&self) -> &str {
+        &self.scope_definition
+    }
+    pub fn requirement_outline(&self) -> &[PlannedRequirement] {
+        &self.requirement_outline
+    }
+    pub fn implementation_approach(&self) -> &str {
+        &self.implementation_approach
+    }
+    pub fn risk_summary(&self) -> &[String] {
+        &self.risk_summary
+    }
+    pub fn success_criteria(&self) -> &[String] {
+        &self.success_criteria
+    }
+    pub fn artifact_path(&self) -> Option<&ArtifactPath> {
+        self.artifact_path.as_ref()
+    }
 
     pub fn set_scope_definition(&mut self, scope: impl Into<String>) {
         self.scope_definition = scope.into();

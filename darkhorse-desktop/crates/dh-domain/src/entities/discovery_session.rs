@@ -8,7 +8,8 @@ use crate::values::{IdentifiedRisk, Tradeoff};
 /// session tied to an initiative. It captures the problem framing process,
 /// option comparison, tradeoff analysis, and emerging decisions.
 ///
-/// Sessions progress through phases: Framing → Exploring → Converging → Concluded.
+/// The persisted phase is only a notebook grouping retained for existing data;
+/// it is not the VEP Discover stage and has no transition legality.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DiscoverySession {
     id: Uuid,
@@ -44,7 +45,11 @@ pub struct DiscoveryOption {
 }
 
 impl DiscoverySession {
-    pub fn start(initiative_id: Uuid, title: impl Into<String>, problem: impl Into<String>) -> Self {
+    pub fn start(
+        initiative_id: Uuid,
+        title: impl Into<String>,
+        problem: impl Into<String>,
+    ) -> Self {
         let now = Utc::now();
         Self {
             id: Uuid::new_v4(),
@@ -63,36 +68,51 @@ impl DiscoverySession {
         }
     }
 
-    pub fn id(&self) -> Uuid { self.id }
-    pub fn initiative_id(&self) -> Uuid { self.initiative_id }
-    pub fn title(&self) -> &str { &self.title }
-    pub fn phase(&self) -> &DiscoveryPhase { &self.phase }
-    pub fn problem_statement(&self) -> &str { &self.problem_statement }
-    pub fn options_considered(&self) -> &[DiscoveryOption] { &self.options_considered }
-    pub fn tradeoffs(&self) -> &[Tradeoff] { &self.tradeoffs }
-    pub fn risks(&self) -> &[IdentifiedRisk] { &self.risks }
-    pub fn assumptions(&self) -> &[String] { &self.assumptions }
-    pub fn open_questions(&self) -> &[String] { &self.open_questions }
-    pub fn notes(&self) -> &str { &self.notes }
-    pub fn created_at(&self) -> DateTime<Utc> { self.created_at }
-    pub fn updated_at(&self) -> DateTime<Utc> { self.updated_at }
+    pub fn id(&self) -> Uuid {
+        self.id
+    }
+    pub fn initiative_id(&self) -> Uuid {
+        self.initiative_id
+    }
+    pub fn title(&self) -> &str {
+        &self.title
+    }
+    pub fn phase(&self) -> &DiscoveryPhase {
+        &self.phase
+    }
+    pub fn problem_statement(&self) -> &str {
+        &self.problem_statement
+    }
+    pub fn options_considered(&self) -> &[DiscoveryOption] {
+        &self.options_considered
+    }
+    pub fn tradeoffs(&self) -> &[Tradeoff] {
+        &self.tradeoffs
+    }
+    pub fn risks(&self) -> &[IdentifiedRisk] {
+        &self.risks
+    }
+    pub fn assumptions(&self) -> &[String] {
+        &self.assumptions
+    }
+    pub fn open_questions(&self) -> &[String] {
+        &self.open_questions
+    }
+    pub fn notes(&self) -> &str {
+        &self.notes
+    }
+    pub fn created_at(&self) -> DateTime<Utc> {
+        self.created_at
+    }
+    pub fn updated_at(&self) -> DateTime<Utc> {
+        self.updated_at
+    }
 
-    pub fn advance_phase(&mut self, next: DiscoveryPhase) -> crate::errors::DomainResult<()> {
-        let valid = matches!(
-            (&self.phase, &next),
-            (DiscoveryPhase::Framing, DiscoveryPhase::Exploring)
-                | (DiscoveryPhase::Exploring, DiscoveryPhase::Converging)
-                | (DiscoveryPhase::Converging, DiscoveryPhase::Concluded)
-        );
-        if !valid {
-            return Err(crate::errors::DomainError::InvalidStateTransition {
-                from: format!("{:?}", self.phase),
-                to: format!("{:?}", next),
-            });
-        }
+    /// Changes a local notebook grouping only. No transition eligibility is
+    /// inferred and no governed process state is changed.
+    pub fn set_notebook_phase(&mut self, next: DiscoveryPhase) {
         self.phase = next;
         self.updated_at = Utc::now();
-        Ok(())
     }
 
     pub fn add_option(&mut self, name: impl Into<String>, description: impl Into<String>) {
@@ -141,16 +161,15 @@ impl DiscoverySession {
         self.updated_at = Utc::now();
     }
 
-    pub fn is_concluded(&self) -> bool {
-        self.phase == DiscoveryPhase::Concluded
-    }
-
     pub fn unresolved_question_count(&self) -> usize {
         self.open_questions.len()
     }
 
-    pub fn unresolved_tradeoff_count(&self) -> usize {
-        self.tradeoffs.iter().filter(|t| !t.is_resolved()).count()
+    pub fn unpositioned_tradeoff_count(&self) -> usize {
+        self.tradeoffs
+            .iter()
+            .filter(|t| !t.has_draft_position())
+            .count()
     }
 }
 
@@ -166,17 +185,9 @@ mod tests {
     }
 
     #[test]
-    fn can_advance_through_phases() {
+    fn notebook_phase_is_non_authoritative_ui_state() {
         let mut s = DiscoverySession::start(Uuid::new_v4(), "Test", "Problem");
-        assert!(s.advance_phase(DiscoveryPhase::Exploring).is_ok());
-        assert!(s.advance_phase(DiscoveryPhase::Converging).is_ok());
-        assert!(s.advance_phase(DiscoveryPhase::Concluded).is_ok());
-        assert!(s.is_concluded());
-    }
-
-    #[test]
-    fn cannot_skip_phases() {
-        let mut s = DiscoverySession::start(Uuid::new_v4(), "Test", "Problem");
-        assert!(s.advance_phase(DiscoveryPhase::Concluded).is_err());
+        s.set_notebook_phase(DiscoveryPhase::Concluded);
+        assert_eq!(s.phase(), &DiscoveryPhase::Concluded);
     }
 }

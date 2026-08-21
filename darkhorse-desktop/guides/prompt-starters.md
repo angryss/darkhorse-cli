@@ -1,5 +1,7 @@
 # Prompt Starters Guide
 
+> **Process boundary:** Prompts may collect draft input and request the installed Darkhorse CLI adapter. They must not invent readiness, Tier 1/2/3, lifecycle transitions, review approval, Close eligibility, or edit A1 projections directly.
+
 **Ready-to-use prompts for Copilot, Claude, and Codex on Tauri desktop projects following DarkHorse principles.**
 
 > Copy, paste, and customize. Each prompt is designed to work with the self-contained

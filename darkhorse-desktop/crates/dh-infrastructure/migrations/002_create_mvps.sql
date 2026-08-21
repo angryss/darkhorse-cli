@@ -1,3 +1,5 @@
+-- S05 preservation: MVP data is non-authoritative VEP input/display state.
+-- This migration is intentionally unchanged in shape so existing data survives.
 CREATE TABLE IF NOT EXISTS mvps (
     id              TEXT PRIMARY KEY,
     initiative_id   TEXT NOT NULL REFERENCES initiatives(id) ON DELETE CASCADE,

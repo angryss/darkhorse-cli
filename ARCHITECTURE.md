@@ -6,6 +6,28 @@
 
 ## Core Principle
 
+### Governed developer lifecycle
+
+DarkHorse exposes one developer lifecycle and no competing process:
+
+`Discover -> Plan -> Implement -> Test -> Close`
+
+The generated project's exact `@angryss/vep@2.0.0` dependency is the sole process-command authority. `discover`, `plan`, `test`, `review`, and `close` preserve the project-local `visu` output and exit status. Review is an independent check within the Test stage, not a sixth lifecycle stage. `implement` only verifies the approved canonical A1 before ordinary engineering work; it creates no lifecycle transition or separate state.
+
+OpenSpec is optional draft input before A1 and a read-only projection after A1. Once `.visu/work/<change-id>/contract.yaml` exists, that contract is the sole editable plan authority. AI adapters, workflow prose, prompts, `.darkhorse.yaml`, and DarkHorse Desktop cannot approve scope, waive proof, decide closure, or replace VEP state.
+
+Delegation always resolves the generated project's installed `visu`. Missing, corrupt, incompatible, global, PATH, source-tree, embedded, and tarball fallbacks fail closed.
+
+Command classification:
+
+| Command | Class | Boundary |
+|---|---|---|
+| `discover`, `plan`, `test`, `review`, `close` | A — direct delegation | Project-local `visu` owns JSON, exit status, and governed outcome |
+| `implement` | B — bounded ergonomics | Installed VEP validates approved A1; no transition is persisted |
+| `init` | B — bounded ergonomics | Generates the exact project-owned VEP boundary |
+| `troubleshoot`, `validate`, variant scaffolding, `mcp-serve`, `ai sync` | C — independent tooling | May diagnose, scaffold, or display; never changes VEP authority |
+| Legacy DarkHorse/OpenSpec lifecycle instructions | D — retired | Retained only as non-authoritative engineering reference where useful |
+
 **A DarkHorse scaffolder is only complete if it generates both the runtime product and the development guidance system.**
 
 Every scaffolder must produce:

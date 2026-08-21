@@ -1,3 +1,5 @@
+-- S05 preservation: serialized phases/risks are notebook/input data only.
+-- They are never lifecycle, readiness, or Tier 1/2/3 authority.
 CREATE TABLE IF NOT EXISTS discovery_sessions (
     id TEXT PRIMARY KEY NOT NULL,
     initiative_id TEXT NOT NULL,

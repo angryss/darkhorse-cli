@@ -1,17 +1,20 @@
 import { Command } from 'commander';
-import { logger } from '../core/logger.js';
+import { delegateProjectLocalVisu, reportLifecycleBoundaryError } from './validate.js';
 
 export function registerPlanCommand(program: Command): void {
   program
     .command('plan')
-    .description('Create an architecture-compliant proposal')
-    .option('-f, --feature <feature>', 'Feature or change to plan')
-    .option('-m, --mvp <mvp>', 'Target MVP milestone (e.g. 1.0)')
-    .option('-p, --priority <priority>', 'Priority: P0, P1, P2, P3')
-    .option('-c, --context <context>', 'Target bounded context')
-    .option('-t, --type <type>', 'Type: feature, enhancement, bug-fix')
-    .action(async (_opts) => {
-      logger.warn('Plan command not yet implemented (v1 priority: 8/8)');
-      logger.info('See workflows/skills/plan.md for the planning workflow.');
+    .description('Delegate Plan and canonical A1 semantics to project-local VEP')
+    .argument('[visu-arguments...]', 'Arguments passed unchanged to project-local visu')
+    .option('--project-root <dir>', 'Generated project root', '.')
+    .allowUnknownOption(true)
+    .allowExcessArguments(true)
+    .action(async (visuArguments: string[], opts: { projectRoot: string }) => {
+      try {
+        process.exitCode = await delegateProjectLocalVisu(opts.projectRoot, 'plan', visuArguments);
+      } catch (error) {
+        reportLifecycleBoundaryError(error);
+        process.exitCode = 1;
+      }
     });
 }

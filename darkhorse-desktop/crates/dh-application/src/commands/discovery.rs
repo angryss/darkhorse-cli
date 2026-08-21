@@ -4,10 +4,9 @@ use uuid::Uuid;
 
 use crate::errors::{AppError, AppResult};
 use crate::ports::DiscoverySessionRepository;
-use dh_domain::entities::{DiscoverySession, DiscoveryPhase};
+use dh_domain::entities::{DiscoveryPhase, DiscoverySession};
 use dh_domain::services::DiscoveryService;
-
-// --- Start Discovery Session ---
+use dh_domain::values::VepReadinessInput;
 
 #[derive(Debug, Deserialize)]
 pub struct StartDiscoverySessionCommand {
@@ -20,7 +19,7 @@ pub struct StartDiscoverySessionCommand {
 pub struct DiscoverySessionStarted {
     pub session_id: Uuid,
     pub initiative_id: Uuid,
-    pub phase: String,
+    pub notebook_phase: String,
 }
 
 pub async fn handle_start_discovery_session(
@@ -28,68 +27,45 @@ pub async fn handle_start_discovery_session(
     repo: &dyn DiscoverySessionRepository,
 ) -> AppResult<DiscoverySessionStarted> {
     let session = DiscoverySession::start(cmd.initiative_id, cmd.title, cmd.problem_statement);
-    let id = session.id();
-    let initiative_id = session.initiative_id();
+    let result = DiscoverySessionStarted {
+        session_id: session.id(),
+        initiative_id: session.initiative_id(),
+        notebook_phase: format!("{:?}", session.phase()),
+    };
     repo.save(&session)?;
-    info!(session_id = %id, "Discovery session started");
-    Ok(DiscoverySessionStarted {
-        session_id: id,
-        initiative_id,
-        phase: format!("{:?}", DiscoveryPhase::Framing),
-    })
+    info!(session_id = %result.session_id, "Discovery notes started");
+    Ok(result)
 }
-
-// --- Continue Discovery Session (advance phase) ---
 
 #[derive(Debug, Deserialize)]
-pub struct ContinueDiscoverySessionCommand {
+pub struct UpdateDiscoveryNotebookCommand {
     pub session_id: Uuid,
-    pub target_phase: DiscoveryPhaseInput,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub enum DiscoveryPhaseInput {
-    Exploring,
-    Converging,
-    Concluded,
-}
-
-impl From<DiscoveryPhaseInput> for DiscoveryPhase {
-    fn from(input: DiscoveryPhaseInput) -> Self {
-        match input {
-            DiscoveryPhaseInput::Exploring => DiscoveryPhase::Exploring,
-            DiscoveryPhaseInput::Converging => DiscoveryPhase::Converging,
-            DiscoveryPhaseInput::Concluded => DiscoveryPhase::Concluded,
-        }
-    }
+    pub notebook_phase: DiscoveryPhase,
 }
 
 #[derive(Debug, Serialize)]
-pub struct DiscoverySessionContinued {
+pub struct DiscoveryNotebookUpdated {
     pub session_id: Uuid,
-    pub new_phase: String,
+    pub notebook_phase: String,
+    pub process_transition: bool,
 }
 
-pub async fn handle_continue_discovery_session(
-    cmd: ContinueDiscoverySessionCommand,
+pub async fn handle_update_discovery_notebook(
+    cmd: UpdateDiscoveryNotebookCommand,
     repo: &dyn DiscoverySessionRepository,
-) -> AppResult<DiscoverySessionContinued> {
+) -> AppResult<DiscoveryNotebookUpdated> {
     let mut session = repo
         .find_by_id(cmd.session_id)?
         .ok_or_else(|| AppError::NotFound(format!("Discovery session {}", cmd.session_id)))?;
-
-    let target: DiscoveryPhase = cmd.target_phase.into();
-    session.advance_phase(target)?;
-    let phase = format!("{:?}", session.phase());
+    session.set_notebook_phase(cmd.notebook_phase);
+    let notebook_phase = format!("{:?}", session.phase());
     repo.save(&session)?;
-    info!(session_id = %cmd.session_id, phase = %phase, "Discovery session advanced");
-    Ok(DiscoverySessionContinued {
+    Ok(DiscoveryNotebookUpdated {
         session_id: cmd.session_id,
-        new_phase: phase,
+        notebook_phase,
+        process_transition: false,
     })
 }
-
-// --- Record Discovery Decision (add option) ---
 
 #[derive(Debug, Deserialize)]
 pub struct RecordDiscoveryOptionCommand {
@@ -105,47 +81,24 @@ pub async fn handle_record_discovery_option(
     let mut session = repo
         .find_by_id(cmd.session_id)?
         .ok_or_else(|| AppError::NotFound(format!("Discovery session {}", cmd.session_id)))?;
-
     session.add_option(cmd.option_name, cmd.description);
-    repo.save(&session)?;
-    Ok(())
+    repo.save(&session)
 }
-
-// --- Assess Discovery Readiness ---
 
 #[derive(Debug, Deserialize)]
-pub struct AssessDiscoveryReadinessCommand {
+pub struct CollectDiscoveryVepInputCommand {
     pub session_id: Uuid,
 }
 
-#[derive(Debug, Serialize)]
-pub struct DiscoveryReadinessResult {
-    pub session_id: Uuid,
-    pub is_ready: bool,
-    pub score: f64,
-    pub blockers: Vec<String>,
-    pub recommendations: Vec<String>,
-}
-
-pub async fn handle_assess_discovery_readiness(
-    cmd: AssessDiscoveryReadinessCommand,
+pub async fn handle_collect_discovery_vep_input(
+    cmd: CollectDiscoveryVepInputCommand,
     repo: &dyn DiscoverySessionRepository,
-) -> AppResult<DiscoveryReadinessResult> {
+) -> AppResult<VepReadinessInput> {
     let session = repo
         .find_by_id(cmd.session_id)?
         .ok_or_else(|| AppError::NotFound(format!("Discovery session {}", cmd.session_id)))?;
-
-    let readiness = DiscoveryService::assess_readiness(&session);
-    Ok(DiscoveryReadinessResult {
-        session_id: cmd.session_id,
-        is_ready: readiness.is_ready,
-        score: readiness.score,
-        blockers: readiness.blockers,
-        recommendations: readiness.recommendations,
-    })
+    Ok(DiscoveryService::collect_vep_input(&session))
 }
-
-// --- Load Discovery Session ---
 
 #[derive(Debug, Deserialize)]
 pub struct LoadDiscoverySessionCommand {
@@ -159,8 +112,6 @@ pub async fn handle_load_discovery_session(
     repo.find_by_id(cmd.session_id)?
         .ok_or_else(|| AppError::NotFound(format!("Discovery session {}", cmd.session_id)))
 }
-
-// --- List Discovery Sessions ---
 
 #[derive(Debug, Deserialize)]
 pub struct ListDiscoverySessionsCommand {

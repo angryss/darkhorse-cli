@@ -1,3 +1,5 @@
+-- S05 preservation: slice status is local work-item UI state only.
+-- It cannot prove Test/Review/Close or VEP completion.
 CREATE TABLE IF NOT EXISTS implementation_slices (
     id TEXT PRIMARY KEY NOT NULL,
     mvp_id TEXT NOT NULL,

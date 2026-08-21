@@ -80,18 +80,6 @@ impl Initiative {
         self.updated_at = Utc::now();
     }
 
-    pub fn advance_status(&mut self, new_status: Status) -> crate::errors::DomainResult<()> {
-        if !self.status.can_transition_to(&new_status) {
-            return Err(crate::errors::DomainError::InvalidStateTransition {
-                from: format!("{:?}", self.status),
-                to: format!("{:?}", new_status),
-            });
-        }
-        self.status = new_status;
-        self.updated_at = Utc::now();
-        Ok(())
-    }
-
     pub fn add_tag(&mut self, tag: impl Into<String>) {
         let tag = tag.into();
         if !self.tags.contains(&tag) {
@@ -109,18 +97,5 @@ mod tests {
     fn new_initiative_has_draft_status() {
         let init = Initiative::new("Test", "A test initiative");
         assert!(matches!(init.status(), Status::Draft));
-    }
-
-    #[test]
-    fn can_advance_from_draft_to_exploring() {
-        let mut init = Initiative::new("Test", "desc");
-        assert!(init.advance_status(Status::Exploring).is_ok());
-        assert!(matches!(init.status(), Status::Exploring));
-    }
-
-    #[test]
-    fn cannot_skip_status() {
-        let mut init = Initiative::new("Test", "desc");
-        assert!(init.advance_status(Status::Delivering).is_err());
     }
 }

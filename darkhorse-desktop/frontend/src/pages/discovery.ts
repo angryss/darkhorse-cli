@@ -4,7 +4,7 @@ export function renderDiscovery(): string {
       <h2>Product Discovery</h2>
       <div class="card">
         <h3>Start a Discovery Session</h3>
-        <p>Discovery sessions help you explore a product idea, compare options, identify tradeoffs and risks, and converge on a direction before formal planning.</p>
+        <p>Capture non-authoritative observations, options, tradeoffs, and risks as VEP input. Only governed project/VEP state decides whether Discover can move to Plan.</p>
         <form id="discovery-form">
           <label for="discovery-title">Session Title</label>
           <input type="text" id="discovery-title" placeholder="e.g. Core Platform Architecture" />
@@ -17,22 +17,21 @@ export function renderDiscovery(): string {
       </div>
       <div id="discovery-session" class="card hidden">
         <h3>Active Session</h3>
-        <div id="session-phase" class="phase-indicator"></div>
+        <div id="session-phase" class="phase-indicator">Local notebook grouping (not lifecycle state)</div>
         <div class="session-controls">
           <button id="btn-add-option" class="btn-secondary">Add Option</button>
           <button id="btn-add-tradeoff" class="btn-secondary">Add Tradeoff</button>
           <button id="btn-add-risk" class="btn-secondary">Add Risk</button>
-          <button id="btn-advance-phase" class="btn-primary">Advance Phase</button>
+          <button id="btn-organize-notes" class="btn-secondary">Organize Notes</button>
         </div>
         <div id="session-options"></div>
         <div id="session-tradeoffs"></div>
         <div id="session-risks"></div>
       </div>
       <div id="discovery-readiness" class="card hidden">
-        <h3>Planning Readiness</h3>
-        <div id="readiness-score"></div>
-        <div id="readiness-blockers"></div>
-        <button id="btn-check-readiness" class="btn-secondary">Check Readiness</button>
+        <h3>Governed Readiness Projection</h3>
+        <p>No Desktop score or cached decision is authoritative. Refresh through the project-local VEP delegation on the Workspace page.</p>
+        <pre id="readiness-projection">No fresh VEP result loaded.</pre>
       </div>
       <div id="discovery-sessions-list" class="card">
         <h3>Previous Sessions</h3>

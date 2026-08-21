@@ -29,12 +29,18 @@ export interface DarkhorseConfig {
   name: string;
   description: string;
   version: string;
+  /** VEP generation enablement only. The current VEP version lives only in root package.json. */
+  vep: VepConfig;
   archetype: ProjectArchetype;
   java: JavaConfig;
   frontend?: FrontendConfig;
   features: FeatureFlags;
   ai: AiConfig;
   paths: ProjectPaths;
+}
+
+export interface VepConfig {
+  enabled: boolean;
 }
 
 export interface JavaConfig {
@@ -149,6 +155,7 @@ export function buildConfig(input: InitInput): DarkhorseConfig {
     name: input.name,
     description: input.description,
     version: '0.1.0',
+    vep: { enabled: true },
     archetype: input.archetype,
     java: {
       framework: 'quarkus',

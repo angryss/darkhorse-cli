@@ -47,12 +47,8 @@ pub async fn handle_generate_slices(
             _ => SliceType::FullStack,
         };
 
-        let mut slice = ImplementationSlice::new(
-            cmd.mvp_id,
-            input.title,
-            input.description,
-            slice_type,
-        );
+        let mut slice =
+            ImplementationSlice::new(cmd.mvp_id, input.title, input.description, slice_type);
         for req_id in input.requirement_ids {
             slice.link_requirement(req_id);
         }
@@ -90,7 +86,7 @@ pub async fn handle_link_requirement_to_slice(
     Ok(())
 }
 
-// --- Update Slice Status ---
+// --- Update local work-item display status (never VEP state) ---
 
 #[derive(Debug, Deserialize)]
 pub struct UpdateSliceStatusCommand {
@@ -98,7 +94,7 @@ pub struct UpdateSliceStatusCommand {
     pub status: String,
 }
 
-pub async fn handle_update_slice_status(
+pub async fn handle_update_slice_work_item(
     cmd: UpdateSliceStatusCommand,
     repo: &dyn SliceRepository,
 ) -> AppResult<()> {

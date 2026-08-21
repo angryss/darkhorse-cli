@@ -1,3 +1,5 @@
+-- S05 preservation: requirements are planning input, not A1 or VEP readiness.
+-- Existing rows remain byte/shape compatible and cannot authorize a transition.
 CREATE TABLE IF NOT EXISTS requirements (
     id                  TEXT PRIMARY KEY,
     mvp_id              TEXT NOT NULL REFERENCES mvps(id) ON DELETE CASCADE,

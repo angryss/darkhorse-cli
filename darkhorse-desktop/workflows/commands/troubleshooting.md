@@ -1,47 +1,5 @@
-# Command: Run Troubleshooting
+# Command: Troubleshoot
 
-Use the **Troubleshooting** skill defined in `openspec/specs/workflow/skills/troubleshooting.md`.
+Use the Troubleshooting skill to collect diagnostic input and a bounded correction proposal. Amend A1 through the adapter if governed scope or meaning changes, then regenerate projections.
 
-> A Copilot agent for this command lives at `.github/agents/troubleshoot.agent.md`.
-
-## Parameters
-
-- **issue**: Description of the problem or bug
-- **mvp**: Target MVP milestone (e.g., 1.0)
-- **severity**: Critical / High / Medium / Low
-- **context**: Affected bounded context or crate name
-- **evidence**: Error messages, logs, or reproduction steps
-
-## Instruction
-
-Read and follow the Troubleshooting skill at `openspec/specs/workflow/skills/troubleshooting.md`.
-
-Load all required context files listed in the skill, then execute all steps in order.
-
-Produce the output in the exact format defined by the skill.
-
-After completing the analysis, suggest proceeding to the **Planning** command to formalize the fix, then **Implementation** to apply it.
-
-## Invocation Template
-
-```
-Use the Troubleshooting skill defined in openspec/specs/workflow/skills/troubleshooting.md.
-
-issue: [describe the problem]
-mvp: [target milestone]
-severity: [Critical/High/Medium/Low]
-context: [affected bounded context or crate]
-evidence: [error messages, logs, or reproduction steps]
-
-Follow clean architecture and project rules.
-
-Produce:
-- Problem summary
-- Root cause analysis
-- Bug category
-- Architecture violation check
-- Bug report at openspec/changes/mvp-[MVP]/BUG-[MVP]-[###]/
-- Updated openspec/changes/mvp-[MVP]/progress-tracker.md
-- Regression test spec
-- Next actions (planning → implementation)
-```
+Rerun the affected installed Darkhorse CLI operation and preserve its exact exit/stdout/stderr. No diagnostic or cached Desktop state authorizes a VEP transition.

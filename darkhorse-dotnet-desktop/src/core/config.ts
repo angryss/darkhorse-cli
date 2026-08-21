@@ -45,6 +45,7 @@ interface SerializableConfig {
   name: string;
   description: string;
   version: string;
+  vep?: unknown;
   namespace: string;
   dotnet: DarkhorseConfig['dotnet'];
   features: DarkhorseConfig['features'];
@@ -57,6 +58,7 @@ function configToSerializable(config: DarkhorseConfig): SerializableConfig {
     name: config.name,
     description: config.description,
     version: config.version,
+    vep: { enabled: config.vep.enabled },
     namespace: config.namespace,
     dotnet: config.dotnet,
     features: config.features,
@@ -71,6 +73,22 @@ const DEFAULT_AI_CONFIG: AiConfig = {
   tools: { copilot: true, kiro: false },
 };
 
+const DEFAULT_VEP_CONFIG: DarkhorseConfig['vep'] = { enabled: true };
+
+function normalizeVepConfig(value: unknown): DarkhorseConfig['vep'] {
+  if (value === undefined) return DEFAULT_VEP_CONFIG;
+  if (typeof value !== 'object'
+    || value === null
+    || Array.isArray(value)
+    || Object.keys(value).some((key) => key !== 'enabled')
+    || typeof (value as { enabled?: unknown }).enabled !== 'boolean') {
+    throw new Error(
+      'Invalid .darkhorse.yaml VEP configuration. Keep only "vep.enabled" as a boolean; select the VEP version exclusively in the generated project root package.json.',
+    );
+  }
+  return { enabled: (value as { enabled: boolean }).enabled };
+}
+
 const DEFAULT_DEPLOYMENT_CONFIG: DeploymentConfig = {
   wix: true,
   cicd: 'none',
@@ -80,6 +98,7 @@ function fromSerializable(raw: SerializableConfig, projectRoot: string): Darkhor
   return {
     ...raw,
     namespace: raw.namespace ?? toPascalCase(raw.name),
+    vep: normalizeVepConfig(raw.vep),
     ai: raw.ai ?? DEFAULT_AI_CONFIG,
     deployment: raw.deployment ?? DEFAULT_DEPLOYMENT_CONFIG,
     paths: buildProjectPaths(projectRoot),

@@ -2,7 +2,9 @@
 
 ## Summary
 
-All four scaffolder packages pass type-check and full test suites as of the latest validation. 378 tests pass across the scaffolders. CI is configured via `.github/workflows/validation.yml`.
+All four scaffolder packages pass type-check, build, package, security, and full test suites as of the VEP 2.0 terminal candidate validation. 465 tests pass across the scaffolders. The DarkHorse Desktop Cargo workspace adds 15 passing tests, and the Desktop frontend clean install/build also passes. CI is configured via `.github/workflows/validation.yml`.
+
+The terminal candidate integrates exact public `@angryss/vep@2.0.0`, calibrates all four generators, completes a real disposable Rust/Tauri `normalize_project_label` change through the five-stage lifecycle, and leaves final independent human review pending with the qualified reviewer. See [`docs/vep-2-integration.md`](docs/vep-2-integration.md).
 
 The main Phase 2 failures were caused by an outdated test expectation and an environment-specific NuGet network limitation, not by the generated-artifact cleanup. Both were resolved in Phase 3.
 
@@ -10,11 +12,13 @@ The main Phase 2 failures were caused by an outdated test expectation and an env
 
 | Package | Type-Check | Tests | Test Count | CLI Smoke |
 | --- | --- | --- | --- | --- |
-| `darkhorse-dotnet` | Pass | Pass | 238 | Pass |
-| `darkhorse-dotnet-desktop` | Pass | Pass | 76 | Pass |
-| `darkhorse-java` | Pass | Pass | 23 | Pass |
-| `darkhorse-rust` | Pass | Pass | 41 | Pass |
-| **Total** | **Pass** | **Pass** | **378** | **Pass** |
+| `darkhorse-dotnet` | Pass | Pass | 259 | Pass |
+| `darkhorse-dotnet-desktop` | Pass | Pass | 97 | Pass |
+| `darkhorse-java` | Pass | Pass | 44 | Pass |
+| `darkhorse-rust` | Pass | Pass | 65 | Pass |
+| **Total** | **Pass** | **Pass** | **465** | **Pass** |
+
+Additional terminal checks: Cargo workspace 15/15 pass; Desktop frontend clean install/build pass; five npm dependency audits report zero vulnerabilities; four package dry-runs and four clean relocated installs pass with no copied VEP authority or proof evidence.
 
 CI workflow added: `.github/workflows/validation.yml` — runs matrix over all three scaffolders on `ubuntu-latest`, Node 20, triggered on push to main and pull requests.
 

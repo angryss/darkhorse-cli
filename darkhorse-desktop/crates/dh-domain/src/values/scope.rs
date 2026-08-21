@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-/// Relative sizing for MVP scope.
+/// Relative draft sizing input; it does not select VEP tier.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub enum ScopeSize {
     Tiny,
@@ -9,8 +9,7 @@ pub enum ScopeSize {
     Large,
 }
 
-/// Represents an explicit scope boundary — things that are
-/// deliberately included or excluded from an MVP.
+/// Draft scope observations. Canonical scope lives in A1 after materialization.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ScopeBoundary {
     pub included: Vec<String>,

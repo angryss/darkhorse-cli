@@ -33,6 +33,8 @@ export interface DarkhorseConfig {
   name: string;
   description: string;
   version: string;
+  /** VEP generation enablement only. The current VEP version lives only in root package.json. */
+  vep: VepConfig;
   workspaceNamespace: string;      // PascalCase namespace for shared Contracts (e.g. "OrderManagement")
   archetype?: ProjectArchetype;    // undefined until first `add` (kept for service context)
   dotnet?: DotnetConfig;           // undefined until a service is added
@@ -40,6 +42,10 @@ export interface DarkhorseConfig {
   features: FeatureFlags;
   ai: AiConfig;
   paths: ProjectPaths;
+}
+
+export interface VepConfig {
+  enabled: boolean;
 }
 
 export interface DotnetConfig {
@@ -192,6 +198,7 @@ export function buildConfig(input: InitInput): DarkhorseConfig {
     name: input.name,
     description: input.description,
     version: '0.1.0',
+    vep: { enabled: true },
     workspaceNamespace: input.namespace ?? toPascalCase(input.name),
     // archetype and dotnet are undefined at workspace level
     frontend: input.includeFrontend
@@ -227,6 +234,7 @@ export function buildServiceConfig(input: AddInput, projectConfig: DarkhorseConf
     name: input.name,
     description: projectConfig.description,
     version: projectConfig.version,
+    vep: projectConfig.vep,
     workspaceNamespace: projectConfig.workspaceNamespace,
     archetype: input.archetype,
     dotnet: {

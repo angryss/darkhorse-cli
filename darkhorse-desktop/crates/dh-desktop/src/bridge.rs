@@ -3,7 +3,7 @@ use tauri::State;
 use uuid::Uuid;
 
 use dh_application::commands;
-use dh_application::ports::{InitiativeRepository, SettingsStore};
+use dh_application::ports::{InitiativeRepository, SettingsStore, VepDelegationRequest};
 use dh_infrastructure::updates;
 
 use crate::state::AppState;
@@ -32,9 +32,7 @@ pub async fn create_initiative(
 }
 
 #[tauri::command]
-pub async fn list_initiatives(
-    state: State<'_, AppState>,
-) -> Result<serde_json::Value, String> {
+pub async fn list_initiatives(state: State<'_, AppState>) -> Result<serde_json::Value, String> {
     let initiatives = state
         .initiative_repo
         .find_all()
@@ -87,28 +85,29 @@ pub async fn start_discovery_session(
 }
 
 #[derive(Debug, Deserialize)]
-pub struct ContinueDiscoveryInput {
+pub struct UpdateDiscoveryNotebookInput {
     pub session_id: String,
-    pub target_phase: String,
+    pub notebook_phase: String,
 }
 
 #[tauri::command]
-pub async fn continue_discovery_session(
-    input: ContinueDiscoveryInput,
+pub async fn update_discovery_notebook(
+    input: UpdateDiscoveryNotebookInput,
     state: State<'_, AppState>,
 ) -> Result<serde_json::Value, String> {
     let session_id = Uuid::parse_str(&input.session_id).map_err(|e| e.to_string())?;
-    let target_phase = match input.target_phase.to_lowercase().as_str() {
-        "exploring" => commands::DiscoveryPhaseInput::Exploring,
-        "converging" => commands::DiscoveryPhaseInput::Converging,
-        "concluded" => commands::DiscoveryPhaseInput::Concluded,
-        _ => return Err(format!("Invalid phase: {}", input.target_phase)),
+    let notebook_phase = match input.notebook_phase.to_lowercase().as_str() {
+        "framing" => dh_domain::entities::DiscoveryPhase::Framing,
+        "exploring" => dh_domain::entities::DiscoveryPhase::Exploring,
+        "converging" => dh_domain::entities::DiscoveryPhase::Converging,
+        "concluded" => dh_domain::entities::DiscoveryPhase::Concluded,
+        _ => return Err(format!("Invalid notebook phase: {}", input.notebook_phase)),
     };
-    let cmd = commands::ContinueDiscoverySessionCommand {
+    let cmd = commands::UpdateDiscoveryNotebookCommand {
         session_id,
-        target_phase,
+        notebook_phase,
     };
-    let result = commands::handle_continue_discovery_session(cmd, &state.discovery_session_repo)
+    let result = commands::handle_update_discovery_notebook(cmd, &state.discovery_session_repo)
         .await
         .map_err(|e| e.to_string())?;
     serde_json::to_value(result).map_err(|e| e.to_string())
@@ -144,13 +143,13 @@ pub struct DiscoveryReadinessInput {
 }
 
 #[tauri::command]
-pub async fn assess_discovery_readiness(
+pub async fn collect_discovery_vep_input(
     input: DiscoveryReadinessInput,
     state: State<'_, AppState>,
 ) -> Result<serde_json::Value, String> {
     let session_id = Uuid::parse_str(&input.session_id).map_err(|e| e.to_string())?;
-    let cmd = commands::AssessDiscoveryReadinessCommand { session_id };
-    let result = commands::handle_assess_discovery_readiness(cmd, &state.discovery_session_repo)
+    let cmd = commands::CollectDiscoveryVepInputCommand { session_id };
+    let result = commands::handle_collect_discovery_vep_input(cmd, &state.discovery_session_repo)
         .await
         .map_err(|e| e.to_string())?;
     serde_json::to_value(result).map_err(|e| e.to_string())
@@ -176,20 +175,19 @@ pub async fn list_discovery_sessions(
 
 // ─── Planning commands ─────────────────────────────────────────────
 
-#[derive(Debug, Deserialize)]
-pub struct PlanningInput {
-    pub initiative_id: String,
+#[tauri::command]
+pub async fn invoke_project_vep(
+    input: VepDelegationRequest,
+    state: State<'_, AppState>,
+) -> Result<serde_json::Value, String> {
+    let result = commands::handle_invoke_project_vep(input, &state.vep_delegator)
+        .map_err(|error| error.to_string())?;
+    serde_json::to_value(result).map_err(|error| error.to_string())
 }
 
 #[tauri::command]
-pub async fn check_planning_readiness(
-    _input: PlanningInput,
-) -> Result<serde_json::Value, String> {
-    Ok(serde_json::json!({
-        "is_ready": false,
-        "readiness_score": 0.0,
-        "blockers": ["Full planning check requires complete repository wiring"]
-    }))
+pub async fn get_vep_lifecycle() -> Result<serde_json::Value, String> {
+    serde_json::to_value(dh_domain::values::VEP_LIFECYCLE).map_err(|error| error.to_string())
 }
 
 // ─── Scope commands ────────────────────────────────────────────────
@@ -204,7 +202,7 @@ pub struct DefineScopeInput {
 #[tauri::command]
 pub async fn define_mvp_scope(
     input: DefineScopeInput,
-    state: State<'_, AppState>,
+    _state: State<'_, AppState>,
 ) -> Result<serde_json::Value, String> {
     let mvp_id = Uuid::parse_str(&input.mvp_id).map_err(|e| e.to_string())?;
     let cmd = commands::DefineMvpScopeCommand {
@@ -275,7 +273,7 @@ pub struct UpdateSliceStatusInput {
 }
 
 #[tauri::command]
-pub async fn update_slice_status(
+pub async fn update_slice_work_item(
     input: UpdateSliceStatusInput,
     state: State<'_, AppState>,
 ) -> Result<serde_json::Value, String> {
@@ -284,7 +282,7 @@ pub async fn update_slice_status(
         slice_id,
         status: input.status,
     };
-    commands::handle_update_slice_status(cmd, &state.slice_repo)
+    commands::handle_update_slice_work_item(cmd, &state.slice_repo)
         .await
         .map_err(|e| e.to_string())?;
     Ok(serde_json::json!({ "updated": true }))
@@ -321,6 +319,7 @@ pub async fn update_roadmap(input: RoadmapInput) -> Result<serde_json::Value, St
     let initiative_id = Uuid::parse_str(&input.initiative_id).map_err(|e| e.to_string())?;
     Ok(serde_json::json!({
         "initiative_id": initiative_id.to_string(),
+        "action": input.action,
         "message": "Roadmap update scaffold — action received"
     }))
 }
@@ -341,7 +340,9 @@ pub async fn update_progress(input: ProgressInput) -> Result<serde_json::Value, 
     Ok(serde_json::json!({
         "initiative_id": initiative_id.to_string(),
         "entry_id": Uuid::new_v4().to_string(),
-        "message": format!("Progress '{}' recorded", input.title)
+        "status": input.status,
+        "notes": input.notes,
+        "message": format!("Local work note '{}' recorded; no VEP state changed", input.title)
     }))
 }
 
@@ -407,9 +408,7 @@ pub async fn create_workspace(
 }
 
 #[tauri::command]
-pub async fn list_workspaces(
-    state: State<'_, AppState>,
-) -> Result<serde_json::Value, String> {
+pub async fn list_workspaces(state: State<'_, AppState>) -> Result<serde_json::Value, String> {
     let result = commands::handle_list_workspaces(&state.workspace_repo)
         .await
         .map_err(|e| e.to_string())?;
@@ -458,16 +457,36 @@ pub struct SetSettingInput {
     pub value: String,
 }
 
+fn is_governed_vep_setting(key: &str) -> bool {
+    let normalized = key.to_ascii_lowercase().replace(['-', '_', '.'], "");
+    normalized.contains("vep") || normalized.contains("processversion")
+}
+
 #[tauri::command]
 pub async fn set_setting(
     input: SetSettingInput,
     state: State<'_, AppState>,
 ) -> Result<serde_json::Value, String> {
+    if is_governed_vep_setting(&input.key) {
+        return Err("SECONDARY_DESKTOP_VERSION_PIN_REJECTED: generated project root package.json is the sole current VEP-version authority.".into());
+    }
     state
         .settings_store
         .set(&input.key, &input.value)
         .map_err(|e| e.to_string())?;
     Ok(serde_json::json!({ "key": input.key, "saved": true }))
+}
+
+#[cfg(test)]
+mod tests {
+    use super::is_governed_vep_setting;
+
+    #[test]
+    fn desktop_rejects_secondary_vep_version_settings() {
+        assert!(is_governed_vep_setting("current-vep-version"));
+        assert!(is_governed_vep_setting("process_version"));
+        assert!(!is_governed_vep_setting("theme"));
+    }
 }
 
 // ─── Update commands ───────────────────────────────────────────────

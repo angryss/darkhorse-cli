@@ -1,38 +1,24 @@
 ---
-description: Create a DDD-compliant proposal for a WPF desktop feature
+description: "Materialize or amend canonical VEP A1 without creating parallel plan authority"
+mode: agent
 ---
 
-# /plan
+# /plan — VEP-bound help
 
-Invoke the `@plan` agent to create a structured proposal for implementation.
+> Installed `@angryss/vep` owns lifecycle, gates, risk, artifacts, proof, review, and closure.
+> Darkhorse supplies bounded framework ergonomics only.
 
-## Usage
+## VEP 2.0 authority boundary
 
-```
-/plan [feature description] [--context ContextName] [--mvp X.Y]
-```
+- OpenSpec is optional draft input before A1.
+- `.visu/work/<change-id>/contract.yaml` is the sole editable semantic and plan authority after validation.
+- `proposal.md` and `tasks.md` are deterministic, hash/version-bound read-only projections.
+- Roadmaps, trackers, agents, commands, and skills never override A1.
 
-## Examples
+## Action
 
-```
-/plan Add OrderManagement bounded context with create/list/cancel operations for MVP 1.0
-/plan Implement REQ-1.0-002: domain model for the Inventory context
-/plan Add a notification bell to the MainWindow shell that shows unread alerts
-```
+- If A1 is absent, pass one complete OpenSpec draft to `materializeOpenSpecDraft`.
+- If A1 exists, use `amendCanonicalA1`; never overwrite it from OpenSpec.
 
-## What This Produces
-
-A proposal at `openspec/changes/mvp-{X.Y}/{proposal-id}/`:
-- `proposal.md` — requirement, acceptance criteria, architecture decisions
-- `tasks.md` — task checklist organized by layer
-
-## Architecture Checklist (auto-checked by @plan)
-
-- Domain has no new external dependencies
-- Handlers do not call Infrastructure directly
-- ViewModels dispatch via `IMediator`
-- Implementation order is inside-out
-
-## Next Step
-
-After plan approval: `/implement [proposal-id]`
+Load the matching file in `openspec/specs/workflow/skills/` for architecture-specific help.
+Stop on invalid A1, stale binding, direct projection edit, mixed version, or cross-change reuse.

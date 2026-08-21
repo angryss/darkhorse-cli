@@ -1,5 +1,7 @@
 # Agent Limits Rule (v1.0)
 
+> Agents cannot authorize VEP lifecycle, readiness, risk tier, proof, review, or Close. Use the project-local VEP through the installed Darkhorse CLI; preserve nonzero/fail-closed results.
+
 Mandatory rule: project setup and automation must not create agent sprawl or pull in unapproved AI tooling.
 
 ## Approved AI Tools

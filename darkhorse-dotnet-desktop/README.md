@@ -4,6 +4,8 @@
 
 Part of the [DarkHorse](../README.md) AI-native engineering framework.
 
+Generated projects pin public `@angryss/vep@2.0.0` exactly at the root and own their VEP state. `discover`, `plan`, `test`, `review`, and `close` delegate to project-local `visu`; `implement` verifies the approved A1 boundary. Optional OpenSpec is draft input only—after materialization A1 is the sole editable plan authority. See [the repository VEP integration contract](../docs/vep-2-integration.md).
+
 ---
 
 ## What It Scaffolds

@@ -1,41 +1,24 @@
 ---
-description: "Create a DDD-compliant requirement proposal for a feature, enhancement, or bug fix"
+description: "Materialize or amend canonical VEP A1 without creating parallel plan authority"
 mode: agent
 ---
 
-Execute the **Planning** workflow.
+# /plan — VEP-bound help
 
-## Skill
+> Installed `@angryss/vep` owns lifecycle, gates, risk, artifacts, proof, review, and closure.
+> Darkhorse supplies bounded framework ergonomics only.
 
-Read and follow every step in `openspec/specs/workflow/skills/planning.md`.
+## VEP 2.0 authority boundary
 
-## Context
+- OpenSpec is optional draft input before A1.
+- `.visu/work/<change-id>/contract.yaml` is the sole editable semantic and plan authority after validation.
+- `proposal.md` and `tasks.md` are deterministic, hash/version-bound read-only projections.
+- Roadmaps, trackers, agents, commands, and skills never override A1.
 
-Load all required context files listed in the skill before producing output.
+## Action
 
-## Parameters
+- If A1 is absent, pass one complete OpenSpec draft to `materializeOpenSpecDraft`.
+- If A1 exists, use `amendCanonicalA1`; never overwrite it from OpenSpec.
 
-- **feature**: What feature or change to plan
-- **mvp**: Target MVP milestone (e.g., 1.0)
-- **priority**: P0 (Critical) / P1 (High) / P2 (Medium) / P3 (Low)
-- **context**: Target bounded context name
-- **type**: feature / enhancement / bug-fix
-
-## Constraints
-
-- NO code generation — proposals only
-- NO modifications outside `openspec/changes/`, `context/`, `openspec/specs/project/roadmap.md`
-- Output goes to `openspec/changes/mvp-{MVP}/REQ-{MVP}-{###}/`
-- Update `openspec/changes/mvp-{MVP}/progress-tracker.md` (add row + update Total Requirements count)
-- Update `context/30-BOUNDED-CONTEXTS.md` — add or expand bounded context entry for every proposal that introduces or materially changes a bounded context; mark N/A if purely cross-cutting/infrastructure
-- Update `openspec/specs/project/roadmap.md` — add the REQ to the active MVP's Requirements table
-
-## Handoff
-
-After completing, confirm the following closing steps are done:
-1. `openspec/changes/mvp-{MVP}/REQ-{MVP}-{###}/proposal.md` — created
-2. `context/30-BOUNDED-CONTEXTS.md` — updated (or marked N/A)
-3. `openspec/specs/project/roadmap.md` — REQ added to MVP Requirements table
-4. `openspec/changes/mvp-{MVP}/progress-tracker.md` — row added, total updated
-
-Then suggest proceeding to `/implement` with the generated proposal ID.
+Load the matching file in `openspec/specs/workflow/skills/` for architecture-specific help.
+Stop on invalid A1, stale binding, direct projection edit, mixed version, or cross-change reuse.

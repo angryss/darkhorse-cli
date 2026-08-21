@@ -6,6 +6,8 @@ DarkHorse is an AI-native engineering framework. Its scaffolders generate both a
 
 Generated projects are intended to be self-contained. They should not depend on the DarkHorse CLI at runtime.
 
+Every governed generated project pins public `@angryss/vep@2.0.0` exactly in its root `package.json`, owns its `.visu` work state, and invokes only its project-local `visu`. DarkHorse exposes one developer lifecycle: **Discover -> Plan -> Implement -> Test -> Close**. Optional OpenSpec input transitions one-way into canonical A1; proposal/tasks files remain deterministic, non-authoritative projections. See [VEP 2.0 integration](docs/vep-2-integration.md).
+
 ---
 
 ## Why DarkHorse Exists
@@ -106,7 +108,7 @@ command -> agent -> skill
 
 - `init` scaffolds a complete project: runtime structure plus development guidance system.
 - `add` adds services to an existing workspace (`darkhorse-dotnet`) or bounded contexts to a desktop project (`darkhorse-dotnet-desktop`).
-- `discover`, `plan`, `implement`, and `troubleshoot` form a continuous AI-native workflow loop.
+- `discover`, `plan`, `implement`, `test`, and `close` expose the one VEP-governed lifecycle; `review` supplies the Test-stage independent-review proof boundary. `troubleshoot` reports bounded recovery without becoming another lifecycle.
 - `nx-monorepo` analyzes workspace fit for Nx and produces a phased adoption plan (`darkhorse-dotnet` and `darkhorse-java`).
 - `deploy setup-cicd` provisions CI/CD pipelines (`darkhorse-dotnet-desktop`).
 - `mcp-serve` is intended to expose CLI tools to AI agents via the Model Context Protocol, but MCP support should be treated as experimental unless a package documents full implementation.

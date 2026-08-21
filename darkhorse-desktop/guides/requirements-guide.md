@@ -1,5 +1,7 @@
 # Requirements Guide
 
+> **Process boundary:** Requirements are input to the governed A1 flow, not approval or completion evidence. Once A1 exists, amend `contract.yaml` through the adapter and regenerate read-only projections.
+
 **How to write effective requirements for darkhorse-desktop projects.**
 
 ---

@@ -13,18 +13,9 @@ pub struct UpdateRoadmapCommand {
 
 #[derive(Debug, Deserialize)]
 pub enum RoadmapAction {
-    AddMilestone {
-        name: String,
-        description: String,
-    },
-    AddItem {
-        milestone_id: Uuid,
-        title: String,
-    },
-    CompleteItem {
-        milestone_id: Uuid,
-        item_id: Uuid,
-    },
+    AddMilestone { name: String, description: String },
+    AddItem { milestone_id: Uuid, title: String },
+    MarkItemDone { milestone_id: Uuid, item_id: Uuid },
 }
 
 #[derive(Debug, Serialize)]
@@ -43,9 +34,9 @@ pub async fn handle_update_roadmap(cmd: UpdateRoadmapCommand) -> AppResult<Updat
             info!(initiative_id = %cmd.initiative_id, item = %title, "Roadmap item added");
             format!("Item '{}' added", title)
         }
-        RoadmapAction::CompleteItem { item_id, .. } => {
-            info!(initiative_id = %cmd.initiative_id, item = %item_id, "Item completed");
-            format!("Item '{}' marked complete", item_id)
+        RoadmapAction::MarkItemDone { item_id, .. } => {
+            info!(initiative_id = %cmd.initiative_id, item = %item_id, "Local roadmap item marked done");
+            format!("Local item '{}' marked done (no VEP transition)", item_id)
         }
     };
 

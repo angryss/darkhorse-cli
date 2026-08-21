@@ -1,40 +1,24 @@
 ---
-description: Diagnose and fix bugs or architecture violations in the WPF desktop project
+description: "Diagnose failures and recover through canonical VEP A1 authority"
+mode: agent
 ---
 
-# /troubleshoot
+# /troubleshoot — VEP-bound help
 
-Invoke the `@troubleshoot` agent to diagnose issues systematically.
+> Installed `@angryss/vep` owns lifecycle, gates, risk, artifacts, proof, review, and closure.
+> Darkhorse supplies bounded framework ergonomics only.
 
-## Usage
+## VEP 2.0 authority boundary
 
-```
-/troubleshoot [symptom or error description]
-```
+- OpenSpec is optional draft input before A1.
+- `.visu/work/<change-id>/contract.yaml` is the sole editable semantic and plan authority after validation.
+- `proposal.md` and `tasks.md` are deterministic, hash/version-bound read-only projections.
+- Roadmaps, trackers, agents, commands, and skills never override A1.
 
-## Examples
+## Action
 
-```
-/troubleshoot The OrdersViewModel list is not refreshing after I create a new order
-/troubleshoot System.InvalidOperationException: Cannot resolve service for type IOrderRepository
-/troubleshoot The PlaceOrderCommand is throwing ValidationException but I can't see which field failed
-/troubleshoot My WPF binding is not updating — the property is set but the UI doesn't change
-```
+- Diagnose without changing A1 or projections.
+- If A1 meaning is wrong, amend A1; if a view is stale, regenerate it from current A1.
 
-## What This Produces
-
-- Root cause identification
-- Minimal targeted fix
-- Regression test to prevent recurrence
-- Architecture compliance verification of the fix
-
-## Common Categories
-
-| Category | Keyword |
-|----------|---------|
-| UI binding issues | `binding`, `not updating`, `not refreshing` |
-| DI issues | `cannot resolve`, `null reference on startup` |
-| CQRS issues | `command`, `handler`, `mediator` |
-| EF Core issues | `migration`, `dbcontext`, `entity` |
-| Architecture violations | `dependency`, `violation`, `layer` |
-| Threading issues | `cross-thread`, `dispatcher`, `UI thread` |
+Load the matching file in `openspec/specs/workflow/skills/` for architecture-specific help.
+Stop on invalid A1, stale binding, direct projection edit, mixed version, or cross-change reuse.

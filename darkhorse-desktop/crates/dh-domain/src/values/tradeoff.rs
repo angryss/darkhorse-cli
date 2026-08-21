@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-/// Represents a tradeoff identified during discovery or planning.
-/// Captures the tension between two competing concerns.
+/// Draft tradeoff observation supplied as VEP/A1 input.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Tradeoff {
     pub dimension_a: String,
@@ -10,7 +9,7 @@ pub struct Tradeoff {
     pub notes: String,
 }
 
-/// Where the decision landed on the tradeoff spectrum.
+/// A local draft position, not governed approval.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub enum TradeoffPosition {
     FavorA,
@@ -34,7 +33,7 @@ impl Tradeoff {
         }
     }
 
-    pub fn is_resolved(&self) -> bool {
+    pub fn has_draft_position(&self) -> bool {
         self.position != TradeoffPosition::Unresolved
     }
 }

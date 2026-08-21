@@ -1,5 +1,7 @@
 # Project Structure Rules (v2.0)
 
+> Structure and UI conventions are not process authority. The generated project root `package.json` selects VEP; A1 is sole editable plan authority; Desktop consumes derived state.
+
 **Mandatory structure rules for Rust/Tauri desktop projects.**
 
 > **DarkHorse Desktop is a product, not a scaffolder.** These rules define the canonical project structure for Tauri desktop applications that follow DarkHorse principles. They describe the expected layout of a generated or hand-structured desktop project — not the generation process itself.

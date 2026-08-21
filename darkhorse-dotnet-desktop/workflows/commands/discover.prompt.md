@@ -1,33 +1,24 @@
 ---
-description: Explore and shape product ideas for the WPF desktop application
+description: "Explore change intent as optional draft input to canonical VEP"
+mode: agent
 ---
 
-# /discover
+# /discover — VEP-bound help
 
-Invoke the `@discover` agent to explore a feature or idea before formal planning.
+> Installed `@angryss/vep` owns lifecycle, gates, risk, artifacts, proof, review, and closure.
+> Darkhorse supplies bounded framework ergonomics only.
 
-## Usage
+## VEP 2.0 authority boundary
 
-```
-/discover [idea or feature to explore]
-```
+- OpenSpec is optional draft input before A1.
+- `.visu/work/<change-id>/contract.yaml` is the sole editable semantic and plan authority after validation.
+- `proposal.md` and `tasks.md` are deterministic, hash/version-bound read-only projections.
+- Roadmaps, trackers, agents, commands, and skills never override A1.
 
-## Examples
+## Action
 
-```
-/discover I want to add order management so users can create and track orders
-/discover Should notifications be a new bounded context or part of the existing Orders context?
-/discover What domain events would the Inventory context raise when stock is low?
-```
+- Before A1 exists, discovery may write one `OpenSpecDraft` JSON document under `openspec/changes/<change-id>/draft.json`.
+- After A1 exists, discovery is advisory only. Record semantic changes by amending A1 through the adapter.
 
-## What This Produces
-
-- Domain concept identification
-- Bounded context mapping
-- Command and query inventory
-- WPF UI surface estimate
-- Readiness assessment for `/plan`
-
-## Next Step
-
-After discovery: `/plan [feature] for MVP [X.Y]`
+Load the matching file in `openspec/specs/workflow/skills/` for architecture-specific help.
+Stop on invalid A1, stale binding, direct projection edit, mixed version, or cross-change reuse.

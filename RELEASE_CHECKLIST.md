@@ -2,6 +2,21 @@
 
 DarkHorse is preparing for a public alpha launch under Angry Software Solutions.
 
+## VEP 2.0 terminal integration checkpoint
+
+- [x] Exact public `@angryss/vep@2.0.0` selected by each generated root `package.json`.
+- [x] Four generators produce clean-installable VEP-ready projects using project-local `visu`.
+- [x] Discover -> Plan -> Implement -> Test -> Close real-engineering calibration passes.
+- [x] OpenSpec transitions one-way to canonical A1; stale, direct-edit, and cross-change projections fail closed.
+- [x] CLI and Desktop lifecycle/readiness/risk semantics delegate to project-owned VEP state.
+- [x] Compatible/incompatible upgrade and A1/A2/A3/A4 byte-preservation regression passes.
+- [x] Four package dry-runs and relocated clean installs pass without copied VEP authority or proof leakage.
+- [x] CLI tests 465/465, Cargo tests 15/15, Desktop frontend build pass, dependency findings 0.
+- [x] Terminal candidate and evidence prepared for the qualified human reviewer.
+- [ ] Brandon Rock final independent candidate decision—not yet executed.
+
+No publication or push is authorized by this checkpoint.
+
 ## Public Launch Steps
 
 - Confirm the repository name, description, topics, and owner under the public GitHub organization.

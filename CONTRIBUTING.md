@@ -1,5 +1,13 @@
 # Contributing to DarkHorse
 
+## One governed lifecycle
+
+All contributions use one developer lifecycle: `Discover -> Plan -> Implement -> Test -> Close`. Run the matching DarkHorse command from the generated project root. DarkHorse delegates `discover`, `plan`, `test`, `review`, and `close` to that project's exact `@angryss/vep@2.0.0` installation and preserves its result and exit status. Review belongs to the Test stage.
+
+`implement <change-id>` verifies the approved `.visu/work/<change-id>/contract.yaml` and its current OpenSpec projections through project-local VEP, then returns control for normal engineering work. It does not approve the contract, expand scope, create a transition, waive proof, or close work.
+
+OpenSpec may supply a draft before A1. After materialization, A1 is the only editable plan authority; amend A1 and regenerate its projections. Prompts, agents, workflow documents, progress files, and `.darkhorse.yaml` are never process authority. If project-local VEP is absent or incompatible, stop and repair the exact local installation—never use global, PATH, source-tree, embedded, or tarball fallback behavior.
+
 DarkHorse is currently public-alpha/pre-alpha quality. Contributions are welcome, but the repository is still being shaped for a broader open-source audience.
 
 ## Current Contribution Focus

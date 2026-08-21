@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-/// Captures the reasoning behind a key product or architecture decision.
+/// Captures draft decision reasoning for governed A1 input; it is not approval.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DecisionRationale {
     pub chosen_option: String,

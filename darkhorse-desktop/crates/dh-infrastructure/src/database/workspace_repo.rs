@@ -3,6 +3,9 @@ use dh_application::ports::WorkspaceRepository;
 use dh_domain::entities::Workspace;
 use uuid::Uuid;
 
+// Workspace selection supplies projectRoot only; root package.json remains the
+// sole current VEP-version authority and no VEP version is persisted here.
+
 use super::DbConnection;
 
 /// SQLite-backed implementation of the WorkspaceRepository port.

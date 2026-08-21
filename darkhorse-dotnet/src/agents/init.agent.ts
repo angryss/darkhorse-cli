@@ -3,6 +3,7 @@ import { writeConfig, type DarkhorseConfig, type SkillResult } from '../core/ind
 import { scaffoldWorkspace } from '../skills/scaffolding.js';
 import { seedOpenSpec } from '../skills/openspec.js';
 import { generateContext } from '../skills/context.js';
+import { materializeVepReadiness, prepareVepReadiness } from '../skills/vep.js';
 
 /**
  * Init agent — initializes a new DarkHorse workspace.
@@ -10,6 +11,7 @@ import { generateContext } from '../skills/context.js';
  * No service archetype at this stage — use `darkhorse-dotnet add <type>` to add services.
  */
 export async function initAgent(config: DarkhorseConfig): Promise<void> {
+  const vepPlan = await prepareVepReadiness(config);
   logger.header(`Initializing workspace: ${config.name}`);
   if (config.features.frontend) {
     const plat = config.frontend?.platform ?? 'web';
@@ -36,6 +38,10 @@ export async function initAgent(config: DarkhorseConfig): Promise<void> {
   // 4. Write .darkhorse.yaml
   logger.step('Writing workspace config...');
   await writeConfig(config);
+
+  // 5. Materialize the project-owned VEP dependency and starter Contract
+  logger.step('Generating VEP-ready project boundary...');
+  results.push(await materializeVepReadiness(vepPlan));
 
   // Report
   logger.blank();

@@ -1,70 +1,43 @@
-# Prompt Starters — Rust/Tauri Desktop
+# Prompt Starters — Rust/Tauri project
 
-> Example prompts for AI agents working on DarkHorse Rust/Tauri projects.
+These prompts assist engineering inside the single governed lifecycle:
 
-## Discovery
+`Discover -> Plan -> Implement -> Test -> Close`
 
-- "Analyze the current project structure and identify what bounded contexts we need."
-- "Review the domain model and suggest missing entities or value objects."
-- "What Tauri plugins would benefit this project?"
+The generated project's project-local `visu` owns every governed result. AI prompts cannot approve an A1, expand scope, waive proof, approve review, or close work.
 
-## Planning
+## Discover
 
-- "Create a proposal for REQ-1.0-001: [describe feature]."
-- "Plan the domain model for the [context name] bounded context."
-- "Design the SQLite schema for [feature area]."
-- "Plan the Tauri command interface for [feature area]."
+Run `darkhorse-rust discover --input <discover-input.json> --json`, then ask:
 
-## Implementation
+> Explain the VEP Discover result and help gather missing product evidence. Do not select a tier or transition state.
 
-- "Implement REQ-1.0-001 following the approved proposal."
-- "Add a new entity `[Name]` to the domain crate with proper value objects."
-- "Create the port trait and SQLite repository for `[Entity]`."
-- "Add a Tauri command for `[action]` that dispatches to the application layer."
-- "Create the frontend page for `[feature]` with proper service layer calls."
+## Plan
 
-## Troubleshooting
+An optional OpenSpec draft may be materialized into A1 first. After that, `.visu/work/<change-id>/contract.yaml` is the sole editable plan authority.
 
-- "Why is `cargo check` failing with a dependency cycle error?"
-- "The Tauri command returns an error — trace it through all layers."
-- "SQLite migration is failing — diagnose and fix."
-- "The frontend can't reach the Tauri backend — check IPC configuration."
+Run `darkhorse-rust plan --input <plan-input.json> --json`, then ask:
 
-## Architecture Review
+> Help improve the canonical A1 within its authorized scope. Do not edit proposal/tasks projections directly or claim approval.
 
-- "Verify that the domain crate has no infrastructure dependencies."
-- "Check that all Tauri commands are thin wrappers dispatching to the application layer."
-- "Review the port trait definitions for completeness."
-- "Ensure all bounded contexts are properly isolated."
+## Implement
 
+Run `darkhorse-rust implement <change-id> --json`, then ask:
 
----
+> Implement only the approved A1 scope using domain/application/infrastructure crates, Tauri command boundaries, SQLite, frontend IPC, and packaging. Do not persist separate lifecycle state.
 
-## Kiro Prompts
+## Test
 
-> Use these natural-language instructions with Kiro. Kiro reads `openspec/AGENTS.md` and the `.kiro/steering/` files for context.
+Run `darkhorse-rust test --input <proof-input.json> --json`. When independent review is required, run `darkhorse-rust review --input <review-input.json> --json` as part of the Test stage.
 
-### Onboard to the Project
-`Read openspec/AGENTS.md and all .kiro/steering/ files to understand this Tauri project. Summarize the architecture, crate structure, and current MVP status.`
+> Help diagnose failed proof without changing the expected result or manufacturing success.
 
-### Run Discovery for a Feature
-`Run the Discover workflow from openspec/specs/workflow/skills/discovery.md for [feature].`
+## Close
 
-### Plan a Feature
-`Using the discovery at openspec/changes/discoveries/DISC-###.md, run the Plan workflow and produce a proposal.`
+Run `darkhorse-rust close --input <close-input.json> --json`, then follow the exact VEP next action.
 
-### Implement a Proposal
-`Implement the approved proposal at openspec/changes/[mvp]/proposal.md. Follow the implementation order: Domain crate then Application then Infrastructure then Tauri commands then Frontend.`
+> Summarize the governed close result. Do not infer closure from implementation, local checks, or prose.
 
-### Troubleshoot an Issue
-`Troubleshoot [issue description]. Follow openspec/specs/workflow/skills/troubleshooting.md. Do not change code until you have written a bug proposal in openspec/changes/bugs/.`
+## Independent tooling
 
----
-
-## Copilot Prompts
-
-- `@workspace /discover [feature]`
-- `@workspace /plan [feature] based on DISC-###`
-- `@workspace /implement proposal from openspec/changes/[mvp]/proposal.md`
-- `@workspace /troubleshoot [issue]`
-
+`troubleshoot`, `validate`, architecture prompts, and platform-specific scaffold commands are independent DarkHorse tools. They may help diagnose or implement, but they are not lifecycle commands and cannot alter VEP state.

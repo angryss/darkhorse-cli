@@ -1,30 +1,24 @@
 ---
-description: "Evaluate whether Nx is a good fit for this workspace and produce an adoption plan"
+description: "Evaluate Nx as optional draft input without creating plan authority"
 mode: agent
 ---
 
-Execute the **Nx Monorepo** workflow.
+# /nx-monorepo — VEP-bound help
 
-## Skill
+> Installed `@angryss/vep` owns lifecycle, gates, risk, artifacts, proof, review, and closure.
+> Darkhorse supplies bounded framework ergonomics only.
 
-Read and follow every step in `openspec/specs/workflow/skills/nx-monorepo.md`.
+## VEP 2.0 authority boundary
 
-## Context
+- OpenSpec is optional draft input before A1.
+- `.visu/work/<change-id>/contract.yaml` is the sole editable semantic and plan authority after validation.
+- `proposal.md` and `tasks.md` are deterministic, hash/version-bound read-only projections.
+- Roadmaps, trackers, agents, commands, and skills never override A1.
 
-Load all required context files listed in the skill before producing output.
+## Action
 
-## Parameters
+- Produce analysis only. Before A1, it may inform an OpenSpec draft.
+- After A1, any adopted topology change must be an explicit A1 amendment.
 
-- **mode**: `plan-ahead` (new product) or `migration` (existing product)
-- **name**: Product or workspace name
-- **ecosystem**: `dotnet`, `java`, `desktop`, `frontend`, or `mixed`
-- **projects**: Comma-separated list of project names
-- **pain-points**: Known pain points (migration mode only)
-
-## Output
-
-- Recommendation (recommended / optional / not recommended)
-- Fit score (0–100)
-- Rationale with benefits, concerns, and complexity tradeoff
-- Target monorepo workspace design
-- Migration or setup steps with risk levels
+Load the matching file in `openspec/specs/workflow/skills/` for architecture-specific help.
+Stop on invalid A1, stale binding, direct projection edit, mixed version, or cross-change reuse.

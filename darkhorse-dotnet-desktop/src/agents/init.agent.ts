@@ -4,12 +4,14 @@ import { scaffoldProject } from '../skills/scaffolding.js';
 import { scaffoldDeployment } from '../skills/deployment.js';
 import { seedOpenSpec } from '../skills/openspec.js';
 import { generateContext } from '../skills/context.js';
+import { materializeVepReadiness, prepareVepReadiness } from '../skills/vep.js';
 
 /**
  * Init agent — initializes a new DarkHorse WPF desktop project.
  * Creates the five-layer Onion Architecture skeleton, seeds OpenSpec specs, and generates context files.
  */
 export async function initAgent(config: DarkhorseConfig): Promise<void> {
+  const vepPlan = await prepareVepReadiness(config);
   const ns = config.dotnet.namespace;
   const uiLabel = config.dotnet.uiFramework === 'materialdesign'
     ? 'Material Design in XAML Toolkit'
@@ -50,6 +52,10 @@ export async function initAgent(config: DarkhorseConfig): Promise<void> {
   // 5. Write .darkhorse.yaml
   logger.step('Writing project config...');
   await writeConfig(config);
+
+  // 6. Materialize the project-owned VEP dependency and starter Contract
+  logger.step('Generating VEP-ready project boundary...');
+  results.push(await materializeVepReadiness(vepPlan));
 
   // Report
   logger.blank();

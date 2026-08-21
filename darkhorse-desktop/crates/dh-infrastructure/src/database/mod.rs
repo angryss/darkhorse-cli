@@ -11,3 +11,6 @@ pub use initiative_repo::*;
 pub use migrations::*;
 pub use slice_repo::*;
 pub use workspace_repo::*;
+
+// Database exports are storage ports only; no exported repository owns VEP
+// lifecycle, readiness, tier, proof, review, or closure truth.

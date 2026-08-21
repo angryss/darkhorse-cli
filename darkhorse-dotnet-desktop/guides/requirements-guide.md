@@ -1,86 +1,31 @@
-# Requirements Guide — WPF Desktop
+# Requirements Guide — WPF desktop project
 
-## Requirement Format
+Requirements begin as discovery input. They become governed implementation scope only after they are represented in an approved canonical A1 at `.visu/work/<change-id>/contract.yaml`.
 
-All requirements follow this structure:
+## Draft checklist
 
-```markdown
-## REQ-{MVP}-{###}: {Short Title}
+Capture these facts before Plan:
 
-**MVP:** {X.Y}
-**Status:** Not Started | In Progress | In Review | Done | Blocked
-**Context:** {BoundedContextName}
-**Layer(s):** Domain | Application | Infrastructure | Presentation | All
+- the observable problem and desired outcome;
+- included and excluded repositories, paths, and interfaces;
+- dependencies and assumptions;
+- fixed, testable acceptance criteria;
+- independently sourced proof expectations;
+- risk triggers and rationale;
+- reviewers and authority subjects;
+- a reversible path to done;
+- platform context: bounded contexts, Onion Architecture layers, CQRS, MVVM, persistence, installer, and UI behavior.
 
-### Description
-[What needs to be built. Use domain language.]
+This checklist is drafting guidance, not a second plan format. An optional OpenSpec draft flows one way into A1. Once A1 exists, edit only A1 and regenerate proposal/tasks projections.
 
-### Acceptance Criteria
-- [ ] {Specific, testable criterion 1}
-- [ ] {Specific, testable criterion 2}
-- [ ] All existing tests pass
+## Acceptance criteria
 
-### Notes
-[Dependencies, technical decisions, open questions]
-```
+Write each criterion as an observable outcome, not an implementation instruction. Include the actor or system state, the action, the expected result, and any boundary or failure behavior. VEP owns proof binding and whether the evidence satisfies the frozen expectation.
 
----
+## Authority boundaries
 
-## Bounded Context Spec Format
-
-Create `openspec/specs/domain/<ContextName>.md` for each bounded context:
-
-```markdown
-# <ContextName> Context
-
-## Purpose
-[What business capability does this context own?]
-
-## Ubiquitous Language
-| Term | Definition |
-|------|-----------|
-| [Term] | [Domain-specific meaning] |
-
-## Aggregate Root: <ContextName>
-**Invariants:**
-- [Rule the aggregate enforces]
-
-**Properties:**
-- `Id: Guid` — identity
-- [other properties]
-
-**Methods:**
-- `Create(...)` — factory method
-- [state-change methods]
-
-**Domain Events:**
-- `<ContextName>CreatedEvent` — raised when...
-
-## Commands
-- `Create<ContextName>Command` — [what it does]
-
-## Queries
-- `Get<ContextName>Query` — returns `<ContextName>Dto`
-
-## Repository Interface
-```csharp
-public interface I<ContextName>Repository
-{
-    Task<<ContextName>?> GetByIdAsync(Guid id, CancellationToken ct);
-    Task AddAsync(<ContextName> entity, CancellationToken ct);
-}
-```
-```
-
----
-
-## MVP Planning Checklist
-
-Before starting an MVP, ensure:
-
-- [ ] Requirements are written in `openspec/specs/project/roadmap.md`
-- [ ] All requirements have IDs (`REQ-{MVP}-{###}`)
-- [ ] Bounded context specs are written in `openspec/specs/domain/`
-- [ ] `context/30-BOUNDED-CONTEXTS.md` is updated
-- [ ] `openspec/changes/mvp-{X.Y}/progress-tracker.md` is created
-- [ ] Domain ubiquitous language is defined
+- DarkHorse and AI adapters may clarify wording and platform considerations.
+- Only project-local VEP validates the contract, proof, review, and close inputs.
+- An AI response cannot approve readiness, change risk tier, expand scope, waive proof, or close a change.
+- Progress trackers, roadmaps, prompts, and generated projections are non-authoritative views.
+- Missing or incompatible project-local VEP fails closed; no global, PATH, source-tree, embedded, or tarball fallback is allowed.

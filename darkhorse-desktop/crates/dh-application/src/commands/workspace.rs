@@ -4,7 +4,9 @@ use tracing::info;
 use uuid::Uuid;
 
 use crate::errors::{AppError, AppResult};
-use crate::ports::WorkspaceRepository;
+use crate::ports::{
+    VepDelegationPort, VepDelegationRequest, VepDelegationResult, WorkspaceRepository,
+};
 use dh_domain::entities::Workspace;
 
 // --- Create Workspace ---
@@ -54,9 +56,7 @@ pub async fn handle_load_workspace(
 
 // --- List Workspaces ---
 
-pub async fn handle_list_workspaces(
-    repo: &dyn WorkspaceRepository,
-) -> AppResult<Vec<Workspace>> {
+pub async fn handle_list_workspaces(repo: &dyn WorkspaceRepository) -> AppResult<Vec<Workspace>> {
     repo.find_all()
 }
 
@@ -84,4 +84,12 @@ pub async fn handle_load_workspace_summary(
         root_path: ws.root_path().to_path_buf(),
         initiative_count: 0, // Will be populated once initiative-workspace link is queried
     })
+}
+
+/// Delegates without interpreting lifecycle, readiness, risk, or completion.
+pub fn handle_invoke_project_vep(
+    request: VepDelegationRequest,
+    port: &dyn VepDelegationPort,
+) -> AppResult<VepDelegationResult> {
+    port.invoke(&request)
 }

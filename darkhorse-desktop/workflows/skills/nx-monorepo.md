@@ -1,5 +1,7 @@
 # Skill: Nx Monorepo
 
+> **Authority:** architecture input only. VEP remains lifecycle/readiness/risk/review/closure authority and A1 remains the editable plan authority.
+
 ## Metadata
 
 ```yaml

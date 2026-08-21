@@ -1,5 +1,7 @@
 # Frontend Patterns Guide
 
+> **Process boundary:** UI state is presentation only. Render fresh VEP/A1 projections; never turn cached state, a rejected invocation, risk input, or a work-item status into lifecycle/readiness/completion truth.
+
 **Architecture and implementation patterns for Tauri desktop frontend development.**
 
 ---

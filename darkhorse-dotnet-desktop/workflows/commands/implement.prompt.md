@@ -1,45 +1,24 @@
 ---
-description: Execute an approved proposal inside-out for the WPF desktop project
+description: "Provide framework ergonomics inside canonical VEP A1 authority"
+mode: agent
 ---
 
-# /implement
+# /implement — VEP-bound help
 
-Invoke the `@implement` agent to execute an approved proposal.
+> Installed `@angryss/vep` owns lifecycle, gates, risk, artifacts, proof, review, and closure.
+> Darkhorse supplies bounded framework ergonomics only.
 
-## Usage
+## VEP 2.0 authority boundary
 
-```
-/implement [proposal-id or REQ-X.Y-NNN] [--mvp X.Y]
-```
+- OpenSpec is optional draft input before A1.
+- `.visu/work/<change-id>/contract.yaml` is the sole editable semantic and plan authority after validation.
+- `proposal.md` and `tasks.md` are deterministic, hash/version-bound read-only projections.
+- Roadmaps, trackers, agents, commands, and skills never override A1.
 
-## Examples
+## Action
 
-```
-/implement REQ-1.0-001
-/implement orders-create-feature --mvp 1.0
-/implement the OrderManagement domain layer
-```
+- Require the governed A1 at `.visu/work/<change-id>/contract.yaml`.
+- Run `validateOpenSpecProjections` before using proposal/tasks as human-readable views.
 
-## Execution Order (Mandatory)
-
-```
-1. Common (if new primitives needed)
-2. Domain entities, value objects, domain events, repository interfaces
-3. Application commands, queries, handlers, validators
-4. Infrastructure repositories, EF Core configurations
-5. Presentation ViewModels + XAML Views
-6. Tests
-```
-
-## Pre-conditions
-
-- `openspec/changes/mvp-{X.Y}/{proposal-id}/proposal.md` must exist
-- Proposal must have passed the architecture checklist
-- Requirement must be in `progress-tracker.md`
-
-## Post-conditions
-
-- All tasks in `tasks.md` are checked
-- `dotnet test` passes with zero failures
-- `context/30-BOUNDED-CONTEXTS.md` is updated (if new context)
-- Requirement status is `Done` in progress tracker
+Load the matching file in `openspec/specs/workflow/skills/` for architecture-specific help.
+Stop on invalid A1, stale binding, direct projection edit, mixed version, or cross-change reuse.

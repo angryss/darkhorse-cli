@@ -18,9 +18,6 @@ pub enum DomainError {
     #[error("Workspace not found: {0}")]
     WorkspaceNotFound(String),
 
-    #[error("Invalid state transition from {from} to {to}")]
-    InvalidStateTransition { from: String, to: String },
-
     #[error("Validation failed: {0}")]
     ValidationFailed(String),
 
@@ -29,9 +26,6 @@ pub enum DomainError {
 
     #[error("Scope boundary violated: {0}")]
     ScopeBoundaryViolated(String),
-
-    #[error("Planning readiness not met: {0}")]
-    PlanningReadinessNotMet(String),
 
     #[error("Artifact not found: {0}")]
     ArtifactNotFound(String),

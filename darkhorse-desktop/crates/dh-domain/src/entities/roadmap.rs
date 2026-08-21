@@ -2,8 +2,8 @@ use chrono::{DateTime, NaiveDate, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-/// A roadmap organizes the delivery timeline for an initiative,
-/// grouping work into milestones with target dates and tracked progress.
+/// A non-authoritative product timeline. Milestone/item labels never determine
+/// VEP lifecycle state or Close eligibility.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Roadmap {
     id: Uuid,
@@ -54,7 +54,11 @@ impl Roadmap {
         &self.milestones
     }
 
-    pub fn add_milestone(&mut self, name: impl Into<String>, description: impl Into<String>) -> Uuid {
+    pub fn add_milestone(
+        &mut self,
+        name: impl Into<String>,
+        description: impl Into<String>,
+    ) -> Uuid {
         let id = Uuid::new_v4();
         self.milestones.push(Milestone {
             id,
@@ -105,7 +109,7 @@ impl Milestone {
         }
     }
 
-    pub fn mark_completed(&mut self) {
+    pub fn mark_display_done(&mut self) {
         self.completed = true;
     }
 

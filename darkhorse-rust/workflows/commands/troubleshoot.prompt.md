@@ -1,32 +1,24 @@
 ---
-description: "Diagnose a bug, identify root cause, and produce a structured troubleshooting report"
+description: "Diagnose failures and recover through canonical VEP A1 authority"
 mode: agent
 ---
 
-Execute the **Troubleshooting** workflow.
+# /troubleshoot — VEP-bound help
 
-## Skill
+> Installed `@angryss/vep` owns lifecycle, gates, risk, artifacts, proof, review, and closure.
+> Darkhorse supplies bounded framework ergonomics only.
 
-Read and follow every step in `openspec/specs/workflow/skills/troubleshooting.md`.
+## VEP 2.0 authority boundary
 
-## Context
+- OpenSpec is optional draft input before A1.
+- `.visu/work/<change-id>/contract.yaml` is the sole editable semantic and plan authority after validation.
+- `proposal.md` and `tasks.md` are deterministic, hash/version-bound read-only projections.
+- Roadmaps, trackers, agents, commands, and skills never override A1.
 
-Load all required context files listed in the skill before producing output.
+## Action
 
-## Parameters
+- Diagnose without changing A1 or projections.
+- If A1 meaning is wrong, amend A1; if a view is stale, regenerate it from current A1.
 
-- **issue**: Description of the problem or bug
-- **mvp**: Target MVP milestone (e.g., 1.0)
-- **severity**: Critical / High / Medium / Low
-- **context**: Affected bounded context name
-- **evidence**: Error messages, logs, or reproduction steps
-
-## Constraints
-
-- NO source code modifications — reports and proposals only
-- Output goes to `openspec/changes/mvp-{MVP}/BUG-{MVP}-{###}/`
-- Update `openspec/changes/mvp-{MVP}/progress-tracker.md`
-
-## Handoff
-
-After completing, suggest proceeding to `/plan` to formalize the fix, then `/implement` to apply it.
+Load the matching file in `openspec/specs/workflow/skills/` for architecture-specific help.
+Stop on invalid A1, stale binding, direct projection edit, mixed version, or cross-change reuse.

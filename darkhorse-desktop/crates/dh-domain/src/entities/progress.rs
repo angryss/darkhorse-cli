@@ -2,8 +2,8 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-/// Tracks overall delivery progress for an initiative, including
-/// completed items, blockers, and velocity indicators.
+/// Tracks local work-item presentation data. It does not project or authorize
+/// VEP lifecycle, proof, review, or completion.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ProgressTracker {
     id: Uuid,
@@ -83,7 +83,7 @@ impl ProgressTracker {
         }
     }
 
-    pub fn completion_percent(&self) -> f64 {
+    pub fn work_item_percent(&self) -> f64 {
         if self.entries.is_empty() {
             return 0.0;
         }

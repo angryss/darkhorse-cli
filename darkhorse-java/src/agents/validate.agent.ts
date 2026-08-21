@@ -5,5 +5,5 @@
  * Thin orchestrator; real logic lives in skills.
  */
 export async function validateAgent(): Promise<void> {
-  logger.warn('Validate agent not yet implemented');
+  logger.info('Validation assistance is non-authoritative and performs no VEP lifecycle transition.');
 }

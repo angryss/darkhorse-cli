@@ -1,15 +1,20 @@
 import { Command } from 'commander';
-import { logger } from '../core/logger.js';
+import { delegateProjectLocalVisu, reportLifecycleBoundaryError } from './validate.js';
 
 export function registerPlanCommand(program: Command): void {
   program
     .command('plan')
-    .description('Create a DDD-compliant proposal for a feature or change')
-    .option('-f, --feature <feature>', 'Feature or requirement to plan')
-    .option('-c, --context <context>', 'Target bounded context')
-    .option('--mvp <mvp>', 'Target MVP milestone (e.g. 1.0)')
-    .action(async (_opts) => {
-      logger.warn('Plan command not yet implemented');
-      logger.info('See workflows/skills/planning.md for the planning workflow.');
+    .description('Delegate Plan and canonical A1 semantics to project-local VEP')
+    .argument('[visu-arguments...]', 'Arguments passed unchanged to project-local visu')
+    .option('--project-root <dir>', 'Generated project root', '.')
+    .allowUnknownOption(true)
+    .allowExcessArguments(true)
+    .action(async (visuArguments: string[], opts: { projectRoot: string }) => {
+      try {
+        process.exitCode = await delegateProjectLocalVisu(opts.projectRoot, 'plan', visuArguments);
+      } catch (error) {
+        reportLifecycleBoundaryError(error);
+        process.exitCode = 1;
+      }
     });
 }

@@ -1,5 +1,11 @@
 # Repository Status
 
+## VEP 2.0 terminal candidate
+
+DarkHorse's four scaffolders now generate project-owned VEP boundaries pinned exactly to public `@angryss/vep@2.0.0`. The terminal implementation, calibration, package, documentation, security, and preservation checks pass. The candidate is awaiting Brandon Rock's separately supplied final independent review decision; it is not yet approved or complete.
+
+The current lifecycle and authority model is documented in [`docs/vep-2-integration.md`](docs/vep-2-integration.md). No Foundation adoption, publication, push, or protected-consumer mutation is part of this candidate checkpoint.
+
 ## Current Maturity Assessment
 
 DarkHorse is currently **public-alpha/pre-alpha quality**. The project has a coherent framework direction and working scaffolders, but it is still being cleaned up for external contributors and broader public trust.

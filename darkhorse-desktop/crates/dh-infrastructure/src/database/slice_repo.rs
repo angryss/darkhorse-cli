@@ -3,6 +3,8 @@ use dh_application::ports::SliceRepository;
 use dh_domain::entities::ImplementationSlice;
 use uuid::Uuid;
 
+// Slice status is local work-item presentation data, never VEP completion.
+
 use super::DbConnection;
 
 /// SQLite-backed implementation of the SliceRepository port.
@@ -38,7 +40,10 @@ impl SliceRepository for SqliteSliceRepo {
             .map_err(|e| AppError::Persistence(e.to_string()))
     }
 
-    fn find_by_id(&self, id: Uuid) -> dh_application::errors::AppResult<Option<ImplementationSlice>> {
+    fn find_by_id(
+        &self,
+        id: Uuid,
+    ) -> dh_application::errors::AppResult<Option<ImplementationSlice>> {
         self.db
             .with_conn(|conn| {
                 let mut stmt = conn
@@ -63,7 +68,10 @@ impl SliceRepository for SqliteSliceRepo {
             .map_err(|e| AppError::Persistence(e.to_string()))
     }
 
-    fn find_by_mvp(&self, mvp_id: Uuid) -> dh_application::errors::AppResult<Vec<ImplementationSlice>> {
+    fn find_by_mvp(
+        &self,
+        mvp_id: Uuid,
+    ) -> dh_application::errors::AppResult<Vec<ImplementationSlice>> {
         self.db
             .with_conn(|conn| {
                 let mut stmt = conn
@@ -87,7 +95,10 @@ impl SliceRepository for SqliteSliceRepo {
         self.db
             .with_conn(|conn| {
                 let rows = conn
-                    .execute("DELETE FROM implementation_slices WHERE id = ?1", [id.to_string()])
+                    .execute(
+                        "DELETE FROM implementation_slices WHERE id = ?1",
+                        [id.to_string()],
+                    )
                     .map_err(crate::errors::InfraError::Sqlite)?;
                 Ok(rows > 0)
             })

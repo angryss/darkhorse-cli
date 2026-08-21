@@ -1,31 +1,24 @@
 ---
-description: "Explore and shape a product idea, feature, or scope change before formal planning"
+description: "Explore change intent as optional draft input to canonical VEP"
 mode: agent
 ---
 
-Execute the **Discovery** workflow.
+# /discover — VEP-bound help
 
-## Skill
+> Installed `@angryss/vep` owns lifecycle, gates, risk, artifacts, proof, review, and closure.
+> Darkhorse supplies bounded framework ergonomics only.
 
-Read and follow every step in `openspec/specs/workflow/skills/discovery.md`.
+## VEP 2.0 authority boundary
 
-## Context
+- OpenSpec is optional draft input before A1.
+- `.visu/work/<change-id>/contract.yaml` is the sole editable semantic and plan authority after validation.
+- `proposal.md` and `tasks.md` are deterministic, hash/version-bound read-only projections.
+- Roadmaps, trackers, agents, commands, and skills never override A1.
 
-Load all required context files listed in the skill before producing output.
+## Action
 
-## Parameters
+- Before A1 exists, discovery may write one `OpenSpecDraft` JSON document under `openspec/changes/<change-id>/draft.json`.
+- After A1 exists, discovery is advisory only. Record semantic changes by amending A1 through the adapter.
 
-- **idea**: The idea, feature, or change to explore
-- **mode**: `discovery` (new idea) or `adjustment` (change to existing plan)
-- **mvp**: Target MVP milestone (e.g., 1.0) — optional, may be determined during discovery
-- **context**: Related bounded context or existing plan
-
-## Constraints
-
-- NO code generation — discovery documents only
-- NO modifications to `backend/`, `frontend/`, or `deployment/`
-- Output goes to `openspec/changes/discoveries/DISC-{###}.md`
-
-## Handoff
-
-After completing, suggest proceeding to `/plan` with the discovery output.
+Load the matching file in `openspec/specs/workflow/skills/` for architecture-specific help.
+Stop on invalid A1, stale binding, direct projection edit, mixed version, or cross-change reuse.

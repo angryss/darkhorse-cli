@@ -1,62 +1,31 @@
-# Requirements Guide — Rust/Tauri Desktop
+# Requirements Guide — Rust/Tauri project
 
-> How to write and manage requirements for DarkHorse Rust/Tauri projects.
+Requirements begin as discovery input. They become governed implementation scope only after they are represented in an approved canonical A1 at `.visu/work/<change-id>/contract.yaml`.
 
-## Requirement Structure
+## Draft checklist
 
-Each requirement lives in a proposal directory:
+Capture these facts before Plan:
 
-```
-openspec/changes/mvp-X.Y/REQ-X.Y-NNN/
-├── proposal.md        ← What to build and why
-├── design.md          ← Technical approach (optional for small changes)
-└── checklist.md       ← Implementation verification checklist
-```
+- the observable problem and desired outcome;
+- included and excluded repositories, paths, and interfaces;
+- dependencies and assumptions;
+- fixed, testable acceptance criteria;
+- independently sourced proof expectations;
+- risk triggers and rationale;
+- reviewers and authority subjects;
+- a reversible path to done;
+- platform context: domain/application/infrastructure crates, Tauri command boundaries, SQLite, frontend IPC, and packaging.
 
-## Requirement ID Format
+This checklist is drafting guidance, not a second plan format. An optional OpenSpec draft flows one way into A1. Once A1 exists, edit only A1 and regenerate proposal/tasks projections.
 
-`REQ-{MVP}-{###}` — e.g., `REQ-1.0-001`, `REQ-1.0-002`
+## Acceptance criteria
 
-## Proposal Template
+Write each criterion as an observable outcome, not an implementation instruction. Include the actor or system state, the action, the expected result, and any boundary or failure behavior. VEP owns proof binding and whether the evidence satisfies the frozen expectation.
 
-```markdown
-# REQ-X.Y-NNN — [Title]
+## Authority boundaries
 
-## Summary
-[One-paragraph description of what this requirement delivers]
-
-## Motivation
-[Why is this needed? What problem does it solve?]
-
-## Scope
-- [ ] Domain changes (entities, values, services)
-- [ ] Application changes (commands, handlers, ports)
-- [ ] Infrastructure changes (database, filesystem)
-- [ ] Desktop changes (Tauri commands, state)
-- [ ] Frontend changes (pages, services, components)
-
-## Acceptance Criteria
-1. [Specific, testable criterion]
-2. [Another criterion]
-
-## Implementation Notes
-[Any technical guidance, constraints, or design decisions]
-```
-
-## Classification Types
-
-| Type | Description |
-|------|-------------|
-| **full-slice** | End-to-end: domain → application → infrastructure → desktop → frontend |
-| **backend** | Rust crate changes only (no frontend) |
-| **frontend** | TypeScript UI changes only (no Rust) |
-| **infrastructure** | Persistence, filesystem, settings |
-| **docs** | Documentation, context, or spec updates |
-
-## Workflow
-
-1. **Define** — Create requirement in `openspec/specs/project/roadmap.md`
-2. **Propose** — Write detailed proposal in `openspec/changes/mvp-X.Y/REQ-X.Y-NNN/`
-3. **Implement** — Execute inside-out (domain → application → infrastructure → desktop → frontend)
-4. **Track** — Update `progress-tracker.md` status after each step
-5. **Archive** — Move completed MVP from `changes/` to `archive/`
+- DarkHorse and AI adapters may clarify wording and platform considerations.
+- Only project-local VEP validates the contract, proof, review, and close inputs.
+- An AI response cannot approve readiness, change risk tier, expand scope, waive proof, or close a change.
+- Progress trackers, roadmaps, prompts, and generated projections are non-authoritative views.
+- Missing or incompatible project-local VEP fails closed; no global, PATH, source-tree, embedded, or tarball fallback is allowed.

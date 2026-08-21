@@ -1,187 +1,43 @@
-﻿# AGENTS.md — {{project.name}}
+# AGENTS.md — {{project.name}}
 
-> **AI Agent Entry Point.** Read this file first when working on this project.
+> **VEP 2.0 authority boundary.** Installed `@angryss/vep` owns lifecycle, gates, risk,
+> artifacts, proof, review, and closure. Darkhorse owns framework scaffolding and this adapter only.
 
 ## Project
 
 - **Name:** {{project.name}}
 - **Description:** {{project.description}}
-- **Archetype:** {{project.archetype}}
-- **Framework:** Quarkus (Java {{project.java.javaVersion}})
-- **Architecture:** DDD + Onion Architecture + CQRS
-- **Generated:** {{timestamp}} by DarkHorse Java CLI v{{cliVersion}}
-
-## Archetype: {{project.archetype}}
-
-{{#if (eq project.archetype "api")}}
-This is a **standard API** — it owns its data, exposes HTTP endpoints, and contains full domain logic.
-- Commands persist via repositories
-- Queries read from repositories or read models
-- Full domain model with entities, value objects, aggregates
-{{/if}}
-{{#if (eq project.archetype "bff-api")}}
-This is a **BFF API (Backend-for-Frontend)** — it is a routing layer between a frontend and downstream services.
-- **Commands dispatch to a message broker** — they do NOT persist
-- **Queries call downstream REST APIs** — they do NOT access a database
-- Domain layer contains **interfaces and contracts only** — no business logic execution
-- **No persistence dependencies** — no repositories, no database, no ORM
-{{/if}}
-{{#if (eq project.archetype "microservice")}}
-This is a **Microservice** — it is message-driven, owns its data, and is NOT HTTP-first.
-- Commands triggered by inbound messages from a broker, not HTTP requests
-- Full domain logic with persistence
-- Publishes integration events for other services
-- REST endpoints only for health checks or admin
-{{/if}}
+- **Architecture references:** DDD, Onion Architecture, and CQRS
+- **Generated:** {{timestamp}} by Darkhorse CLI v{{cliVersion}}
 
 ## Reading Order
 
-1. `context/00-START-HERE.md` — Project overview and navigation
-2. **This file** — AI agent instructions and workflow system
-3. `.github/copilot-instructions.md` — Workspace-level Copilot/Claude instructions
-4. `openspec/specs/architecture/archetype-rules.md` — Archetype constraints
-5. `openspec/specs/architecture/` — Mandatory architecture rules
-6. `openspec/specs/patterns/` — Implementation patterns
-7. `.github/prompts/` — Prompt commands (invoke as `/discover`, `/plan`, `/implement`, `/troubleshoot`)
-8. `openspec/specs/workflow/skills/` — Development workflow skills (referenced by commands)
-9. `openspec/specs/domain/` — Bounded contexts (project-specific)
-10. `openspec/specs/project/roadmap.md` — MVP roadmap and archiving rules
-11. `openspec/changes/mvp-1.0/progress-tracker.md` — Active MVP progress tracker
-12. `openspec/changes/` — Active proposals and tasks
+1. `context/00-START-HERE.md` — project navigation
+2. `.visu/work/<change-id>/contract.yaml` — canonical A1 when a governed change exists
+3. `openspec/specs/architecture/` — retained framework constraints
+4. `openspec/specs/patterns/` — retained implementation patterns
+5. `openspec/specs/domain/` — project domain reference
+6. `openspec/specs/workflow/skills/` — non-authoritative VEP-bound help
+7. `openspec/changes/<change-id>/proposal.md` and `tasks.md` — read-only projections
 
-## Agentic Workflow
+## Authority transition
 
-This project uses a three-layer agentic workflow: **Agent → Command → Skill**.
+- Before A1 exists, one optional `OpenSpecDraft` may capture explicit change input.
+- `materializeOpenSpecDraft` maps it one-way and installed VEP validates the candidate.
+- Only a valid `.visu/work/<change-id>/contract.yaml` becomes editable plan authority.
+- OpenSpec cannot overwrite an existing A1.
+- `proposal.md` and `tasks.md` bind change id, exact VEP version, A1 SHA-256, projection version, and generation id.
+- Roadmaps, trackers, commands, agents, and skills are views or ergonomic guidance; none decides VEP state.
 
-| Layer | Location | Invoked As | Purpose |
-|-------|----------|------------|---------|
-| **Agents** | `.github/agents/` | `@agent-name` in Copilot chat | Enforce behavioral rules, guide interaction |
-| **Commands** | `.github/prompts/` | `/command-name` in chat | Structured invocation, parameterized execution |
-| **Skills** | `openspec/specs/workflow/skills/` | Referenced by commands | Detailed step-by-step workflow execution |
+## Governed recovery
 
-### Available Workflows
+- Semantic correction: amend A1 through `amendCanonicalA1`, validate, and regenerate.
+- Missing/stale view: call `regenerateOpenSpecProjections` from current validated A1.
+- Direct edit, mixed pin, changed hash, or cross-change reuse: stop without mutation.
+- Never reconstruct A1 from proposal/tasks and never introduce another lifecycle or gate.
 
-| Command | Agent | Skill | Purpose |
-|---------|-------|-------|---------|
-| `/discover` | `@discover` | `discovery.md` | Explore and shape ideas before planning |
-| `/plan` | `@plan` | `planning.md` | Create DDD-compliant proposals |
-| `/implement` | `@implement` | `implementation.md` | Execute approved proposals inside-out |
-| `/troubleshoot` | `@troubleshoot` | `troubleshooting.md` | Diagnose bugs and architecture violations |
+## Framework work
 
-### Execution Chain
-
-Agents invoke commands. Commands invoke skills. Do not bypass this chain.
-
-1. **Agent** receives user request and enforces hard rules
-2. **Agent** loads the corresponding **Command** from `.github/prompts/`
-3. **Command** references the **Skill** in `openspec/specs/workflow/skills/`
-4. **Skill** defines the step-by-step execution, context loading, and output format
-
-Commands can also be invoked directly as `/discover`, `/plan`, `/implement`, `/troubleshoot` without going through an agent. The agent adds behavioral guardrails on top.
-
-## Architecture Rules (Mandatory)
-
-All code MUST follow:
-
-- **DDD:** Bounded contexts, ubiquitous language, aggregates, domain events
-- **Onion Architecture:** Domain → Application → Infrastructure → Presentation (dependencies point inward)
-- **CQRS:** Commands and queries are separated
-- **Repository Pattern:** One repository per aggregate root
-- **Integration Events:** Cross-context communication via async events
-
-See `openspec/specs/architecture/` for full rules.
-
-## Canonical Structure
-
-```
-{{project.name}}/
-├── context/          ← AI navigation (you are reading from here)
-├── openspec/         ← Specs, proposals, archive
-├── backend/          ← Java/Quarkus services (DDD bounded contexts)
-│   └── {{archetypeCategory}}/
-│       ├── contexts/
-│       └── examples/
-{{#if project.features.frontend}}
-{{#if (eq project.frontend.platform "both")}}
-├── frontend/         ← React (Web) + React Native (Mobile)
-{{else if (eq project.frontend.platform "mobile")}}
-├── frontend/         ← React Native mobile application (Expo)
-{{else}}
-├── frontend/         ← React web application
-{{/if}}
-{{/if}}
-├── deployment/       ← Docker, Kubernetes, IaC
-└── .darkhorse.yaml   ← Project configuration
-```
-
-## Code Placement Rules
-
-{{#if (eq project.archetype "api")}}
-| Location | Contains |
-|----------|----------|
-| `backend/{{archetypeCategory}}/contexts/<name>/domain/` | Entities, value objects, events, repository interfaces |
-| `backend/{{archetypeCategory}}/contexts/<name>/application/` | Commands, queries, handlers, DTOs |
-| `backend/{{archetypeCategory}}/contexts/<name>/infrastructure/` | Repository implementations, messaging, persistence |
-| `backend/{{archetypeCategory}}/contexts/<name>/presentation/` | REST controllers, routes |
-{{/if}}
-{{#if (eq project.archetype "bff-api")}}
-| Location | Contains |
-|----------|----------|
-| `backend/{{archetypeCategory}}/contexts/<name>/domain/` | Contracts/interfaces ONLY (API client interfaces, message sender interfaces) |
-| `backend/{{archetypeCategory}}/contexts/<name>/application/` | Command handlers (→ broker), query handlers (→ API clients) |
-| `backend/{{archetypeCategory}}/contexts/<name>/infrastructure/` | REST API client implementations, message sender implementations, auth adapters |
-| `backend/{{archetypeCategory}}/contexts/<name>/presentation/` | REST controllers (frontend-facing), auth middleware |
-{{/if}}
-{{#if (eq project.archetype "microservice")}}
-| Location | Contains |
-|----------|----------|
-| `backend/{{archetypeCategory}}/contexts/<name>/domain/` | Entities, value objects, events, repository interfaces |
-| `backend/{{archetypeCategory}}/contexts/<name>/application/` | Command handlers, event handlers, query handlers, DTOs |
-| `backend/{{archetypeCategory}}/contexts/<name>/infrastructure/` | Repository implementations, broker config, event publishers |
-| `backend/{{archetypeCategory}}/contexts/<name>/presentation/` | Message listeners (@Incoming), optional health endpoints |
-{{/if}}
-{{#if project.features.frontend}}
-{{#if (eq project.frontend.platform "both")}}
-| `frontend/web-app/src/` | React components, pages, hooks, services |
-| `frontend/mobile-app/app/` | React Native screens, navigation, components |
-{{else if (eq project.frontend.platform "mobile")}}
-| `frontend/mobile-app/app/` | React Native screens, navigation, components |
-{{else}}
-| `frontend/web-app/src/` | React components, pages, hooks, services |
-{{/if}}
-{{/if}}
-| `deployment/` | Docker, scripts, config |
-| `openspec/` | Specs and proposals only — NO executable code |
-
-## Forbidden
-
-- No agent frameworks (LangChain, AutoGen, CrewAI)
-- No extra top-level directories
-- No code in `openspec/`
-- No cross-context direct dependencies (use integration events)
-- Domain layer has ZERO external dependencies
-{{#if (eq project.archetype "bff-api")}}
-- **No database or persistence dependencies** (no Hibernate, no JDBC, no Panache)
-- **No repository interfaces or implementations**
-- **No domain logic execution** — domain layer contains interfaces/contracts only
-- **No domain events** — BFF dispatches commands to broker, not events
-{{/if}}
-{{#if (eq project.archetype "microservice")}}
-- **No HTTP-first design** — messaging is the primary interface
-- **No shared databases** — this service owns its data exclusively
-{{/if}}
-
-## Workflow
-
-```bash
-npx darkhorse-java plan          # Create an architecture-compliant proposal
-npx darkhorse-java implement     # Execute an approved proposal
-npx darkhorse-java troubleshoot  # Investigate and fix a bug
-npx darkhorse-java validate      # Validate specs and architecture compliance
-```
-
-1. **Plan** — Create proposal in `openspec/changes/mvp-X.Y/<id>/`
-2. **Implement** — Follow `tasks.md`, write code inside-out: Domain → Application → Infrastructure → Presentation{{#if project.features.frontend}} → Frontend{{/if}}
-3. **Test** — Run tests, file bugs as `BUG-X.Y-###` proposals
-4. **Fix** — Investigate and fix bugs via `troubleshoot`
-5. **Archive MVP** — When all progress-tracker rows are `Done` and tests pass, move `openspec/changes/mvp-X.Y/` → `openspec/archive/mvp-X.Y/`, then mark the MVP as `Completed` in `openspec/specs/project/roadmap.md`
+- Use the architecture and pattern references for code placement and framework conventions.
+- Implement only scope authorized by A1.
+- Run VEP only through the project root scripts and project-local `visu` executable.

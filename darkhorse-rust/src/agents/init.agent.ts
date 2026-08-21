@@ -11,8 +11,10 @@ import { scaffoldProject } from '../skills/scaffolding.js';
 import { seedOpenSpec } from '../skills/openspec.js';
 import { generateContext } from '../skills/context.js';
 import { validateScaffold } from '../skills/validation.js';
+import { materializeVepReadiness, prepareVepReadiness } from '../skills/vep.js';
 
 export async function initAgent(config: DarkhorseConfig): Promise<void> {
+  const vepPlan = await prepareVepReadiness(config);
   logger.header(`Initializing project: ${config.name}`);
   logger.info(`Archetype: Tauri Desktop Application`);
   logger.info(`Crate prefix: ${config.rust.cratePrefix}`);
@@ -40,7 +42,11 @@ export async function initAgent(config: DarkhorseConfig): Promise<void> {
   logger.step('Writing project config...');
   await writeConfig(config);
 
-  // 5. Validate scaffolded output
+  // 5. Materialize the project-owned VEP dependency and starter Contract
+  logger.step('Generating VEP-ready project boundary...');
+  results.push(await materializeVepReadiness(vepPlan));
+
+  // 6. Validate scaffolded output
   logger.step('Validating scaffolded project...');
   const validationResult = await validateScaffold(config);
   results.push(validationResult);

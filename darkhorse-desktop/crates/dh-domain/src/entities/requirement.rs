@@ -4,10 +4,9 @@ use uuid::Uuid;
 
 use crate::values::Priority;
 
-/// A structured requirement that belongs to an MVP scope.
+/// A structured requirement observation supplied to the A1 adapter.
 ///
-/// Requirements capture what the product must do — functional behaviors,
-/// quality expectations, and constraints.
+/// After A1 exists, this record is not editable plan or completion authority.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Requirement {
     id: Uuid,

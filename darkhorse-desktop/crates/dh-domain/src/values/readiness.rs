@@ -9,27 +9,15 @@ pub struct PlanningReadiness {
     pub recommendations: Vec<String>,
 }
 
-impl PlanningReadiness {
-    pub fn ready(score: f64) -> Self {
-        Self {
-            score,
-            is_ready: true,
-            blockers: Vec::new(),
-            recommendations: Vec::new(),
-        }
-    }
-
-    pub fn not_ready(score: f64, blockers: Vec<String>) -> Self {
-        Self {
-            score,
-            is_ready: false,
-            blockers,
-            recommendations: Vec::new(),
-        }
-    }
-
-    pub fn with_recommendation(mut self, rec: impl Into<String>) -> Self {
-        self.recommendations.push(rec.into());
-        self
-    }
+/// Structural Desktop observations supplied to the governed planning adapter.
+/// Deliberately contains no score, gate, or ready/not-ready decision.
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "camelCase")]
+pub struct VepReadinessInput {
+    pub discovery_notes_present: bool,
+    pub option_count: usize,
+    pub unresolved_tradeoff_count: usize,
+    pub open_question_count: usize,
+    pub mvp_count: usize,
+    pub requirement_count: usize,
 }

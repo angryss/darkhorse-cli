@@ -10,6 +10,7 @@ interface SerializedConfig {
   name: string;
   description: string;
   version: string;
+  vep?: unknown;
   archetype: string;
   rust: {
     framework: string;
@@ -30,11 +31,28 @@ interface SerializedConfig {
   };
 }
 
+const DEFAULT_VEP_CONFIG: DarkhorseConfig['vep'] = { enabled: true };
+
+function normalizeVepConfig(value: unknown): DarkhorseConfig['vep'] {
+  if (value === undefined) return DEFAULT_VEP_CONFIG;
+  if (typeof value !== 'object'
+    || value === null
+    || Array.isArray(value)
+    || Object.keys(value).some((key) => key !== 'enabled')
+    || typeof (value as { enabled?: unknown }).enabled !== 'boolean') {
+    throw new Error(
+      'Invalid .darkhorse.yaml VEP configuration. Keep only "vep.enabled" as a boolean; select the VEP version exclusively in the generated project root package.json.',
+    );
+  }
+  return { enabled: (value as { enabled: boolean }).enabled };
+}
+
 export async function writeConfig(config: DarkhorseConfig): Promise<void> {
   const serialized: SerializedConfig = {
     name: config.name,
     description: config.description,
     version: config.version,
+    vep: { enabled: config.vep.enabled },
     archetype: config.archetype,
     rust: { ...config.rust },
     frontend: { ...config.frontend },
@@ -57,9 +75,9 @@ export async function readConfig(projectRoot: string): Promise<DarkhorseConfig> 
     entrypoint: 'AGENTS.md',
     tools: { copilot: true, kiro: false },
   };
-
   return {
     ...parsed,
+    vep: normalizeVepConfig(parsed.vep),
     archetype: parsed.archetype as DarkhorseConfig['archetype'],
     rust: {
       framework: parsed.rust.framework as 'tauri',

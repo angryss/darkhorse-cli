@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-/// The type of implementation slice generated from requirements.
+/// Local work-item display category; it does not define VEP implementation scope.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub enum SliceType {
     /// Full vertical slice through all layers

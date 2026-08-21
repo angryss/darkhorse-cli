@@ -1,34 +1,27 @@
-# Troubleshooting Skill
+# Skill: Troubleshooting
 
-> Diagnose and resolve compilation errors, runtime failures, and architecture violations.
+## Purpose
 
-## Parameters
+Diagnose failures and select the one governed recovery path.
 
-| Parameter | Required | Description |
-|-----------|----------|-------------|
-| `issue` | Yes | Description of the issue or error message |
-| `layer` | No | Layer suspected to be the source (domain, application, infrastructure, desktop, frontend) |
+## VEP 2.0 authority boundary
+
+- Installed `@angryss/vep` is the sole process authority.
+- OpenSpec may be edited only as optional draft input before A1 materialization.
+- Validated `.visu/work/<change-id>/contract.yaml` is the sole editable plan after transition.
+- Proposal/tasks are deterministic read-only projections bound to change id, VEP version, A1 hash, projection version, and generation id.
+- This skill supplies no lifecycle, gate, risk-tier, artifact, proof, review, or closure semantics.
 
 ## Steps
 
-1. **Reproduce** — Confirm the issue (run `cargo check`, `cargo test`, or frontend build)
-2. **Locate** — Identify which layer and file is the source
-3. **Trace** — Follow the call chain through layers to find root cause
-4. **Diagnose** — Determine the category of issue:
-   - Compilation error (type mismatch, missing trait impl, lifetime issue)
-   - Architecture violation (wrong dependency direction, logic in wrong layer)
-   - Runtime failure (panic, database error, IPC failure)
-   - Configuration issue (Cargo.toml, tauri.conf.json, package.json)
-5. **Fix** — Apply the smallest correct fix following architecture rules
-6. **Verify** — Confirm the fix: `cargo check && cargo test`
+1. Observe current A1, package pin, and projection bindings without mutation.
+2. Diagnose the implementation or environment within A1 scope.
+3. For semantic correction, use `amendCanonicalA1` and revalidate.
+4. For derived drift only, use `regenerateOpenSpecProjections`; this never changes A1 or requires OpenSpec.
 
-## Common Issue Patterns
+## Fail-closed recovery
 
-| Issue | Root Cause | Fix |
-|-------|-----------|-----|
-| Dependency cycle between crates | Wrong layer dependency | Move shared types to domain, use port traits |
-| Domain crate imports infrastructure | Architecture violation | Extract interface to port trait in application |
-| Tauri command has business logic | Desktop layer too thick | Move logic to application handler |
-| SQLite type conversion error | Missing `From` impl | Add `TryFrom` impl for repository mapping |
-| Frontend invoke returns error | Mismatched command name | Ensure `invoke("name")` matches `#[tauri::command]` fn name |
-| Lifetime error in async handler | Borrow across await | Clone the value or restructure ownership |
+- Invalid candidate: keep current authority unchanged and correct explicit input.
+- Existing A1 plus draft overwrite attempt: stop and amend A1 instead.
+- Missing or stale projection: regenerate from current validated A1.
+- Direct projection edit or cross-change projection: reject; never reverse-sync.

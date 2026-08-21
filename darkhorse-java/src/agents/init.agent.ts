@@ -3,12 +3,14 @@ import { writeConfig, ARCHETYPE_LABELS, type DarkhorseConfig, type SkillResult }
 import { scaffold } from '../skills/scaffolding.js';
 import { seedOpenSpec } from '../skills/openspec.js';
 import { generateContext } from '../skills/context.js';
+import { materializeVepReadiness, prepareVepReadiness } from '../skills/vep.js';
 
 /**
  * Init agent — thin orchestrator.
  * Calls skills in sequence and reports results. No business logic here.
  */
 export async function initAgent(config: DarkhorseConfig): Promise<void> {
+  const vepPlan = await prepareVepReadiness(config);
   logger.header(`Scaffolding: ${config.name}`);
   logger.info(`Archetype: ${ARCHETYPE_LABELS[config.archetype]}`);
   logger.info(`Framework: Quarkus | Java ${config.java.javaVersion} | ${config.java.groupId}`);
@@ -42,6 +44,10 @@ export async function initAgent(config: DarkhorseConfig): Promise<void> {
   // 4. Write .darkhorse.yaml
   logger.step('Writing project config...');
   await writeConfig(config);
+
+  // 5. Materialize the project-owned VEP dependency and starter Contract
+  logger.step('Generating VEP-ready project boundary...');
+  results.push(await materializeVepReadiness(vepPlan));
 
   // Report
   logger.blank();

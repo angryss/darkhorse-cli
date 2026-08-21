@@ -4,8 +4,8 @@ use uuid::Uuid;
 
 use crate::values::{ArtifactPath, IdentifiedRisk, Tradeoff};
 
-/// Structured output from a concluded discovery session.
-/// This is the formal handoff document from discovery into planning.
+/// Legacy structured discovery draft retained as VEP input. It is not a formal
+/// handoff, readiness decision, tier selection, or lifecycle transition.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct DiscoveryOutput {
     id: Uuid,
@@ -38,7 +38,7 @@ pub enum OptionVerdict {
     Parked,
 }
 
-/// Data explicitly prepared for handoff from discovery to planning.
+/// Non-authoritative observations prepared for the governed adapter.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PlanningHandoff {
     pub recommended_mvp_scope: String,
@@ -74,22 +74,55 @@ impl DiscoveryOutput {
         }
     }
 
-    pub fn id(&self) -> Uuid { self.id }
-    pub fn session_id(&self) -> Uuid { self.session_id }
-    pub fn initiative_id(&self) -> Uuid { self.initiative_id }
-    pub fn summary(&self) -> &str { &self.summary }
-    pub fn problem_framing(&self) -> &str { &self.problem_framing }
-    pub fn scope_recommendation(&self) -> &str { &self.scope_recommendation }
-    pub fn options_summary(&self) -> &[OptionSummary] { &self.options_summary }
-    pub fn tradeoffs(&self) -> &[Tradeoff] { &self.tradeoffs }
-    pub fn risks(&self) -> &[IdentifiedRisk] { &self.risks }
-    pub fn assumptions(&self) -> &[String] { &self.assumptions }
-    pub fn constraints(&self) -> &[String] { &self.constraints }
-    pub fn planning_handoff(&self) -> &PlanningHandoff { &self.planning_handoff }
-    pub fn artifact_path(&self) -> Option<&ArtifactPath> { self.artifact_path.as_ref() }
-    pub fn generated_at(&self) -> DateTime<Utc> { self.generated_at }
+    pub fn id(&self) -> Uuid {
+        self.id
+    }
+    pub fn session_id(&self) -> Uuid {
+        self.session_id
+    }
+    pub fn initiative_id(&self) -> Uuid {
+        self.initiative_id
+    }
+    pub fn summary(&self) -> &str {
+        &self.summary
+    }
+    pub fn problem_framing(&self) -> &str {
+        &self.problem_framing
+    }
+    pub fn scope_recommendation(&self) -> &str {
+        &self.scope_recommendation
+    }
+    pub fn options_summary(&self) -> &[OptionSummary] {
+        &self.options_summary
+    }
+    pub fn tradeoffs(&self) -> &[Tradeoff] {
+        &self.tradeoffs
+    }
+    pub fn risks(&self) -> &[IdentifiedRisk] {
+        &self.risks
+    }
+    pub fn assumptions(&self) -> &[String] {
+        &self.assumptions
+    }
+    pub fn constraints(&self) -> &[String] {
+        &self.constraints
+    }
+    pub fn planning_handoff(&self) -> &PlanningHandoff {
+        &self.planning_handoff
+    }
+    pub fn artifact_path(&self) -> Option<&ArtifactPath> {
+        self.artifact_path.as_ref()
+    }
+    pub fn generated_at(&self) -> DateTime<Utc> {
+        self.generated_at
+    }
 
-    pub fn add_option_summary(&mut self, name: impl Into<String>, verdict: OptionVerdict, reasoning: impl Into<String>) {
+    pub fn add_option_summary(
+        &mut self,
+        name: impl Into<String>,
+        verdict: OptionVerdict,
+        reasoning: impl Into<String>,
+    ) {
         self.options_summary.push(OptionSummary {
             name: name.into(),
             verdict,

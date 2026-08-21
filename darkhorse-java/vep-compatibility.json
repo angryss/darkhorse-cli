@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 1,
+  "darkhorse": {
+    "package": "darkhorse-java",
+    "version": "0.1.0"
+  },
+  "vep": {
+    "package": "@angryss/vep",
+    "supported": [
+      {
+        "version": "2.0.0",
+        "integrity": "sha512-2xv9kqH5Aa42xf0l4AYnXS8ljxdUGCaoIp05PIFoL576i/w6sxIWmJqMclfy8a87Z1XQc2rasDirnkuOxOTp8g==",
+        "tarball": "https://registry.npmjs.org/@angryss/vep/-/vep-2.0.0.tgz"
+      }
+    ]
+  }
+}

@@ -1,88 +1,43 @@
 # AGENTS.md — {{project.name}}
 
-> **AI Agent Entry Point.** Read this file first when working on this project.
+> **VEP 2.0 authority boundary.** Installed `@angryss/vep` owns lifecycle, gates, risk,
+> artifacts, proof, review, and closure. Darkhorse owns framework scaffolding and this adapter only.
 
 ## Project
 
 - **Name:** {{project.name}}
 - **Description:** {{project.description}}
-- **Platform:** WPF Desktop (.NET {{project.dotnet.dotnetVersion}}, Windows)
-- **Architecture:** DDD + Onion Architecture + CQRS + MVVM
-- **UI Framework:** {{#if (eq project.dotnet.uiFramework "materialdesign")}}Material Design in XAML Toolkit{{else}}WPF UI (Fluent Design){{/if}}
-- **Persistence:** {{#if project.features.persistence}}EF Core SQLite{{else}}None{{/if}}
-- **Generated:** {{timestamp}} by DarkHorse .NET Desktop CLI v{{cliVersion}}
+- **Architecture references:** WPF, MVVM, Onion Architecture, and CQRS
+- **Generated:** {{timestamp}} by Darkhorse CLI v{{cliVersion}}
 
 ## Reading Order
 
-1. `context/00-START-HERE.md` — Project overview and navigation
-2. **This file** — AI agent instructions and workflow system
-3. `.github/copilot-instructions.md` — Workspace-level Copilot/Claude instructions
-4. `openspec/specs/architecture/architecture-rules.md` — Mandatory architecture rules
-5. `openspec/specs/architecture/archetype-rules.md` — WPF desktop constraints
-6. `openspec/specs/patterns/backend-patterns.md` — Domain and application patterns
-7. `openspec/specs/patterns/frontend-patterns.md` — WPF + MVVM patterns
-8. `.github/prompts/` — Prompt commands (`/discover`, `/plan`, `/implement`, `/troubleshoot`)
-9. `openspec/specs/workflow/skills/` — Workflow skill definitions
-10. `openspec/specs/domain/` — Bounded context specs (project-specific)
-11. `openspec/specs/project/roadmap.md` — MVP roadmap
-12. `openspec/changes/mvp-1.0/progress-tracker.md` — Active MVP tracker
-13. `openspec/changes/` — Active proposals
+1. `context/00-START-HERE.md` — project navigation
+2. `.visu/work/<change-id>/contract.yaml` — canonical A1 when a governed change exists
+3. `openspec/specs/architecture/` — retained framework constraints
+4. `openspec/specs/patterns/` — retained implementation patterns
+5. `openspec/specs/domain/` — project domain reference
+6. `openspec/specs/workflow/skills/` — non-authoritative VEP-bound help
+7. `openspec/changes/<change-id>/proposal.md` and `tasks.md` — read-only projections
 
-## Onion Architecture — Mandatory Rules
+## Authority transition
 
-```
-┌────────────────────────────────────────────┐
-│  Presentation (WPF: Views + ViewModels)    │  → depends on Application + Infrastructure (DI only)
-├────────────────────────────────────────────┤
-│  Infrastructure (Persistence, Adapters)    │  → depends on Application + Domain
-├────────────────────────────────────────────┤
-│  Application (CQRS: Commands + Queries)    │  → depends on Domain + Common
-├────────────────────────────────────────────┤
-│  Domain (Entities, Aggregates, Events)     │  → depends on Common only
-├────────────────────────────────────────────┤
-│  Common (Primitives, Contracts)            │  → depends on NOTHING
-└────────────────────────────────────────────┘
-```
+- Before A1 exists, one optional `OpenSpecDraft` may capture explicit change input.
+- `materializeOpenSpecDraft` maps it one-way and installed VEP validates the candidate.
+- Only a valid `.visu/work/<change-id>/contract.yaml` becomes editable plan authority.
+- OpenSpec cannot overwrite an existing A1.
+- `proposal.md` and `tasks.md` bind change id, exact VEP version, A1 SHA-256, projection version, and generation id.
+- Roadmaps, trackers, commands, agents, and skills are views or ergonomic guidance; none decides VEP state.
 
-**Dependency violations are NEVER acceptable.** Stop and re-read architecture rules before writing code.
+## Governed recovery
 
-## CQRS Rules
+- Semantic correction: amend A1 through `amendCanonicalA1`, validate, and regenerate.
+- Missing/stale view: call `regenerateOpenSpecProjections` from current validated A1.
+- Direct edit, mixed pin, changed hash, or cross-change reuse: stop without mutation.
+- Never reconstruct A1 from proposal/tasks and never introduce another lifecycle or gate.
 
-- **Commands** change state. Return only the new entity ID or void.
-- **Queries** read state. Never mutate.
-- All commands and queries are dispatched through `IMediator` in the Application layer.
-- ViewModels call `_mediator.Send(command/query)` — they never call repositories directly.
-- Command handlers call domain aggregate methods — they never contain business logic themselves.
+## Framework work
 
-## MVVM Rules
-
-- Views are XAML only. Code-behind contains only `DataContext = viewModel` (constructor injection).
-- ViewModels use `CommunityToolkit.Mvvm` (`[ObservableProperty]`, `[RelayCommand]`).
-- ViewModels never reference Infrastructure, EF Core, or WPF-specific types beyond the presentation contract.
-- All async operations use `[RelayCommand]` with `IsBusy` guard.
-
-## Agentic Workflow
-
-| Layer | Location | Invoked As | Purpose |
-|-------|----------|------------|---------|
-| **Agents** | `.github/agents/` | `@agent-name` in Copilot chat | Enforce rules, guide interaction |
-| **Commands** | `.github/prompts/` | `/command-name` in chat | Structured invocation |
-| **Skills** | `openspec/specs/workflow/skills/` | Referenced by commands | Step-by-step execution |
-
-### Available Workflows
-
-| Command | Purpose |
-|---------|---------|
-| `/discover` | Explore ideas and shape features before planning |
-| `/plan` | Create DDD-compliant proposal for a bounded context or feature |
-| `/implement` | Execute an approved proposal inside-out (Domain → Presentation) |
-| `/troubleshoot` | Diagnose bugs and architecture violations |
-
-## Session Rules
-
-1. Always read `context/00-START-HERE.md` and this file before writing any code.
-2. Check `openspec/changes/` for active proposals. Never implement without an approved proposal.
-3. Implement in this order: **Common → Domain → Application → Infrastructure → Presentation**.
-4. Update `openspec/changes/mvp-1.0/progress-tracker.md` as you complete tasks.
-5. Update `context/30-BOUNDED-CONTEXTS.md` when a new context is added.
-6. Run `dotnet test` before marking any task complete. Zero failing tests is mandatory.
+- Use the architecture and pattern references for code placement and framework conventions.
+- Implement only scope authorized by A1.
+- Run VEP only through the project root scripts and project-local `visu` executable.

@@ -4,8 +4,8 @@ use uuid::Uuid;
 
 use crate::values::ScopeClassification;
 
-/// A candidate item being evaluated for inclusion in MVP scope.
-/// Used during the shaping process to track what's in, out, or deferred.
+/// A non-authoritative scope observation. Its local classification is draft
+/// input only and cannot override canonical A1 scope.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ScopeCandidate {
     id: Uuid,
@@ -29,11 +29,7 @@ pub enum ScopeCandidateSource {
 }
 
 impl ScopeCandidate {
-    pub fn new(
-        mvp_id: Uuid,
-        description: impl Into<String>,
-        source: ScopeCandidateSource,
-    ) -> Self {
+    pub fn new(mvp_id: Uuid, description: impl Into<String>, source: ScopeCandidateSource) -> Self {
         let now = Utc::now();
         Self {
             id: Uuid::new_v4(),
@@ -47,21 +43,37 @@ impl ScopeCandidate {
         }
     }
 
-    pub fn id(&self) -> Uuid { self.id }
-    pub fn mvp_id(&self) -> Uuid { self.mvp_id }
-    pub fn description(&self) -> &str { &self.description }
-    pub fn classification(&self) -> &ScopeClassification { &self.classification }
-    pub fn rationale(&self) -> &str { &self.rationale }
-    pub fn source(&self) -> &ScopeCandidateSource { &self.source }
+    pub fn id(&self) -> Uuid {
+        self.id
+    }
+    pub fn mvp_id(&self) -> Uuid {
+        self.mvp_id
+    }
+    pub fn description(&self) -> &str {
+        &self.description
+    }
+    pub fn classification(&self) -> &ScopeClassification {
+        &self.classification
+    }
+    pub fn rationale(&self) -> &str {
+        &self.rationale
+    }
+    pub fn source(&self) -> &ScopeCandidateSource {
+        &self.source
+    }
 
-    pub fn classify(&mut self, classification: ScopeClassification, rationale: impl Into<String>) {
+    pub fn classify_draft(
+        &mut self,
+        classification: ScopeClassification,
+        rationale: impl Into<String>,
+    ) {
         self.classification = classification;
         self.rationale = rationale.into();
         self.updated_at = Utc::now();
     }
 
-    pub fn is_decided(&self) -> bool {
-        self.classification.is_decided()
+    pub fn has_draft_classification(&self) -> bool {
+        self.classification.has_draft_classification()
     }
 }
 
@@ -71,15 +83,23 @@ mod tests {
 
     #[test]
     fn new_candidate_is_undecided() {
-        let c = ScopeCandidate::new(Uuid::new_v4(), "User login", ScopeCandidateSource::Discovery);
-        assert!(!c.is_decided());
+        let c = ScopeCandidate::new(
+            Uuid::new_v4(),
+            "User login",
+            ScopeCandidateSource::Discovery,
+        );
+        assert!(!c.has_draft_classification());
     }
 
     #[test]
     fn classifying_makes_it_decided() {
-        let mut c = ScopeCandidate::new(Uuid::new_v4(), "User login", ScopeCandidateSource::Discovery);
-        c.classify(ScopeClassification::Included, "Core feature");
-        assert!(c.is_decided());
+        let mut c = ScopeCandidate::new(
+            Uuid::new_v4(),
+            "User login",
+            ScopeCandidateSource::Discovery,
+        );
+        c.classify_draft(ScopeClassification::Included, "Core feature");
+        assert!(c.has_draft_classification());
         assert_eq!(c.classification(), &ScopeClassification::Included);
     }
 }

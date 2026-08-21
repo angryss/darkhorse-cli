@@ -1,80 +1,43 @@
 # AGENTS.md — {{project.name}}
 
-> AI agent entry point. Read this file first.
+> **VEP 2.0 authority boundary.** Installed `@angryss/vep` owns lifecycle, gates, risk,
+> artifacts, proof, review, and closure. Darkhorse owns framework scaffolding and this adapter only.
 
-## Project Configuration
+## Project
 
-| Property | Value |
-|----------|-------|
-| **Name** | {{project.name}} |
-| **Description** | {{project.description}} |
-| **Archetype** | Tauri Desktop Application |
-| **Rust Edition** | {{project.rust.edition}} |
-| **Crate Prefix** | {{project.rust.cratePrefix}} |
-| **Framework** | Tauri 2 |
-| **Persistence** | SQLite (local-first) |
-{{#if project.features.frontend}}
-| **Frontend** | Vite + TypeScript |
-{{/if}}
-| **Generated** | {{timestamp}} by DarkHorse Rust CLI v{{cliVersion}} |
+- **Name:** {{project.name}}
+- **Description:** {{project.description}}
+- **Architecture references:** DDD, Onion Architecture, and CQRS
+- **Generated:** {{timestamp}} by Darkhorse CLI v{{cliVersion}}
 
 ## Reading Order
 
-1. **This file** — project config and agent rules
-2. **`context/00-START-HERE.md`** — project overview and navigation
-3. **`.github/copilot-instructions.md`** — workspace-level Copilot/Claude instructions
-4. **`context/10-REPO-MAP.md`** — what lives where
-5. **`context/30-BOUNDED-CONTEXTS.md`** — domain contexts and relationships
-6. **`specs/architecture/`** — mandatory architecture rules
-7. **`specs/patterns/`** — development patterns and examples
-8. **`.github/prompts/`** — prompt commands (invoke as `/discover`, `/plan`, `/implement`, `/troubleshoot`)
-9. **`specs/workflow/skills/`** — workflow skills (referenced by commands)
-10. **`specs/project/roadmap.md`** — MVP roadmap and requirements
+1. `context/00-START-HERE.md` — project navigation
+2. `.visu/work/<change-id>/contract.yaml` — canonical A1 when a governed change exists
+3. `openspec/specs/architecture/` — retained framework constraints
+4. `openspec/specs/patterns/` — retained implementation patterns
+5. `openspec/specs/domain/` — project domain reference
+6. `openspec/specs/workflow/skills/` — non-authoritative VEP-bound help
+7. `openspec/changes/<change-id>/proposal.md` and `tasks.md` — read-only projections
 
-## Crate Architecture
+## Authority transition
 
-| Crate | Layer | Responsibility |
-|-------|-------|----------------|
-| `{{project.rust.cratePrefix}}-domain` | Domain | Entities, value objects, policies, domain services. **Zero external deps.** |
-| `{{project.rust.cratePrefix}}-application` | Application | Commands, use-case handlers, port traits, orchestration |
-| `{{project.rust.cratePrefix}}-infrastructure` | Infrastructure | SQLite, filesystem, settings, logging. Implements port traits. |
-| `{{project.rust.cratePrefix}}-desktop` | Presentation | Tauri host, command bridge, state management, window lifecycle |
+- Before A1 exists, one optional `OpenSpecDraft` may capture explicit change input.
+- `materializeOpenSpecDraft` maps it one-way and installed VEP validates the candidate.
+- Only a valid `.visu/work/<change-id>/contract.yaml` becomes editable plan authority.
+- OpenSpec cannot overwrite an existing A1.
+- `proposal.md` and `tasks.md` bind change id, exact VEP version, A1 SHA-256, projection version, and generation id.
+- Roadmaps, trackers, commands, agents, and skills are views or ergonomic guidance; none decides VEP state.
 
-## Mandatory Architecture Rules
+## Governed recovery
 
-1. **Dependency direction**: Domain ← Application ← Infrastructure ← Desktop. Never reverse.
-2. **Domain purity**: `{{project.rust.cratePrefix}}-domain` has zero dependencies on other crates or external I/O.
-3. **Port-adapter pattern**: Application defines port traits. Infrastructure implements them.
-4. **Command-oriented flow**: UI actions dispatch application commands. No event-driven foundation.
-5. **Local-first persistence**: SQLite via rusqlite. WAL mode. Embedded migrations.
-6. **Tauri commands are thin**: Desktop crate dispatches to application layer. No business logic in commands.
+- Semantic correction: amend A1 through `amendCanonicalA1`, validate, and regenerate.
+- Missing/stale view: call `regenerateOpenSpecProjections` from current validated A1.
+- Direct edit, mixed pin, changed hash, or cross-change reuse: stop without mutation.
+- Never reconstruct A1 from proposal/tasks and never introduce another lifecycle or gate.
 
-## Agentic Workflow
+## Framework work
 
-This project uses a three-layer agentic workflow: **Agent → Command → Skill**.
-
-| Layer | Location | Invoked As | Purpose |
-|-------|----------|------------|---------|
-| **Agents** | `.github/agents/` | `@agent-name` in Copilot chat | Enforce behavioral rules, guide interaction |
-| **Commands** | `.github/prompts/` | `/command-name` in chat | Structured invocation, parameterized execution |
-| **Skills** | `openspec/specs/workflow/skills/` | Referenced by commands | Detailed step-by-step workflow execution |
-
-### Available Workflows
-
-| Command | Agent | Skill | Purpose |
-|---------|-------|-------|---------|
-| `/discover` | `@discover` | `discovery.md` | Explore and shape ideas before planning |
-| `/plan` | `@plan` | `planning.md` | Create DDD-compliant proposals |
-| `/implement` | `@implement` | `implementation.md` | Execute approved proposals inside-out |
-| `/troubleshoot` | `@troubleshoot` | `troubleshooting.md` | Diagnose bugs and architecture violations |
-
-### Execution Chain
-
-Agents invoke commands. Commands invoke skills. Do not bypass this chain.
-
-1. **Agent** receives user request and enforces hard rules
-2. **Agent** loads the corresponding **Command** from `.github/prompts/`
-3. **Command** references the **Skill** in `openspec/specs/workflow/skills/`
-4. **Skill** defines the step-by-step execution, context loading, and output format
-
-Commands can also be invoked directly as `/discover`, `/plan`, `/implement`, `/troubleshoot` without going through an agent.
+- Use the architecture and pattern references for code placement and framework conventions.
+- Implement only scope authorized by A1.
+- Run VEP only through the project root scripts and project-local `visu` executable.

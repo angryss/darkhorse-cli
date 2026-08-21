@@ -4,12 +4,12 @@ import { logger } from '../core/logger.js';
 export function registerTroubleshootCommand(program: Command): void {
   program
     .command('troubleshoot')
-    .description('Investigate and fix bugs')
+    .description('Open independent diagnostics without changing VEP lifecycle state')
     .option('-b, --bug-id <id>', 'Bug ID (e.g. BUG-1.0-003)')
     .option('-s, --symptom <symptom>', 'What is broken')
     .option('-c, --context <context>', 'Target bounded context')
     .action(async (_opts) => {
-      logger.warn('Troubleshoot command not yet implemented (v1 priority: 8/8)');
-      logger.info('See workflows/skills/troubleshoot.md for the troubleshooting workflow.');
+      logger.info('Troubleshoot is independent Darkhorse tooling; it cannot change VEP state or authority.');
+      logger.info('Use the project-local lifecycle command after diagnosis to obtain a governed result.');
     });
 }

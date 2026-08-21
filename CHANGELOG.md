@@ -1,5 +1,15 @@
 # Changelog
 
+## Unreleased — VEP 2.0 terminal candidate
+
+- Integrate exact public `@angryss/vep@2.0.0` across all four scaffolders.
+- Generate project-owned VEP state with root exact-pin authority and project-local `visu` delegation.
+- Add one-way OpenSpec-to-A1 materialization, deterministic projections, and fail-closed drift checks.
+- Delegate CLI and Desktop lifecycle/readiness/risk semantics to project-owned VEP truth.
+- Add explicit compatible/incompatible VEP upgrade behavior with immutable completed-history bytes.
+- Add terminal integration/negative suites, four-generator real-engineering calibration, relocated package verification, and current integration documentation.
+- Final qualified-human independent review remains pending; this entry records no approval or release.
+
 All notable changes to DarkHorse will be documented in this file.
 
 The format is based on Keep a Changelog, and this project currently follows pre-1.0 public-alpha versioning.

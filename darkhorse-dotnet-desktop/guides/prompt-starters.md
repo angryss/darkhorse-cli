@@ -1,78 +1,43 @@
-# Prompt Starters — WPF Desktop
+# Prompt Starters — WPF desktop project
 
-Common prompts for AI-assisted development on DarkHorse WPF desktop projects.
+These prompts assist engineering inside the single governed lifecycle:
 
----
+`Discover -> Plan -> Implement -> Test -> Close`
 
-## Discovery
+The generated project's project-local `visu` owns every governed result. AI prompts cannot approve an A1, expand scope, waive proof, approve review, or close work.
 
-```
-/discover I want to add a feature that lets users [describe feature]. 
-What bounded contexts would this touch and what domain concepts are involved?
-```
+## Discover
 
-```
-/discover What's the right architecture for [feature]? 
-Should it be a new bounded context or extend an existing one?
-```
+Run `darkhorse-dotnet-desktop discover --input <discover-input.json> --json`, then ask:
 
----
+> Explain the VEP Discover result and help gather missing product evidence. Do not select a tier or transition state.
 
-## Planning
+## Plan
 
-```
-/plan Add a [ContextName] bounded context that allows users to [describe purpose].
-MVP: 1.0. Include all CQRS commands and queries needed.
-```
+An optional OpenSpec draft may be materialized into A1 first. After that, `.visu/work/<change-id>/contract.yaml` is the sole editable plan authority.
 
-```
-/plan Implement REQ-1.0-001: [requirement description].
-Use the existing [ContextName] aggregate root.
-```
+Run `darkhorse-dotnet-desktop plan --input <plan-input.json> --json`, then ask:
 
----
+> Help improve the canonical A1 within its authorized scope. Do not edit proposal/tasks projections directly or claim approval.
 
-## Implementation
+## Implement
 
-```
-/implement REQ-1.0-001 — implement inside-out starting from the Domain layer.
-Follow the backend patterns in openspec/specs/patterns/backend-patterns.md.
-```
+Run `darkhorse-dotnet-desktop implement <change-id> --json`, then ask:
 
-```
-/implement the WPF view and viewmodel for the [ContextName] bounded context.
-Follow the MVVM patterns in openspec/specs/patterns/frontend-patterns.md.
-```
+> Implement only the approved A1 scope using bounded contexts, Onion Architecture layers, CQRS, MVVM, persistence, installer, and UI behavior. Do not persist separate lifecycle state.
 
----
+## Test
 
-## Troubleshooting
+Run `darkhorse-dotnet-desktop test --input <proof-input.json> --json`. When independent review is required, run `darkhorse-dotnet-desktop review --input <review-input.json> --json` as part of the Test stage.
 
-```
-/troubleshoot The [ContextName] command is throwing [error]. 
-Here is the stack trace: [paste stack trace]
-```
+> Help diagnose failed proof without changing the expected result or manufacturing success.
 
-```
-/troubleshoot My ViewModel is not updating the UI when [property] changes.
-The binding is: [paste binding]
-```
+## Close
 
----
+Run `darkhorse-dotnet-desktop close --input <close-input.json> --json`, then follow the exact VEP next action.
 
-## Architecture Reviews
+> Summarize the governed close result. Do not infer closure from implementation, local checks, or prose.
 
-```
-Review the [ContextName] domain entity for DDD compliance.
-Check for: missing factory methods, public setters, business logic in wrong layer.
-```
+## Independent tooling
 
-```
-Review the [ContextName]ViewModel for MVVM compliance.
-Check for: business logic in ViewModel, direct repository calls, missing IsBusy guards.
-```
-
-```
-Check the dependency graph for Onion Architecture violations in the [Layer] project.
-List any forbidden references found.
-```
+`troubleshoot`, `validate`, architecture prompts, and platform-specific scaffold commands are independent DarkHorse tools. They may help diagnose or implement, but they are not lifecycle commands and cannot alter VEP state.

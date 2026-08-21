@@ -3,6 +3,9 @@ use dh_application::ports::InitiativeRepository;
 use dh_domain::entities::Initiative;
 use uuid::Uuid;
 
+// Persisted `status` is a legacy catalog label retained for lossless user-data
+// compatibility. No repository read/write can authorize VEP lifecycle state.
+
 use super::DbConnection;
 
 /// SQLite-backed implementation of the InitiativeRepository port.
@@ -70,7 +73,9 @@ impl InitiativeRepository for SqliteInitiativeRepo {
         self.db
             .with_conn(|conn| {
                 let mut stmt = conn
-                    .prepare("SELECT id, name, description FROM initiatives ORDER BY created_at DESC")
+                    .prepare(
+                        "SELECT id, name, description FROM initiatives ORDER BY created_at DESC",
+                    )
                     .map_err(crate::errors::InfraError::Sqlite)?;
 
                 let initiatives = stmt
@@ -92,10 +97,7 @@ impl InitiativeRepository for SqliteInitiativeRepo {
         self.db
             .with_conn(|conn| {
                 let rows = conn
-                    .execute(
-                        "DELETE FROM initiatives WHERE id = ?1",
-                        [id.to_string()],
-                    )
+                    .execute("DELETE FROM initiatives WHERE id = ?1", [id.to_string()])
                     .map_err(crate::errors::InfraError::Sqlite)?;
                 Ok(rows > 0)
             })

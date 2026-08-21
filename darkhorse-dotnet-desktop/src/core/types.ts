@@ -72,6 +72,8 @@ export interface DarkhorseConfig {
   name: string;
   description: string;
   version: string;
+  /** VEP generation enablement only. The current VEP version lives only in root package.json. */
+  vep: VepConfig;
   /** Root C# namespace (e.g. "OrderTracker" or "MyCompany.OrderTracker"). */
   namespace: string;
   dotnet: DotnetConfig;
@@ -79,6 +81,10 @@ export interface DarkhorseConfig {
   ai: AiConfig;
   deployment: DeploymentConfig;
   paths: ProjectPaths;
+}
+
+export interface VepConfig {
+  enabled: boolean;
 }
 
 export interface DotnetConfig {
@@ -210,6 +216,7 @@ export function buildConfig(input: InitInput): DarkhorseConfig {
     name: input.name,
     description: input.description,
     version: '0.1.0',
+    vep: { enabled: true },
     namespace: ns,
     dotnet: {
       framework: 'wpf',

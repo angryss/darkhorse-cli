@@ -4,6 +4,16 @@
 
 ## How to Add a Bounded Context
 
+> **VEP 2.0 authority boundary — this rule governs the entire document.**
+> OpenSpec is optional draft input only until the adapter materializes and installed VEP validates
+> `.visu/work/<change-id>/contract.yaml`. From that transition onward, A1 is the sole editable
+> semantic and implementation-plan authority. `proposal.md` and `tasks.md` are deterministic,
+> hash/version-bound read-only projections. Roadmaps, trackers, agents, commands, and skills are
+> non-authoritative guidance. Any instruction below to create, edit, tick, merge, or reverse-sync
+> those views after A1 exists is superseded. Amend A1 through the adapter, revalidate, and regenerate.
+> Direct projection edits, stale bindings, mixed versions, and cross-change reuse must stop without mutation.
+
+
 1. Create a spec file: `openspec/specs/domain/<context-name>.md`
 2. Create the code structure: `backend/contexts/<context-name>/`
 3. Add a glossary: `backend/contexts/<context-name>/domain/GLOSSARY.md`

@@ -3,6 +3,8 @@ use dh_application::ports::DiscoverySessionRepository;
 use dh_domain::entities::DiscoverySession;
 use uuid::Uuid;
 
+// Serialized phase/risk values are non-authoritative notebook/VEP input data.
+
 use super::DbConnection;
 
 /// SQLite-backed implementation of the DiscoverySessionRepository port.
@@ -65,7 +67,10 @@ impl DiscoverySessionRepository for SqliteDiscoverySessionRepo {
             .map_err(|e| AppError::Persistence(e.to_string()))
     }
 
-    fn find_by_initiative(&self, initiative_id: Uuid) -> dh_application::errors::AppResult<Vec<DiscoverySession>> {
+    fn find_by_initiative(
+        &self,
+        initiative_id: Uuid,
+    ) -> dh_application::errors::AppResult<Vec<DiscoverySession>> {
         self.db
             .with_conn(|conn| {
                 let mut stmt = conn
@@ -89,7 +94,10 @@ impl DiscoverySessionRepository for SqliteDiscoverySessionRepo {
         self.db
             .with_conn(|conn| {
                 let rows = conn
-                    .execute("DELETE FROM discovery_sessions WHERE id = ?1", [id.to_string()])
+                    .execute(
+                        "DELETE FROM discovery_sessions WHERE id = ?1",
+                        [id.to_string()],
+                    )
                     .map_err(crate::errors::InfraError::Sqlite)?;
                 Ok(rows > 0)
             })

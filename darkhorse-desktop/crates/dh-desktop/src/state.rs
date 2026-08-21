@@ -5,7 +5,7 @@ use dh_infrastructure::database::{run_migrations, DbConnection};
 use dh_infrastructure::database::{
     SqliteDiscoverySessionRepo, SqliteInitiativeRepo, SqliteSliceRepo, SqliteWorkspaceRepo,
 };
-use dh_infrastructure::filesystem::LocalArtifactStore;
+use dh_infrastructure::filesystem::{LocalArtifactStore, ProjectLocalVepDelegator};
 use dh_infrastructure::settings::SqliteSettingsStore;
 
 /// Shared application state managed by Tauri.
@@ -13,12 +13,12 @@ use dh_infrastructure::settings::SqliteSettingsStore;
 /// Holds the database connection, repositories, and stores
 /// that are injected into command handlers.
 pub struct AppState {
-    pub db: Arc<DbConnection>,
     pub initiative_repo: SqliteInitiativeRepo,
     pub discovery_session_repo: SqliteDiscoverySessionRepo,
     pub workspace_repo: SqliteWorkspaceRepo,
     pub slice_repo: SqliteSliceRepo,
     pub artifact_store: LocalArtifactStore,
+    pub vep_delegator: ProjectLocalVepDelegator,
     pub settings_store: SqliteSettingsStore,
 }
 
@@ -41,12 +41,12 @@ impl AppState {
         let slice_repo = SqliteSliceRepo::new(Arc::clone(&db));
 
         Ok(Self {
-            db,
             initiative_repo,
             discovery_session_repo,
             workspace_repo,
             slice_repo,
             artifact_store,
+            vep_delegator: ProjectLocalVepDelegator,
             settings_store,
         })
     }
@@ -74,6 +74,10 @@ fn dirs_next() -> Option<PathBuf> {
         std::env::var("XDG_DATA_HOME")
             .ok()
             .map(PathBuf::from)
-            .or_else(|| std::env::var("HOME").ok().map(|h| PathBuf::from(h).join(".local/share")))
+            .or_else(|| {
+                std::env::var("HOME")
+                    .ok()
+                    .map(|h| PathBuf::from(h).join(".local/share"))
+            })
     }
 }

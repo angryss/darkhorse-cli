@@ -4,6 +4,8 @@
 
 **DarkHorse Rust** is a scaffolder CLI. It generates a complete Tauri desktop application — Cargo workspace with Clean Architecture crates, Vite + TypeScript frontend, Tauri configuration, **and** the development guidance system (OpenSpec, context, rules, guides, workflows, roadmap) — from a single `init` command. Each generated project enforces DDD, Clean Architecture, and command-oriented flow. Generated projects are fully self-contained — no runtime dependency on the CLI.
 
+Generated projects pin public `@angryss/vep@2.0.0` exactly at the root and own their VEP state. `discover`, `plan`, `test`, `review`, and `close` delegate to project-local `visu`; `implement` verifies the approved A1 boundary. Optional OpenSpec is draft input only—after materialization A1 is the sole editable plan authority. See [the repository VEP integration contract](../docs/vep-2-integration.md).
+
 ### Role in the DarkHorse Ecosystem
 
 | Concern | DarkHorse Rust |

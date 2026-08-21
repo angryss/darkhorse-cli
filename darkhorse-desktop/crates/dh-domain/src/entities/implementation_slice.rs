@@ -2,12 +2,11 @@ use chrono::{DateTime, Utc};
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-use crate::values::{Priority, SliceType};
 use crate::entities::ProgressStatus;
+use crate::values::{Priority, SliceType};
 
-/// An implementation slice is a delivery-ready unit of work derived
-/// from one or more requirements. Slices represent the DarkHorse model
-/// of turning requirements into concrete implementation chunks.
+/// A local work-item view derived from requirements. Its status is useful UI
+/// tracking only and cannot prove VEP implementation or completion.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct ImplementationSlice {
     id: Uuid,
@@ -57,16 +56,36 @@ impl ImplementationSlice {
         }
     }
 
-    pub fn id(&self) -> Uuid { self.id }
-    pub fn mvp_id(&self) -> Uuid { self.mvp_id }
-    pub fn title(&self) -> &str { &self.title }
-    pub fn description(&self) -> &str { &self.description }
-    pub fn slice_type(&self) -> &SliceType { &self.slice_type }
-    pub fn priority(&self) -> &Priority { &self.priority }
-    pub fn status(&self) -> &ProgressStatus { &self.status }
-    pub fn requirement_ids(&self) -> &[Uuid] { &self.requirement_ids }
-    pub fn acceptance_criteria(&self) -> &[String] { &self.acceptance_criteria }
-    pub fn estimated_complexity(&self) -> &SliceComplexity { &self.estimated_complexity }
+    pub fn id(&self) -> Uuid {
+        self.id
+    }
+    pub fn mvp_id(&self) -> Uuid {
+        self.mvp_id
+    }
+    pub fn title(&self) -> &str {
+        &self.title
+    }
+    pub fn description(&self) -> &str {
+        &self.description
+    }
+    pub fn slice_type(&self) -> &SliceType {
+        &self.slice_type
+    }
+    pub fn priority(&self) -> &Priority {
+        &self.priority
+    }
+    pub fn status(&self) -> &ProgressStatus {
+        &self.status
+    }
+    pub fn requirement_ids(&self) -> &[Uuid] {
+        &self.requirement_ids
+    }
+    pub fn acceptance_criteria(&self) -> &[String] {
+        &self.acceptance_criteria
+    }
+    pub fn estimated_complexity(&self) -> &SliceComplexity {
+        &self.estimated_complexity
+    }
 
     pub fn link_requirement(&mut self, requirement_id: Uuid) {
         if !self.requirement_ids.contains(&requirement_id) {
@@ -95,7 +114,7 @@ impl ImplementationSlice {
         self.updated_at = Utc::now();
     }
 
-    pub fn is_complete(&self) -> bool {
+    pub fn is_work_item_done(&self) -> bool {
         self.status == ProgressStatus::Completed
     }
 

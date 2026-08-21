@@ -1,8 +1,7 @@
 use serde::{Deserialize, Serialize};
 
-/// Lifecycle status for an initiative. Transitions must follow
-/// a forward-only flow: Draft → Exploring → Planning → Delivering → Completed.
-/// An initiative can be Archived from any active state.
+/// Legacy initiative catalog label retained so existing rows deserialize.
+/// It is not developer lifecycle state and has no transition API.
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 pub enum Status {
     Draft,
@@ -13,44 +12,24 @@ pub enum Status {
     Archived,
 }
 
-impl Status {
-    /// Returns whether transitioning from `self` to `target` is allowed.
-    pub fn can_transition_to(&self, target: &Status) -> bool {
-        // Anything can be archived
-        if *target == Status::Archived {
-            return true;
-        }
-        matches!(
-            (self, target),
-            (Status::Draft, Status::Exploring)
-                | (Status::Exploring, Status::Planning)
-                | (Status::Planning, Status::Delivering)
-                | (Status::Delivering, Status::Completed)
-        )
-    }
+/// The persisted `Status` above is a legacy Desktop organization label only.
+/// It has no transition API and cannot authorize VEP lifecycle movement.
+
+/// The one developer-visible lifecycle, projected from governed VEP output.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+#[serde(rename_all = "SCREAMING_SNAKE_CASE")]
+pub enum VepLifecycleStage {
+    Discover,
+    Plan,
+    Implement,
+    Test,
+    Close,
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn valid_forward_transitions() {
-        assert!(Status::Draft.can_transition_to(&Status::Exploring));
-        assert!(Status::Exploring.can_transition_to(&Status::Planning));
-        assert!(Status::Planning.can_transition_to(&Status::Delivering));
-        assert!(Status::Delivering.can_transition_to(&Status::Completed));
-    }
-
-    #[test]
-    fn any_state_can_archive() {
-        assert!(Status::Draft.can_transition_to(&Status::Archived));
-        assert!(Status::Delivering.can_transition_to(&Status::Archived));
-    }
-
-    #[test]
-    fn cannot_skip_states() {
-        assert!(!Status::Draft.can_transition_to(&Status::Planning));
-        assert!(!Status::Draft.can_transition_to(&Status::Delivering));
-    }
-}
+pub const VEP_LIFECYCLE: [VepLifecycleStage; 5] = [
+    VepLifecycleStage::Discover,
+    VepLifecycleStage::Plan,
+    VepLifecycleStage::Implement,
+    VepLifecycleStage::Test,
+    VepLifecycleStage::Close,
+];

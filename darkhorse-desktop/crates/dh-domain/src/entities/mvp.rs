@@ -4,8 +4,8 @@ use uuid::Uuid;
 
 use crate::values::ScopeSize;
 
-/// A Minimum Viable Product defines the smallest deliverable increment
-/// of an initiative that can validate a product hypothesis.
+/// A product-scope draft used as VEP/A1 input. It cannot authorize lifecycle,
+/// readiness, risk tier, or completion.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Mvp {
     id: Uuid,

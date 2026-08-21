@@ -4,6 +4,8 @@
 
 **DarkHorse .NET** is a scaffolder CLI. It generates a complete project — ASP.NET Core backend, React frontend, Docker Compose deployment, **and** the development guidance system (OpenSpec, context, rules, guides, workflows, roadmap) — from a single `init` command. Backend services are added with `add`. Each service enforces DDD, Onion Architecture, and CQRS. Generated projects are fully self-contained — no runtime dependency on the CLI.
 
+Generated projects pin public `@angryss/vep@2.0.0` exactly at the root and own their VEP state. `discover`, `plan`, `test`, `review`, and `close` delegate to project-local `visu`; `implement` verifies the approved A1 boundary. Optional OpenSpec is draft input only—after materialization A1 is the sole editable plan authority. See [the repository VEP integration contract](../docs/vep-2-integration.md).
+
 ### Role in the DarkHorse Ecosystem
 
 | Concern | DarkHorse .NET |
@@ -521,7 +523,7 @@ When scaffolded with `--frontend`, your project includes a reference to the **Re
 
 ## AI Tools Support
 
-DarkHorse generated projects support multiple AI tools. All tools share the same **OpenSpec source of truth** — no duplicated rules or specs.
+DarkHorse generated projects support multiple AI tools. All tools share the same project-owned VEP work state. OpenSpec may supply draft input, but materialized A1 is the sole editable plan authority—no duplicated process truth.
 
 | Tool | Adapter Location | How to Enable |
 |------|-----------------|---------------|

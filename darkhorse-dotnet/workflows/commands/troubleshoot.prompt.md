@@ -1,43 +1,24 @@
 ---
-description: "Reset the deployment environment, run the full stack, guide manual testing, diagnose findings, and hand off to discovery"
+description: "Diagnose failures and recover through canonical VEP A1 authority"
 mode: agent
 ---
 
-Execute the **Troubleshooting** workflow.
+# /troubleshoot — VEP-bound help
 
-## Skill
+> Installed `@angryss/vep` owns lifecycle, gates, risk, artifacts, proof, review, and closure.
+> Darkhorse supplies bounded framework ergonomics only.
 
-Read and follow every step in `openspec/specs/workflow/skills/troubleshooting.md`.
+## VEP 2.0 authority boundary
 
-## Context
+- OpenSpec is optional draft input before A1.
+- `.visu/work/<change-id>/contract.yaml` is the sole editable semantic and plan authority after validation.
+- `proposal.md` and `tasks.md` are deterministic, hash/version-bound read-only projections.
+- Roadmaps, trackers, agents, commands, and skills never override A1.
 
-Load all required context files listed in the skill before producing output.
+## Action
 
-## Parameters
+- Diagnose without changing A1 or projections.
+- If A1 meaning is wrong, amend A1; if a view is stale, regenerate it from current A1.
 
-- **issue**: Description of the problem or bug (optional — may emerge from testing)
-- **mvp**: Target MVP milestone (e.g., 2.1)
-- **severity**: Critical / High / Medium / Low
-- **context**: Affected bounded context name (if known)
-- **evidence**: Error messages, logs, or reproduction steps (if known)
-
-## Phases
-
-1. **Environment Reset** — Tear down Docker deployment (containers, volumes, images) and rebuild clean. Run `docker compose down --volumes --remove-orphans`, remove project images, then `docker compose build --no-cache` and `docker compose up -d`. Confirm all services healthy.
-2. **Manual Testing** — Guide the user to test. Collect all findings.
-3. **Root Cause Analysis** — Analyse findings against DDD/Onion/CQRS rules. Produce bug reports.
-4. **Handoff** — Ask the user to move to `@discover` to explore solutions before planning.
-
-## Constraints
-
-- Environment reset is mandatory — never skip Phase 1. Run all Phase 0 commands autonomously in the terminal.
-- Output goes to `openspec/changes/mvp-{MVP}/BUG-{MVP}-{###}/`
-- Update `openspec/changes/mvp-{MVP}/progress-tracker.md`
-- NO source code modifications — troubleshooting produces bug proposals + tasks only. All fixes must flow through **Discovery → Planning → Implementation**.
-
-## Handoff
-
-After completing, do NOT suggest `/plan` or `/implement` directly.
-Suggest proceeding to `/discover` (via `@discover`) to explore the solution space first.
-
-Canonical lifecycle: **Discovery → Planning → Implementation → Troubleshooting → Discovery**
+Load the matching file in `openspec/specs/workflow/skills/` for architecture-specific help.
+Stop on invalid A1, stale binding, direct projection edit, mixed version, or cross-change reuse.

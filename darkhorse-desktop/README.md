@@ -1,15 +1,17 @@
 # DarkHorse Desktop
 
+> **VEP 2.0 authority boundary.** Desktop stores product notes, work-item UI state, and read-only projections. The only developer lifecycle is **Discover → Plan → Implement → Test → Close**. Lifecycle legality, readiness, risk tier, proof/review meaning, and completion are governed by the generated project's exact project-local VEP through the installed Darkhorse CLI delegation boundary. Desktop has no fallback authority. After A1 exists, `.visu/work/<change-id>/contract.yaml` is the sole editable plan authority.
+
 > **Product** — Local-first desktop application for the DarkHorse product-development platform
 
-DarkHorse Desktop is a **product application**, not a scaffolder. It is the local workspace companion for shaping, planning, and tracking product initiatives. Built with **Tauri 2 + Rust** and a lightweight TypeScript frontend, it supports the full DarkHorse lifecycle — from discovery sessions through MVP scoping, planning outputs, implementation slices, and delivery progress — all local-first, all offline-capable.
+DarkHorse Desktop is a **product application**, not a scaffolder. It is a local workspace companion for collecting draft input and displaying governed projections. Its product notes and work-item tracking remain local-first; governed lifecycle operations require the selected generated project's local VEP.
 
 ### Role in the DarkHorse Ecosystem
 
 | Concern | DarkHorse Desktop |
 |---------|-------------------|
 | **Is** | A runtime desktop application — a product |
-| **Does** | Models the DarkHorse lifecycle: discovery → planning → implementation → delivery |
+| **Does** | Collects VEP input, delegates governed operations, and displays fresh VEP/A1-derived projections |
 | **Consumes** | DarkHorse architectural principles (Clean Architecture, DDD, CQRS) |
 | **Does not** | Own templates, init commands, generation workflows, or scaffold logic |
 
@@ -55,7 +57,7 @@ darkhorse-desktop/
 - **Strong modularity** — each crate has distinct, explicit responsibilities
 - **Local-first** — SQLite for structured data, filesystem for artifacts, settings store for preferences
 - **Workspace-centered** — every entity belongs to a workspace; workspaces are the root context
-- **DarkHorse lifecycle** — the domain models the full journey from discovery through delivery
+- **Governed lifecycle projection** — Desktop displays Discover → Plan → Implement → Test → Close only from fresh VEP/project state
 
 ## Domain Model
 
@@ -103,7 +105,7 @@ Workspace
 
 | Value                | Purpose                                                        |
 |----------------------|----------------------------------------------------------------|
-| `Status`             | Initiative lifecycle (Draft→Exploring→Planning→Delivering→Completed) |
+| `Status`             | Legacy organization label retained for existing data; never lifecycle authority |
 | `Priority`           | Critical / High / Medium / Low / Nice-to-have                  |
 | `ScopeSize`          | Tiny / Small / Medium / Large                                  |
 | `ScopeBoundary`      | Included / excluded / deferred scope items                     |
@@ -114,15 +116,15 @@ Workspace
 | `Tradeoff`           | Tension between two competing dimensions with resolution       |
 | `IdentifiedRisk`     | Risk with level, category, and optional mitigation             |
 | `RiskLevel`          | Critical / High / Medium / Low / Negligible                    |
-| `PlanningReadiness`  | Score, readiness flag, blockers, recommendations               |
+| `PlanningReadiness`  | Legacy serialized snapshot retained for lossless migration only |
 | `SliceType`          | FullStack / Backend / Frontend / Infrastructure / DataMigration / Integration |
 
 ### Domain Services
 
 | Service            | Purpose                                                          |
 |--------------------|------------------------------------------------------------------|
-| `PlanningService`  | Evaluates initiative readiness and calculates readiness score    |
-| `DiscoveryService` | Assesses discovery session health and planning transition readiness |
+| `PlanningService`  | Collects structural planning observations as VEP input            |
+| `DiscoveryService` | Collects discovery observations as VEP input; makes no readiness decision |
 
 ## Application Commands
 
@@ -130,15 +132,15 @@ Workspace
 | Command                           | Description                                        |
 |-----------------------------------|----------------------------------------------------|
 | `start_discovery_session`         | Begin a new discovery session for an initiative     |
-| `continue_discovery_session`      | Advance session through Framing→Exploring→Converging→Concluded |
+| `update_discovery_notebook`       | Organize legacy discovery notes without a process transition |
 | `record_discovery_option`         | Add an option for evaluation during discovery       |
-| `assess_discovery_readiness`      | Check if discovery has enough data for planning     |
+| `collect_discovery_vep_input`     | Collect observations without scoring readiness      |
 | `list_discovery_sessions`         | List all sessions for an initiative                 |
 
 ### Planning & Scope
 | Command                           | Description                                        |
 |-----------------------------------|----------------------------------------------------|
-| `check_planning_readiness`        | Check if an initiative is ready for formal planning |
+| `invoke_project_vep`              | Delegate to an installed Darkhorse CLI; preserve exit/output truth |
 | `define_mvp_scope`                | Add a scope candidate to an MVP                    |
 | `classify_scope_candidate`        | Mark a candidate as Included/Excluded/Deferred     |
 
@@ -148,7 +150,7 @@ Workspace
 | `add_requirement`                 | Add a requirement to an MVP                        |
 | `generate_slices`                 | Generate implementation slices from requirements   |
 | `link_requirement_to_slice`       | Connect a requirement to an implementation slice   |
-| `update_slice_status`             | Update slice progress status                       |
+| `update_slice_work_item`          | Update local slice display status; no VEP transition |
 | `list_slices`                     | List slices for an MVP                             |
 
 ### Artifacts & Workspace
@@ -160,15 +162,15 @@ Workspace
 | `list_workspaces`                 | List all workspaces                                |
 | `load_workspace_summary`          | Load summary data for a workspace                  |
 
-### Initiative Lifecycle
+### Local Catalog and Work-item UI
 | Command                           | Description                                        |
 |-----------------------------------|----------------------------------------------------|
 | `create_initiative`               | Create a new initiative                            |
 | `load_initiative`                 | Load an existing initiative by ID                  |
 | `list_initiatives`                | List all initiatives                               |
-| `update_roadmap`                  | Add milestones, items, or mark items complete      |
-| `update_progress`                 | Record a progress entry                            |
-| `get_setting` / `set_setting`     | Read/write application preferences                 |
+| `update_roadmap`                  | Record local product-timeline UI data               |
+| `update_progress`                 | Record a local work note; never VEP completion      |
+| `get_setting` / `set_setting`     | Read/write UI preferences; VEP/version keys rejected |
 | `check_updates`                   | Check for desktop app updates                      |
 
 ## Persistence Strategy
@@ -189,7 +191,7 @@ Database migrations (7 total) are applied automatically on startup via embedded 
 
 ## Tauri Command Bridge
 
-The `dh-desktop` crate exposes 23 Rust functions as Tauri commands that the frontend invokes:
+The `dh-desktop` crate exposes a typed Tauri boundary. Governed actions use `invoke_project_vep`; all other commands manage draft input, local UI data, or read-only projections.
 
 ```typescript
 // Start a discovery session
@@ -250,4 +252,4 @@ This is **not** a distributed system. There are no:
 - Microservice communication patterns
 - Heavyweight runtime dependencies
 
-This is a local-first, cross-platform desktop product designed for quality, responsiveness, and real product growth. It models the DarkHorse lifecycle specifically — not a generic planning framework.
+This is a local-first, cross-platform desktop companion designed for useful draft capture and governed projections. It does not model a parallel process: installed Darkhorse delegation and project-local VEP own the single developer lifecycle.

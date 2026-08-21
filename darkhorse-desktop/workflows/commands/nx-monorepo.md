@@ -1,5 +1,7 @@
 # Command: Nx Monorepo
 
+> This is architecture input only. It cannot select a VEP risk tier, authorize lifecycle movement, or override the canonical A1.
+
 Use the **Nx Monorepo** skill defined in `openspec/specs/workflow/skills/nx-monorepo.md`.
 
 > A Copilot agent for this command lives at `.github/agents/nx-monorepo.agent.md`.
